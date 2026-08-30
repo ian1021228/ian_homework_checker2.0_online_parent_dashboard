@@ -10,6 +10,10 @@
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#4f46e5">
 
+  <!-- Network Preconnect for ultra-fast mobile verification -->
+  <link rel="preconnect" href="https://firestore.googleapis.com">
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+
   <!-- Google Fonts: Plus Jakarta Sans & Noto Sans TC -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -576,7 +580,7 @@
   <!-- ============================================================== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
     // 1. Firebase Configuration
     const firebaseConfig = {
@@ -589,9 +593,7 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = initializeFirestore(app, {
-      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
-    });
+    const db = getFirestore(app);
     const APP_COLLECTION_ID = "homework-checker-pro";
 
     // Local Storage Keys
@@ -861,6 +863,45 @@
     // FIRESTORE REAL-TIME SYNC
     // ==========================================
 
+    function decodeRestValue(val) {
+      if (!val || typeof val !== 'object') return val;
+      if ('stringValue' in val) return val.stringValue;
+      if ('integerValue' in val) return parseInt(val.integerValue, 10);
+      if ('doubleValue' in val) return parseFloat(val.doubleValue);
+      if ('booleanValue' in val) return val.booleanValue;
+      if ('timestampValue' in val) return val.timestampValue;
+      if ('arrayValue' in val) return (val.arrayValue.values || []).map(decodeRestValue);
+      if ('mapValue' in val) {
+        const map = {};
+        for (const [k, v] of Object.entries(val.mapValue.fields || {})) {
+          map[k] = decodeRestValue(v);
+        }
+        return map;
+      }
+      return val;
+    }
+
+    function parseClassData(rawData) {
+      if (!rawData) return null;
+      let finalData = { ...rawData };
+      if (rawData.data && typeof rawData.data === 'string') {
+        try {
+          const parsed = JSON.parse(rawData.data);
+          finalData = { ...parsed, ...finalData };
+        } catch(e) {}
+      }
+      return finalData;
+    }
+
+    function parseRestDocument(docJson) {
+      if (!docJson || !docJson.fields) return null;
+      const decoded = {};
+      for (const [k, v] of Object.entries(docJson.fields)) {
+        decoded[k] = decodeRestValue(v);
+      }
+      return parseClassData(decoded);
+    }
+
     function connectToClass(accessCode) {
       const cleanCode = accessCode.trim().toUpperCase();
       if (!cleanCode) {
@@ -894,25 +935,56 @@
         state.unsubscribeSnapshot = null;
       }
 
-      // Helper to process class data (handling direct fields or JSON data string)
-      function parseClassData(rawData) {
-        if (!rawData) return null;
-        let finalData = { ...rawData };
-        if (rawData.data && typeof rawData.data === 'string') {
-          try {
-            const parsed = JSON.parse(rawData.data);
-            finalData = { ...parsed, ...finalData };
-          } catch(e) {}
+      // ⚡ Step 2: Ultra-fast direct REST probe (returns in ~150ms on mobile 4G/5G, bypassing WebSocket handshake)
+      let resolvedByFastRest = false;
+      const fetchDirectData = async () => {
+        try {
+          const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/parentClasses/${cleanCode}`;
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 3500);
+          const resp = await fetch(url, { signal: controller.signal });
+          clearTimeout(timer);
+          if (resp.status === 200) {
+            const json = await resp.json();
+            const directData = parseRestDocument(json);
+            if (directData && directData.className && !resolvedByFastRest) {
+              resolvedByFastRest = true;
+              setLoginLoading(false);
+              state.accessCode = cleanCode;
+              state.classData = directData;
+              localStorage.setItem(LS_ACCESS_CODE_KEY, cleanCode);
+              try {
+                localStorage.setItem(LS_CLASS_CACHE_PREFIX + cleanCode, JSON.stringify(directData));
+              } catch (e) {}
+              const currentUrl = new URL(window.location);
+              currentUrl.searchParams.set("code", cleanCode);
+              window.history.replaceState({}, "", currentUrl);
+              showDashboardView();
+              renderParentDashboard(directData);
+            }
+          } else if (resp.status === 404) {
+            if (!state.classData && !resolvedByFastRest) {
+              setLoginLoading(false);
+              showLoginView();
+              elements.loginErrorBox.classList.remove("hidden");
+              elements.loginErrorMsg.textContent = "找不到此班級權限碼（" + cleanCode + "），請確認後重新輸入！";
+              localStorage.removeItem(LS_ACCESS_CODE_KEY);
+            }
+          }
+        } catch (e) {
+          // Ignore fetch error, onSnapshot will handle in background
         }
-        return finalData;
-      }
+      };
 
-      // ⚡ Step 2: Directly listen with real-time onSnapshot with 0 network blocking delay
+      fetchDirectData();
+
+      // ⚡ Step 3: Concurrently connect real-time onSnapshot for continuous live updates
       const classDocRef = doc(db, 'artifacts', APP_COLLECTION_ID, 'public', 'data', 'parentClasses', cleanCode);
 
       state.unsubscribeSnapshot = onSnapshot(classDocRef, (docSnap) => {
         setLoginLoading(false);
         if (docSnap.exists()) {
+          resolvedByFastRest = true;
           const raw = docSnap.data();
           const data = parseClassData(raw);
           state.accessCode = cleanCode;
@@ -940,11 +1012,13 @@
           localStorage.removeItem(LS_ACCESS_CODE_KEY);
         }
       }, (err) => {
-        setLoginLoading(false);
-        console.error("Firestore sync error:", err);
-        elements.syncAlertBanner.classList.remove("hidden");
-        elements.syncAlertMsg.textContent = "即時同步發生異常，請檢查網路連線後重試";
-        showToast("同步連線發生異常", "error");
+        if (!state.classData) {
+          setLoginLoading(false);
+          console.error("Firestore sync error:", err);
+          elements.syncAlertBanner.classList.remove("hidden");
+          elements.syncAlertMsg.textContent = "即時同步發生異常，請檢查網路連線後重試";
+          showToast("同步連線發生異常", "error");
+        }
       });
     }
 
