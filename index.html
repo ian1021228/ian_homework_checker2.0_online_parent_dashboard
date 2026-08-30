@@ -571,7 +571,13 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const GLOBAL_APP_ID = "cheker-barcode";
+    const CANDIDATE_APP_IDS = [
+      "homework-checker-pro",
+      "cheker-barcode",
+      "homework-checker-barcode",
+      "homework-checker"
+    ];
+    let activeAppId = "homework-checker-pro";
 
     // Local Storage Keys
     const LS_ACCESS_CODE_KEY = "parent_access_code";
@@ -839,7 +845,7 @@
     // FIRESTORE REAL-TIME SYNC
     // ==========================================
 
-    function connectToClass(accessCode) {
+    async function connectToClass(accessCode) {
       const cleanCode = accessCode.trim().toUpperCase();
       if (!cleanCode) {
         elements.loginErrorBox.classList.remove("hidden");
@@ -856,13 +862,50 @@
         state.unsubscribeSnapshot = null;
       }
 
-      const classDocRef = doc(db, 'artifacts', GLOBAL_APP_ID, 'public', 'data', 'parentClasses', cleanCode);
+      // Helper to process class data (handling direct fields or JSON data string)
+      function parseClassData(rawData) {
+        if (!rawData) return null;
+        let finalData = { ...rawData };
+        if (rawData.data && typeof rawData.data === 'string') {
+          try {
+            const parsed = JSON.parse(rawData.data);
+            finalData = { ...parsed, ...finalData };
+          } catch(e) {}
+        }
+        return finalData;
+      }
+
+      // Check all candidate app IDs to find where the document exists
+      let targetAppId = activeAppId;
+      try {
+        const checkPromises = CANDIDATE_APP_IDS.map(async (candidateId) => {
+          try {
+            const testRef = doc(db, 'artifacts', candidateId, 'public', 'data', 'parentClasses', cleanCode);
+            const snap = await getDoc(testRef);
+            return { candidateId, exists: snap.exists(), data: snap.exists() ? snap.data() : null };
+          } catch (e) {
+            return { candidateId, exists: false, data: null };
+          }
+        });
+
+        const results = await Promise.all(checkPromises);
+        const found = results.find(r => r.exists);
+        if (found) {
+          targetAppId = found.candidateId;
+          activeAppId = targetAppId;
+        }
+      } catch (err) {
+        console.warn("Candidate check error:", err);
+      }
+
+      const classDocRef = doc(db, 'artifacts', targetAppId, 'public', 'data', 'parentClasses', cleanCode);
 
       // Listen for real-time changes
       state.unsubscribeSnapshot = onSnapshot(classDocRef, (docSnap) => {
         setLoginLoading(false);
         if (docSnap.exists()) {
-          const data = docSnap.data();
+          const raw = docSnap.data();
+          const data = parseClassData(raw);
           state.accessCode = cleanCode;
           state.classData = data;
           
