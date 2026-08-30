@@ -157,6 +157,13 @@
           </a>
         </div>
       </div>
+
+      <div class="mt-6 text-center">
+        <div class="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-indigo-50 border border-indigo-200/80 shadow-sm text-indigo-900 text-xs sm:text-sm font-bold">
+          <i class="fa-solid fa-code text-indigo-600"></i>
+          <span>Created by 王禹硯（<a href="mailto:ianw.solar@gmail.com" class="text-indigo-600 hover:underline font-extrabold">ianw.solar@gmail.com</a>）</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -410,6 +417,12 @@
             <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
           </a>
         </div>
+        <div class="pt-4 flex justify-center">
+          <div class="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-indigo-50 border border-indigo-200/80 shadow-sm text-indigo-900 text-xs sm:text-sm font-bold">
+            <i class="fa-solid fa-code text-indigo-600"></i>
+            <span>Created by 王禹硯（<a href="mailto:ianw.solar@gmail.com" class="text-indigo-600 hover:underline font-extrabold">ianw.solar@gmail.com</a>）</span>
+          </div>
+        </div>
       </div>
     </footer>
   </div>
@@ -506,6 +519,12 @@
         <div class="pt-4 border-t border-slate-100 text-center text-xs text-slate-400 space-y-1">
           <p>系統版本：v2.0 (家長端即時查詢版)</p>
           <p>最後同步時間：<span id="modal-last-synced-time" class="font-mono text-slate-600">--</span></p>
+          <div class="pt-2 flex justify-center">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200/80 text-indigo-900 text-xs font-bold">
+              <i class="fa-solid fa-code text-indigo-600"></i>
+              <span>Created by 王禹硯（<a href="mailto:ianw.solar@gmail.com" class="text-indigo-600 hover:underline">ianw.solar@gmail.com</a>）</span>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -1184,8 +1203,9 @@
       const dates = [];
       const today = new Date();
 
-      // Generate last 7 days (including today)
-      for (let i = 0; i < 7; i++) {
+      // Generate last 7 days (including today) in chronological order:
+      // Earliest day on the left -> latest day (today) on the far right
+      for (let i = 6; i >= 0; i--) {
         const d = new Date(today);
         d.setDate(today.getDate() - i);
         const yyyy = d.getFullYear();
@@ -1202,9 +1222,9 @@
         });
       }
 
-      // Default selected date if not set
-      if (!state.selectedContactDate) {
-        state.selectedContactDate = dates[0].dateStr;
+      // Default selected date if not set (defaults to today on the right)
+      if (!state.selectedContactDate || !dates.some(d => d.dateStr === state.selectedContactDate)) {
+        state.selectedContactDate = dates[dates.length - 1].dateStr;
       }
 
       // Render 7-day slider buttons
