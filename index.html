@@ -576,7 +576,7 @@
   <!-- ============================================================== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, doc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
     // 1. Firebase Configuration
     const firebaseConfig = {
@@ -589,18 +589,15 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const CANDIDATE_APP_IDS = [
-      "homework-checker-pro",
-      "cheker-barcode",
-      "homework-checker-barcode",
-      "homework-checker"
-    ];
-    let activeAppId = "homework-checker-pro";
+    const db = initializeFirestore(app, {
+      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+    });
+    const APP_COLLECTION_ID = "homework-checker-pro";
 
     // Local Storage Keys
     const LS_ACCESS_CODE_KEY = "parent_access_code";
     const LS_STUDENT_SEAT_KEY = "parent_student_seat";
+    const LS_CLASS_CACHE_PREFIX = "parent_class_cache_";
 
     // App Global State
     const state = {
@@ -864,7 +861,7 @@
     // FIRESTORE REAL-TIME SYNC
     // ==========================================
 
-    async function connectToClass(accessCode) {
+    function connectToClass(accessCode) {
       const cleanCode = accessCode.trim().toUpperCase();
       if (!cleanCode) {
         elements.loginErrorBox.classList.remove("hidden");
@@ -874,6 +871,22 @@
 
       setLoginLoading(true);
       elements.loginErrorBox.classList.add("hidden");
+
+      // ⚡ Step 1: Check fast local cache to instantly display dashboard on mobile (0ms perceived latency)
+      try {
+        const cachedRaw = localStorage.getItem(LS_CLASS_CACHE_PREFIX + cleanCode);
+        if (cachedRaw) {
+          const cachedData = JSON.parse(cachedRaw);
+          if (cachedData && cachedData.className) {
+            state.accessCode = cleanCode;
+            state.classData = cachedData;
+            showDashboardView();
+            renderParentDashboard(cachedData);
+          }
+        }
+      } catch (cacheErr) {
+        console.warn("Local cache read error:", cacheErr);
+      }
 
       // Clean up existing listener if any
       if (state.unsubscribeSnapshot) {
@@ -894,32 +907,9 @@
         return finalData;
       }
 
-      // Check all candidate app IDs to find where the document exists
-      let targetAppId = activeAppId;
-      try {
-        const checkPromises = CANDIDATE_APP_IDS.map(async (candidateId) => {
-          try {
-            const testRef = doc(db, 'artifacts', candidateId, 'public', 'data', 'parentClasses', cleanCode);
-            const snap = await getDoc(testRef);
-            return { candidateId, exists: snap.exists(), data: snap.exists() ? snap.data() : null };
-          } catch (e) {
-            return { candidateId, exists: false, data: null };
-          }
-        });
+      // ⚡ Step 2: Directly listen with real-time onSnapshot with 0 network blocking delay
+      const classDocRef = doc(db, 'artifacts', APP_COLLECTION_ID, 'public', 'data', 'parentClasses', cleanCode);
 
-        const results = await Promise.all(checkPromises);
-        const found = results.find(r => r.exists);
-        if (found) {
-          targetAppId = found.candidateId;
-          activeAppId = targetAppId;
-        }
-      } catch (err) {
-        console.warn("Candidate check error:", err);
-      }
-
-      const classDocRef = doc(db, 'artifacts', targetAppId, 'public', 'data', 'parentClasses', cleanCode);
-
-      // Listen for real-time changes
       state.unsubscribeSnapshot = onSnapshot(classDocRef, (docSnap) => {
         setLoginLoading(false);
         if (docSnap.exists()) {
@@ -928,8 +918,11 @@
           state.accessCode = cleanCode;
           state.classData = data;
           
-          // Save to localStorage
+          // Save to localStorage & class cache
           localStorage.setItem(LS_ACCESS_CODE_KEY, cleanCode);
+          try {
+            localStorage.setItem(LS_CLASS_CACHE_PREFIX + cleanCode, JSON.stringify(data));
+          } catch (e) {}
 
           // Update URL without reload
           const currentUrl = new URL(window.location);
