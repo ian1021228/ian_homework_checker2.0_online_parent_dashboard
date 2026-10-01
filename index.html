@@ -12,6 +12,9 @@
   <link rel="icon" type="image/svg+xml" href="homework-checker-icon.svg">
   <link class="rounded-2xl shadow-lg shadow-indigo-500/10" rel="apple-touch-icon" href="homework-checker-icon.png">
   <meta name="theme-color" content="#4f46e5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="家長端看板">
 
   <!-- Network Preconnect for ultra-fast mobile verification -->
   <link rel="preconnect" href="https://firestore.googleapis.com">
@@ -396,7 +399,7 @@
                   </span>
                 </div>
                 <button id="quick-jump-scores-tab-btn" type="button" class="text-xs font-extrabold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer self-start sm:self-auto border border-emerald-200">
-                  <span>查看成績與學習分析獨立分頁 (19科分析與趨勢)</span>
+                  <span>查看成績與學習分析獨立分頁 (21科分析與趨勢)</span>
                   <i class="fa-solid fa-arrow-right text-[10px]"></i>
                 </button>
               </div>
@@ -417,9 +420,9 @@
               <i class="fa-solid fa-shield-halved"></i>
               <span>座號 <span id="locked-seat-display">--</span> 號 學生隱私安全防護</span>
             </div>
-            <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">請輸入學生端查閱密碼 (PIN)</h2>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">請輸入學生端專屬驗證碼 (PIN)</h2>
             <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 mb-6 leading-relaxed">
-              為保護學生個人成績與作業隱私，查看前需輸入孩子在學生端顯示之 4 位數家長查閱密碼（預設為 1000 + 座號）。
+              為保護學生個人成績與各項隱私，查看前需輸入 6 位數專屬 PIN 碼（預設為 100000 + 座號）。
             </p>
 
             <form id="parent-pin-form" class="max-w-xs mx-auto space-y-4">
@@ -428,7 +431,7 @@
                   type="password"
                   id="input-parent-pin"
                   name="parentPin"
-                  placeholder="4 位數密碼"
+                  placeholder="6 位數 PIN 碼"
                   maxlength="6"
                   inputmode="numeric"
                   pattern="[0-9]*"
@@ -449,7 +452,7 @@
               <!-- PIN Error Alert -->
               <div id="pin-error-box" class="hidden p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm flex items-start gap-2 text-left">
                 <i class="fa-solid fa-circle-exclamation mt-0.5 text-rose-500 flex-shrink-0"></i>
-                <span id="pin-error-msg" class="leading-snug">密碼不正確，請確認孩子學生端顯示之密碼！</span>
+                <span id="pin-error-msg" class="leading-snug">密碼不正確，請確認孩子學生端顯示之 6 位數 PIN 碼！</span>
               </div>
 
               <button
@@ -468,7 +471,7 @@
                 <span>切換選擇其他座號</span>
               </button>
               <span class="hidden sm:inline">·</span>
-              <span class="text-slate-400">💡 提示：密碼由孩子在學生端產生；預設為 1000 + 座號</span>
+              <span class="text-slate-400">💡 提示：此密碼為 6 位數專屬 PIN 碼；預設為 100000 + 座號。若忘記密碼請聯繫導師一鍵重設。</span>
             </div>
           </div>
 
@@ -506,6 +509,34 @@
           </button>
         </div>
 
+        <!-- State B-0: Teacher has not configured student PIN -->
+        <div id="parent-scores-unconfigured-view" class="bg-white rounded-3xl p-8 sm:p-10 shadow-sm border border-slate-200/80 text-center hidden">
+          <div class="w-16 h-16 rounded-3xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 border border-amber-100 shadow-sm">
+            <i class="fa-solid fa-lock text-2xl"></i>
+          </div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold mb-3">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>座號 <span class="parent-unconfigured-seat-num">--</span> 號 成績系統尚未開通</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">導師尚未設定專屬驗證碼</h2>
+          <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 mb-6 leading-relaxed">
+            為維護學生個人成績隱私，系統要求必須由班級導師在後台設定開通該座號的專屬 6 位數 PIN 碼後，方可解鎖使用成績系統。
+          </p>
+          <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs sm:text-sm max-w-md mx-auto text-left space-y-2">
+            <div class="font-extrabold flex items-center gap-1.5 text-amber-800">
+              <i class="fa-solid fa-circle-info"></i> 如何開通？
+            </div>
+            <p class="leading-relaxed">
+              請聯繫班級導師至教師端<strong>「成績系統 PIN 碼管理」</strong>為該學生設定或一鍵開通 6 位數專屬密碼。開通後您即可在此輸入 PIN 碼查閱成績。
+            </p>
+          </div>
+          <div class="mt-6">
+            <button type="button" class="btn-goto-pick-seat px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer">
+              切換其他座號
+            </button>
+          </div>
+        </div>
+
         <!-- State B: Seat Selected but Locked (PIN Required) -->
         <div id="parent-scores-locked-view" class="bg-white rounded-3xl p-8 sm:p-10 shadow-sm border border-slate-200/80 text-center hidden">
           <div class="w-16 h-16 rounded-3xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-100 shadow-sm">
@@ -515,9 +546,9 @@
             <i class="fa-solid fa-lock"></i>
             <span>座號 <span class="parent-locked-seat-num">--</span> 號 學生個人成績防護</span>
           </div>
-          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">輸入查閱密碼以解鎖成績分析</h2>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">輸入 6 位數專屬 PIN 碼解鎖成績</h2>
           <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 mb-6 leading-relaxed">
-            為維護學生在校成績與個人隱私，請輸入孩子學生端顯示之專屬密碼（預設為 1000 + 座號）。
+            為維護學生在校成績與個人隱私，請輸入導師或孩子設定之 6 位數專屬密碼（預設為 100000 + 座號）。
           </p>
 
           <form id="parent-scores-pin-form" class="max-w-xs mx-auto space-y-4">
@@ -526,7 +557,7 @@
                 type="password"
                 id="input-scores-pin"
                 class="w-full text-center font-mono tracking-[0.4em] text-2xl sm:text-3xl font-extrabold py-3.5 px-4 bg-slate-50 border border-slate-300 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all placeholder:text-slate-300 placeholder:tracking-normal placeholder:text-base placeholder:font-normal"
-                placeholder="4 位數密碼"
+                placeholder="6 位數 PIN 碼"
                 maxlength="6"
                 inputmode="numeric"
                 required
@@ -558,7 +589,7 @@
           </form>
 
           <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-slate-400">
-            <span class="text-slate-400">💡 提示：密碼由孩子在學生端產生；預設為 1000 + 座號</span>
+            <span class="text-slate-400">💡 提示：此密碼為 6 位數專屬 PIN 碼；預設為 100000 + 座號。若忘記密碼請聯繫導師一鍵重設。</span>
           </div>
         </div>
 
@@ -577,7 +608,7 @@
                     <i class="fa-solid fa-lock text-[10px]"></i> 重新上鎖
                   </button>
                 </div>
-                <p class="text-xs text-slate-500 mt-0.5">跨領域 19 門學科小考成績統計、歷史趨勢與錯題追蹤</p>
+                <p class="text-xs text-slate-500 mt-0.5">跨領域 21 門學科小考成績統計、歷史趨勢與錯題追蹤</p>
               </div>
             </div>
 
@@ -635,24 +666,25 @@
             </div>
           </div>
 
-          <!-- 19 Subjects Performance Analytics Card -->
+          <!-- 21 Subjects Performance Analytics Card -->
           <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80 space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
               <div>
                 <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
                   <i class="fa-solid fa-layer-group text-emerald-600"></i>
-                  <span>19 門領域學科成績深度分析</span>
+                  <span>21 門領域學科成績深度分析</span>
                 </h3>
                 <p class="text-xs text-slate-400 mt-0.5">點選科目卡片可快速過濾該科歷史測驗紀錄</p>
               </div>
               <!-- Domain Filter Tabs -->
               <div class="flex items-center gap-1 overflow-x-auto pb-1 custom-scrollbar text-xs font-bold" id="parent-domain-analytics-filter">
                 <button type="button" data-domain="all" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-extrabold cursor-pointer">全部學科</button>
-                <button type="button" data-domain="lang-math" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">語文與數學</button>
-                <button type="button" data-domain="social" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">社會</button>
-                <button type="button" data-domain="nature" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">自然</button>
+                <button type="button" data-domain="lang" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">語文領域</button>
+                <button type="button" data-domain="math" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">數學領域</button>
+                <button type="button" data-domain="social" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">社會領域</button>
+                <button type="button" data-domain="nature" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">自然科學</button>
                 <button type="button" data-domain="arts-tech" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">藝術與科技</button>
-                <button type="button" data-domain="health-comp" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">健體綜合</button>
+                <button type="button" data-domain="health-comp" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">健體與綜合</button>
               </div>
             </div>
 
@@ -908,7 +940,29 @@
           </a>
         </div>
 
-        <!-- 4. Version & Sync Info -->
+        <!-- 4. PWA 一鍵下載安裝至桌面 / 手機主畫面 -->
+        <div class="pt-5 border-t border-slate-100">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-500 uppercase">安裝應用程式 (PWA)</span>
+            <span id="pwa-parent-install-badge" class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-100 text-indigo-800">可一鍵安裝</span>
+          </div>
+          <button
+            id="btn-parent-pwa-install"
+            type="button"
+            class="w-full flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 hover:from-indigo-700 hover:to-purple-800 text-white font-black text-xs sm:text-sm shadow-md shadow-indigo-600/20 transition-all cursor-pointer group"
+          >
+            <div class="flex items-center gap-2.5">
+              <i class="fa-solid fa-download text-indigo-200 text-base group-hover:scale-110 transition-transform"></i>
+              <span id="parent-pwa-install-btn-text">一鍵下載安裝至桌面 / 手機主畫面</span>
+            </div>
+            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-0.5 transition-transform"></i>
+          </button>
+          <p class="text-[11px] text-slate-400 font-medium mt-1.5 leading-relaxed">
+            ※ 支援電腦 (Chrome/Edge) 與手機 (iOS Safari / Android Chrome) 一鍵安裝，離線秒開更便利！
+          </p>
+        </div>
+
+        <!-- 5. Version & Sync Info -->
         <div class="pt-4 border-t border-slate-100 text-center text-xs text-slate-400 space-y-1">
           <p>系統版本：v2.0 (家長端即時查詢版)</p>
           <p>最後同步時間：<span id="modal-last-synced-time" class="font-mono text-slate-600">--</span></p>
@@ -920,6 +974,40 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  </div>
+
+  <!-- 📱 iOS PWA 安裝指引彈窗 (In-App iOS Installation Guide Modal) -->
+  <div id="modal-ios-pwa-guide" class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden transition-all duration-300">
+    <div class="relative w-full max-w-sm bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+          <i class="fa-brands fa-apple text-slate-800 text-lg"></i>
+          <span>iPhone / iPad 安裝至主畫面</span>
+        </h3>
+        <button id="close-ios-pwa-guide-btn" type="button" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors cursor-pointer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+      <div class="space-y-3 text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+          <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center shrink-0">1</span>
+          <div>點擊 Safari 瀏覽器底部的 <b>「分享」</b> 按鈕（<i class="fa-solid fa-arrow-up-from-bracket text-indigo-600"></i>）。</div>
+        </div>
+        <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+          <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center shrink-0">2</span>
+          <div>向下捲動選單，點選 <b>「加入主畫面」</b>（<i class="fa-regular fa-square-plus text-indigo-600"></i>）。</div>
+        </div>
+        <div class="flex items-start gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100">
+          <span class="w-6 h-6 rounded-full bg-indigo-600 text-white font-black text-xs flex items-center justify-center shrink-0">3</span>
+          <div>點選右上角的 <b>「新增」</b>，即可在手機桌面看見專屬 App 圖示秒開使用！</div>
+        </div>
+      </div>
+      <div class="pt-2">
+        <button id="confirm-ios-pwa-guide-btn" type="button" class="w-full py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-indigo-600/20 transition-all cursor-pointer">
+          我知道了
+        </button>
       </div>
     </div>
   </div>
@@ -1077,6 +1165,7 @@
 
       // Dedicated Scores & Analytics Panel Elements
       parentScoresUnboundView: document.getElementById("parent-scores-unbound-view"),
+      parentScoresUnconfiguredView: document.getElementById("parent-scores-unconfigured-view"),
       parentScoresLockedView: document.getElementById("parent-scores-locked-view"),
       parentScoresUnlockedView: document.getElementById("parent-scores-unlocked-view"),
       scoresViewSeatBadge: document.getElementById("scores-view-seat-badge"),
@@ -1135,6 +1224,14 @@
       modalAccessCodeBadge: document.getElementById("modal-access-code-badge"),
       switchClassModalBtn: document.getElementById("switch-class-modal-btn"),
       modalLastSyncedTime: document.getElementById("modal-last-synced-time"),
+
+      // PWA Elements
+      btnParentPwaInstall: document.getElementById("btn-parent-pwa-install"),
+      parentPwaInstallBadge: document.getElementById("pwa-parent-install-badge"),
+      parentPwaInstallBtnText: document.getElementById("parent-pwa-install-btn-text"),
+      modalIosPwaGuide: document.getElementById("modal-ios-pwa-guide"),
+      closeIosPwaGuideBtn: document.getElementById("close-ios-pwa-guide-btn"),
+      confirmIosPwaGuideBtn: document.getElementById("confirm-ios-pwa-guide-btn"),
 
       // Matrix Modal
       matrixModal: document.getElementById("matrix-modal"),
@@ -1287,15 +1384,21 @@
     // ==========================================
 
     function init() {
-      // Load stored seat
-      const savedSeat = localStorage.getItem(LS_STUDENT_SEAT_KEY);
-      if (savedSeat) {
-        state.studentSeat = parseInt(savedSeat, 10);
-      }
-
-      // Check URL parameters for ?code=XXXX
+      // Check URL parameters for ?code=XXXX & ?seat=XX
       const urlParams = new URLSearchParams(window.location.search);
       const codeFromUrl = urlParams.get("code");
+      const seatFromUrl = urlParams.get("seat");
+
+      if (seatFromUrl && parseInt(seatFromUrl, 10) > 0) {
+        state.studentSeat = parseInt(seatFromUrl, 10);
+        localStorage.setItem(LS_STUDENT_SEAT_KEY, String(state.studentSeat));
+      } else {
+        const savedSeat = localStorage.getItem(LS_STUDENT_SEAT_KEY);
+        if (savedSeat) {
+          state.studentSeat = parseInt(savedSeat, 10);
+        }
+      }
+
       const savedCode = localStorage.getItem(LS_ACCESS_CODE_KEY);
 
       if (codeFromUrl) {
@@ -1435,6 +1538,7 @@
               } catch (e) {}
               const currentUrl = new URL(window.location);
               currentUrl.searchParams.set("code", cleanCode);
+              if (state.studentSeat) currentUrl.searchParams.set("seat", state.studentSeat);
               window.history.replaceState({}, "", currentUrl);
               showDashboardView();
               renderParentDashboard(directData);
@@ -1476,6 +1580,7 @@
           // Update URL without reload
           const currentUrl = new URL(window.location);
           currentUrl.searchParams.set("code", cleanCode);
+          if (state.studentSeat) currentUrl.searchParams.set("seat", state.studentSeat);
           window.history.replaceState({}, "", currentUrl);
 
           showDashboardView();
@@ -1575,22 +1680,45 @@
       }
     }
 
+    function getTeacherConfiguredPin(seat) {
+      const s = String(seat || state.studentSeat || "");
+      if (!s) return null;
+      if (state.classData?.studentPins && state.classData.studentPins[s]) {
+        return String(state.classData.studentPins[s]).trim();
+      }
+      if (state.cloudStudentData?.parentPin) {
+        return String(state.cloudStudentData.parentPin).trim();
+      }
+      return null;
+    }
+
     function isSeatUnlocked(seat) {
       if (!seat || !state.accessCode) return false;
       const key = `parent_unlocked_${state.accessCode}_seat${seat}`;
-      return localStorage.getItem(key) === "true";
+      const pinKey = `parent_unlocked_pin_${state.accessCode}_seat${seat}`;
+      const isUnlocked = localStorage.getItem(key) === "true";
+      if (!isUnlocked) return false;
+      const teacherPin = getTeacherConfiguredPin(seat);
+      if (teacherPin) {
+        return localStorage.getItem(pinKey) === teacherPin;
+      }
+      return false;
     }
 
-    function unlockSeat(seat) {
+    function unlockSeat(seat, pin) {
       if (!seat || !state.accessCode) return;
       const key = `parent_unlocked_${state.accessCode}_seat${seat}`;
+      const pinKey = `parent_unlocked_pin_${state.accessCode}_seat${seat}`;
       localStorage.setItem(key, "true");
+      if (pin) localStorage.setItem(pinKey, String(pin));
     }
 
     function relockSeat(seat) {
       if (!seat || !state.accessCode) return;
       const key = `parent_unlocked_${state.accessCode}_seat${seat}`;
+      const pinKey = `parent_unlocked_pin_${state.accessCode}_seat${seat}`;
       localStorage.removeItem(key);
+      localStorage.removeItem(pinKey);
     }
 
     function setStudentSeat(seatNumber) {
@@ -1803,23 +1931,44 @@
       const seat = state.studentSeat;
       // 🌟 只有成績需要密碼：若尚未解鎖成績，顯示成績防護提示並提供解鎖入口
       if (seat && !isSeatUnlocked(seat)) {
-        elements.studentScoresList.innerHTML = `
-          <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50/80 via-teal-50/50 to-indigo-50/50 border border-emerald-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg shrink-0 shadow-xs">
-                <i class="fa-solid fa-shield-halved"></i>
+        const teacherPin = getTeacherConfiguredPin(seat);
+        if (!teacherPin) {
+          elements.studentScoresList.innerHTML = `
+            <div class="p-4 sm:p-5 rounded-2xl bg-amber-50/80 border border-amber-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg shrink-0 shadow-xs">
+                  <i class="fa-solid fa-lock"></i>
+                </div>
+                <div>
+                  <div class="text-xs sm:text-sm font-extrabold text-amber-900">成績系統待導師設定開通</div>
+                  <div class="text-[11px] text-amber-700">作業點收完全公開，成績分析需待導師在後台設定專屬 6 位數 PIN 碼</div>
+                </div>
               </div>
-              <div>
-                <div class="text-xs sm:text-sm font-extrabold text-slate-900">孩子小考成績已受 PIN 密碼保護</div>
-                <div class="text-[11px] text-slate-500">作業繳交情況完全公開，各科小考成績需輸入學生端密碼查閱</div>
-              </div>
+              <button id="btn-goto-scores-tab-unlock" type="button" class="touch-target px-4 py-2 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>查看開通說明</span>
+              </button>
             </div>
-            <button id="btn-goto-scores-tab-unlock" type="button" class="touch-target px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5">
-              <i class="fa-solid fa-key"></i>
-              <span>輸入密碼查閱成績</span>
-            </button>
-          </div>
-        `;
+          `;
+        } else {
+          elements.studentScoresList.innerHTML = `
+            <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50/80 via-teal-50/50 to-indigo-50/50 border border-emerald-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg shrink-0 shadow-xs">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                  <div class="text-xs sm:text-sm font-extrabold text-slate-900">孩子小考成績已受 PIN 密碼保護</div>
+                  <div class="text-[11px] text-slate-500">作業繳交情況完全公開，各科小考成績需輸入 6 位數專屬 PIN 碼查閱</div>
+                </div>
+              </div>
+              <button id="btn-goto-scores-tab-unlock" type="button" class="touch-target px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5">
+                <i class="fa-solid fa-key"></i>
+                <span>輸入 PIN 碼查閱成績</span>
+              </button>
+            </div>
+          `;
+        }
         const gotoBtn = document.getElementById("btn-goto-scores-tab-unlock");
         if (gotoBtn) {
           gotoBtn.addEventListener("click", () => {
@@ -1827,7 +1976,7 @@
           });
         }
         if (elements.studentScoresAvgBadge) {
-          elements.studentScoresAvgBadge.textContent = "需密碼保護";
+          elements.studentScoresAvgBadge.textContent = teacherPin ? "需密碼保護" : "待導師開通";
         }
         if (elements.studentMoodDisplayBox) {
           elements.studentMoodDisplayBox.classList.add("hidden");
@@ -1919,14 +2068,16 @@
     // ==========================================
 
     const PARENT_DOMAINS_CONFIG = [
-      { id: "lang-math", name: "語文與數學", color: "bg-indigo-500", subjects: ["國語文", "英語文", "數學"] },
-      { id: "social", name: "社會領域", color: "bg-amber-500", subjects: ["歷史", "地理", "公民與社會"] },
-      { id: "nature", name: "自然科學", color: "bg-emerald-500", subjects: ["生物", "理化", "地球科學"] },
+      { id: "lang", name: "語文領域", color: "bg-indigo-500", subjects: ["國語文", "英語文"] },
+      { id: "math", name: "數學領域", color: "bg-blue-500", subjects: ["數學"] },
+      { id: "social", name: "社會領域", color: "bg-amber-500", subjects: ["歷史", "地理", "公民與社會", "綜合社會"] },
+      { id: "nature", name: "自然科學", color: "bg-emerald-500", subjects: ["生物", "理化", "地球科學", "綜合自然"] },
       { id: "arts-tech", name: "藝術與科技", color: "bg-purple-500", subjects: ["音樂", "視覺藝術", "表演藝術", "資訊科技", "生活科技"] },
       { id: "health-comp", name: "健體與綜合活動", color: "bg-rose-500", subjects: ["健康教育", "體育", "家政", "童軍", "輔導"] }
     ];
 
-    const PARENT_ALL_19_SUBJECTS = PARENT_DOMAINS_CONFIG.flatMap(d => d.subjects);
+    const PARENT_ALL_21_SUBJECTS = PARENT_DOMAINS_CONFIG.flatMap(d => d.subjects);
+    const PARENT_ALL_19_SUBJECTS = PARENT_ALL_21_SUBJECTS; // Alias for backward compatibility
     let parentActiveDomainFilter = "all";
 
     async function renderParentScoresSection() {
@@ -1935,10 +2086,38 @@
       // 1. Seat unbound check
       if (!seat) {
         elements.parentScoresUnboundView?.classList.remove("hidden");
+        elements.parentScoresUnconfiguredView?.classList.add("hidden");
         elements.parentScoresLockedView?.classList.add("hidden");
         elements.parentScoresUnlockedView?.classList.add("hidden");
         return;
       }
+
+      // Check if teacher configured PIN for this seat
+      let teacherPin = getTeacherConfiguredPin(seat);
+      if (!teacherPin && state.accessCode) {
+        try {
+          const studentDocId = `studentScores_${state.accessCode}_seat${seat}`;
+          const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/userProfiles/${studentDocId}`;
+          const resp = await fetch(url);
+          if (resp.status === 200) {
+            const json = await resp.json();
+            state.cloudStudentData = parseRestDocument(json);
+            teacherPin = getTeacherConfiguredPin(seat);
+          }
+        } catch (e) {}
+      }
+
+      // If teacher has NOT configured PIN, show unconfigured view
+      if (!teacherPin) {
+        elements.parentScoresUnboundView?.classList.add("hidden");
+        elements.parentScoresUnconfiguredView?.classList.remove("hidden");
+        elements.parentScoresLockedView?.classList.add("hidden");
+        elements.parentScoresUnlockedView?.classList.add("hidden");
+        document.querySelectorAll('.parent-unconfigured-seat-num').forEach(el => el.textContent = `${seat}`);
+        return;
+      }
+
+      elements.parentScoresUnconfiguredView?.classList.add("hidden");
 
       // 2. Lock check
       if (!isSeatUnlocked(seat)) {
@@ -2427,31 +2606,34 @@
       if (errorBox) errorBox.classList.add("hidden");
 
       try {
-        const studentDocId = `studentScores_${state.accessCode}_seat${seat}`;
-        const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/userProfiles/${studentDocId}`;
-        const resp = await fetch(url);
-        let cloudData = null;
-        if (resp.status === 200) {
-          const json = await resp.json();
-          cloudData = parseRestDocument(json);
-          state.cloudStudentData = cloudData;
+        let teacherPin = getTeacherConfiguredPin(seat);
+        if (!teacherPin && state.accessCode) {
+          const studentDocId = `studentScores_${state.accessCode}_seat${seat}`;
+          const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/userProfiles/${studentDocId}`;
+          const resp = await fetch(url);
+          if (resp.status === 200) {
+            const json = await resp.json();
+            state.cloudStudentData = parseRestDocument(json);
+            teacherPin = getTeacherConfiguredPin(seat);
+          }
         }
 
-        const defaultPin = String(1000 + Number(seat));
-        const cloudPin = (cloudData && cloudData.parentPin && String(cloudData.parentPin).trim().length > 0)
-          ? String(cloudData.parentPin).trim()
-          : null;
+        if (!teacherPin) {
+          if (errorBox) errorBox.classList.remove("hidden");
+          if (errorMsg) errorMsg.textContent = "導師尚未開通此座號的成績專屬 PIN 碼！請聯繫導師在教師端開通。";
+          return;
+        }
 
-        const isMatch = (cloudPin && enteredPin === cloudPin) || (enteredPin === defaultPin);
+        const isMatch = (enteredPin === teacherPin);
 
         if (isMatch) {
-          unlockSeat(seat);
+          unlockSeat(seat, enteredPin);
           showToast(`驗證成功！已解鎖 ${seat} 號學生專區與成績分析`, "success");
           renderStudentPersonalSection(state.classData);
           renderParentScoresSection();
         } else {
           if (errorBox) errorBox.classList.remove("hidden");
-          if (errorMsg) errorMsg.textContent = "密碼不正確！請向孩子確認學生端顯示之專屬查閱密碼。";
+          if (errorMsg) errorMsg.textContent = "密碼不正確！請向孩子或導師確認 6 位數專屬 PIN 碼。若忘記密碼請聯繫導師一鍵重設。";
           if (inputEl) {
             inputEl.focus();
             inputEl.select();
@@ -2459,15 +2641,15 @@
         }
       } catch (err) {
         console.error("PIN verification error:", err);
-        const defaultPin = String(1000 + Number(seat));
-        if (enteredPin === defaultPin) {
-          unlockSeat(seat);
+        const teacherPin = getTeacherConfiguredPin(seat);
+        if (teacherPin && enteredPin === teacherPin) {
+          unlockSeat(seat, enteredPin);
           showToast(`驗證成功！已解鎖 ${seat} 號學生專區與成績分析`, "success");
           renderStudentPersonalSection(state.classData);
           renderParentScoresSection();
         } else {
           if (errorBox) errorBox.classList.remove("hidden");
-          if (errorMsg) errorMsg.textContent = "驗證失敗，請檢查網路連線或向孩子確認密碼！";
+          if (errorMsg) errorMsg.textContent = "驗證失敗，請檢查網路連線或向導師確認 PIN 碼！";
         }
       } finally {
         if (submitBtn) submitBtn.disabled = false;
@@ -2939,6 +3121,77 @@
       elements.syncRetryBtn.addEventListener('click', () => {
         if (state.accessCode) connectToClass(state.accessCode);
       });
+
+      // Service Worker registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(err => {
+            console.warn('[PWA] ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+
+      // PWA Installation & Service Worker Registration
+      let parentDeferredInstallPrompt = null;
+
+      function updateParentPwaInstallState() {
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        if (isStandalone) {
+          if (elements.parentPwaInstallBadge) {
+            elements.parentPwaInstallBadge.textContent = "已安裝為桌面 App";
+            elements.parentPwaInstallBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800";
+          }
+          if (elements.parentPwaInstallBtnText) {
+            elements.parentPwaInstallBtnText.textContent = "✅ 已安裝為桌面 App（可離線使用）";
+          }
+        }
+      }
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        parentDeferredInstallPrompt = e;
+        if (elements.parentPwaInstallBadge) {
+          elements.parentPwaInstallBadge.textContent = "可一鍵安裝";
+        }
+      });
+
+      window.addEventListener('appinstalled', () => {
+        parentDeferredInstallPrompt = null;
+        updateParentPwaInstallState();
+        showToast("🎉 恭喜！家長端看板已成功安裝至您的桌面/主畫面", "success");
+      });
+
+      const isIosDevice = () => {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        return /iphone|ipad|ipod/.test(userAgent);
+      };
+
+      if (elements.btnParentPwaInstall) {
+        elements.btnParentPwaInstall.addEventListener("click", async () => {
+          const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+          if (isStandalone) {
+            showToast("您目前已在使用桌面 App 模式！", "info");
+            return;
+          }
+
+          if (parentDeferredInstallPrompt) {
+            parentDeferredInstallPrompt.prompt();
+            const { outcome } = await parentDeferredInstallPrompt.userChoice;
+            if (outcome === 'accepted') {
+              showToast("🎉 感謝安裝！已將家長端看板新增至主畫面", "success");
+            }
+            parentDeferredInstallPrompt = null;
+          } else if (isIosDevice()) {
+            elements.modalIosPwaGuide?.classList.remove("hidden");
+          } else {
+            showToast("若未自動跳出安裝視窗，請點選瀏覽器網址列右側的「安裝」圖示即可加到桌面！", "info");
+          }
+        });
+      }
+
+      elements.closeIosPwaGuideBtn?.addEventListener("click", () => elements.modalIosPwaGuide?.classList.add("hidden"));
+      elements.confirmIosPwaGuideBtn?.addEventListener("click", () => elements.modalIosPwaGuide?.classList.add("hidden"));
+      updateParentPwaInstallState();
 
       // Window Online/Offline listeners
       window.addEventListener('online', () => {
