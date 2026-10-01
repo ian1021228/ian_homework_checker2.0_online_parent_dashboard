@@ -267,6 +267,10 @@
                   <button id="change-seat-quick-btn" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 underline underline-offset-2">
                     更換座號
                   </button>
+                  <span class="text-slate-300">·</span>
+                  <button id="relock-seat-btn" class="text-xs font-semibold text-slate-500 hover:text-rose-600 flex items-center gap-1 transition-colors cursor-pointer" title="重新鎖定並保護學生個人隱私">
+                    <i class="fa-solid fa-lock text-[10px]"></i> 重新上鎖
+                  </button>
                 </div>
                 <p id="student-status-summary" class="text-xs text-slate-500 mt-0.5">點選下方標籤可快速篩選相關作業</p>
               </div>
@@ -331,6 +335,101 @@
             <div id="personal-homework-list" class="space-y-2">
               <!-- Rendered items -->
             </div>
+          </div>
+
+          <!-- Student Quiz Scores & Mood Journal Section -->
+          <div id="student-scores-section" class="mt-6 pt-5 border-t border-slate-100">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">
+                  <i class="fa-solid fa-chart-line"></i>
+                </span>
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">學生平時小考成績與心得</span>
+              </div>
+              <span id="student-scores-avg-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                載入中...
+              </span>
+            </div>
+
+            <!-- Scores List Container -->
+            <div id="student-scores-list" class="space-y-2 mb-3">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Today's Mood / Reflection if available -->
+            <div id="student-mood-display-box" class="hidden p-3.5 rounded-2xl bg-indigo-50/70 border border-indigo-100">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
+                  <i class="fa-regular fa-face-smile text-indigo-600"></i> 今日孩子的心情日記
+                </span>
+                <span id="student-mood-emoji" class="text-base"></span>
+              </div>
+              <p id="student-mood-text" class="text-xs text-indigo-950 font-medium leading-relaxed pl-5"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- State C: Seat Selected but Locked (Parent PIN Protection) -->
+        <div id="student-locked-view" class="hidden text-center py-8 px-4">
+          <div class="w-16 h-16 rounded-3xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4 border border-indigo-100 shadow-sm">
+            <i class="fa-solid fa-lock text-2xl text-indigo-600"></i>
+          </div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold mb-2">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>座號 <span id="locked-seat-display">--</span> 號 學生隱私安全防護</span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">請輸入學生端查閱密碼 (PIN)</h2>
+          <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 mb-6 leading-relaxed">
+            為保護學生個人成績與作業隱私，查看前需輸入孩子在學生端顯示之 4 位數家長查閱密碼。
+          </p>
+
+          <form id="parent-pin-form" class="max-w-xs mx-auto space-y-4">
+            <div class="relative">
+              <input
+                type="password"
+                id="input-parent-pin"
+                name="parentPin"
+                placeholder="4 位數密碼"
+                maxlength="6"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+                class="w-full text-center font-mono tracking-[0.4em] text-2xl sm:text-3xl font-extrabold py-3.5 px-4 bg-slate-50 border border-slate-300 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder:text-slate-300 placeholder:tracking-normal placeholder:text-base placeholder:font-normal"
+                required
+              />
+              <button
+                type="button"
+                id="btn-toggle-pin-visibility"
+                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                title="顯示/隱藏密碼"
+              >
+                <i class="fa-regular fa-eye text-sm" id="icon-pin-eye"></i>
+              </button>
+            </div>
+
+            <!-- PIN Error Alert -->
+            <div id="pin-error-box" class="hidden p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm flex items-start gap-2 text-left">
+              <i class="fa-solid fa-circle-exclamation mt-0.5 text-rose-500 flex-shrink-0"></i>
+              <span id="pin-error-msg" class="leading-snug">密碼不正確，請確認孩子學生端顯示之密碼！</span>
+            </div>
+
+            <button
+              type="submit"
+              id="btn-submit-pin"
+              class="touch-target w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-bold text-sm sm:text-base shadow-lg shadow-indigo-500/25 transition-all cursor-pointer disabled:opacity-50"
+            >
+              <i id="pin-submit-icon" class="fa-solid fa-unlock-keyhole"></i>
+              <span id="pin-submit-text">驗證並解鎖</span>
+            </button>
+          </form>
+
+          <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-slate-400">
+            <button id="btn-cancel-unlock-seat" type="button" class="text-indigo-600 hover:underline font-semibold flex items-center gap-1 cursor-pointer">
+              <i class="fa-solid fa-arrow-left"></i>
+              <span>切換選擇其他座號</span>
+            </button>
+            <span class="hidden sm:inline">·</span>
+            <span class="text-slate-400">💡 提示：密碼由孩子在學生端產生；預設為 1000 + 座號</span>
           </div>
         </div>
 
@@ -609,6 +708,7 @@
       accessCode: "",
       studentSeat: null, // number | null
       classData: null,
+      cloudStudentData: null,
       selectedContactDate: getTodayDateString(),
       unsubscribeSnapshot: null,
       isOnline: true
@@ -644,6 +744,7 @@
       studentSeatDisplay: document.getElementById("student-seat-display"),
       studentSeatTitle: document.getElementById("student-seat-title"),
       changeSeatQuickBtn: document.getElementById("change-seat-quick-btn"),
+      relockSeatBtn: document.getElementById("relock-seat-btn"),
       cardUpdatedTime: document.getElementById("card-updated-time"),
       statCompletedCount: document.getElementById("stat-completed-count"),
       statCorrectionCount: document.getElementById("stat-correction-count"),
@@ -653,6 +754,28 @@
       personalHomeworkList: document.getElementById("personal-homework-list"),
       personalHwCountBadge: document.getElementById("personal-hw-count-badge"),
       quickSeatPickerGrid: document.getElementById("quick-seat-picker-grid"),
+
+      // PIN Protection
+      studentLockedView: document.getElementById("student-locked-view"),
+      lockedSeatDisplay: document.getElementById("locked-seat-display"),
+      parentPinForm: document.getElementById("parent-pin-form"),
+      inputParentPin: document.getElementById("input-parent-pin"),
+      btnTogglePinVisibility: document.getElementById("btn-toggle-pin-visibility"),
+      iconPinEye: document.getElementById("icon-pin-eye"),
+      pinErrorBox: document.getElementById("pin-error-box"),
+      pinErrorMsg: document.getElementById("pin-error-msg"),
+      btnSubmitPin: document.getElementById("btn-submit-pin"),
+      pinSubmitText: document.getElementById("pin-submit-text"),
+      pinSubmitIcon: document.getElementById("pin-submit-icon"),
+      btnCancelUnlockSeat: document.getElementById("btn-cancel-unlock-seat"),
+
+      // Student Scores & Mood
+      studentScoresSection: document.getElementById("student-scores-section"),
+      studentScoresList: document.getElementById("student-scores-list"),
+      studentScoresAvgBadge: document.getElementById("student-scores-avg-badge"),
+      studentMoodDisplayBox: document.getElementById("student-mood-display-box"),
+      studentMoodEmoji: document.getElementById("student-mood-emoji"),
+      studentMoodText: document.getElementById("student-mood-text"),
 
       // Contact Book Section
       selectedDateLabel: document.getElementById("selected-date-label"),
@@ -1114,11 +1237,29 @@
       }
     }
 
+    function isSeatUnlocked(seat) {
+      if (!seat || !state.accessCode) return false;
+      const key = `parent_unlocked_${state.accessCode}_seat${seat}`;
+      return localStorage.getItem(key) === "true";
+    }
+
+    function unlockSeat(seat) {
+      if (!seat || !state.accessCode) return;
+      const key = `parent_unlocked_${state.accessCode}_seat${seat}`;
+      localStorage.setItem(key, "true");
+    }
+
+    function relockSeat(seat) {
+      if (!seat || !state.accessCode) return;
+      const key = `parent_unlocked_${state.accessCode}_seat${seat}`;
+      localStorage.removeItem(key);
+    }
+
     function setStudentSeat(seatNumber) {
       state.studentSeat = seatNumber ? parseInt(seatNumber, 10) : null;
       if (state.studentSeat) {
         localStorage.setItem(LS_STUDENT_SEAT_KEY, state.studentSeat.toString());
-        showToast(`已綁定學生座號：${state.studentSeat} 號`, "success");
+        showToast(`已選取學生座號：${state.studentSeat} 號`, "info");
       } else {
         localStorage.removeItem(LS_STUDENT_SEAT_KEY);
         showToast("已清除座號綁定", "info");
@@ -1141,13 +1282,27 @@
       if (!seat) {
         // Show unbound prompt view
         elements.studentBoundView.classList.add("hidden");
+        elements.studentLockedView.classList.add("hidden");
         elements.studentUnboundView.classList.remove("hidden");
         elements.navSeatLabel.textContent = "選擇座號";
         return;
       }
 
+      // Check PIN Lock
+      if (!isSeatUnlocked(seat)) {
+        elements.studentBoundView.classList.add("hidden");
+        elements.studentUnboundView.classList.add("hidden");
+        elements.studentLockedView.classList.remove("hidden");
+        elements.lockedSeatDisplay.textContent = `${seat}`;
+        elements.inputParentPin.value = "";
+        elements.pinErrorBox.classList.add("hidden");
+        elements.navSeatLabel.textContent = `${seat} 號 (需解鎖)`;
+        return;
+      }
+
       // Show bound view
       elements.studentBoundView.classList.remove("hidden");
+      elements.studentLockedView.classList.add("hidden");
       elements.studentUnboundView.classList.add("hidden");
       elements.studentSeatDisplay.textContent = `${seat}`;
       elements.studentSeatTitle.textContent = `${seat}`;
@@ -1274,6 +1429,111 @@
             </div>
           `;
         }).join('');
+      }
+
+      // Load & Render Student Quiz Scores and Mood Journal from Cloud
+      loadAndRenderStudentScores(seat);
+    }
+
+    async function loadAndRenderStudentScores(seat) {
+      if (!state.accessCode || !seat) return;
+      try {
+        const studentDocId = `studentScores_${state.accessCode}_seat${seat}`;
+        const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/userProfiles/${studentDocId}`;
+        const resp = await fetch(url);
+        if (resp.status === 200) {
+          const json = await resp.json();
+          const cloudData = parseRestDocument(json);
+          state.cloudStudentData = cloudData;
+          renderStudentScoresView(cloudData);
+        } else {
+          renderStudentScoresView(null);
+        }
+      } catch (e) {
+        console.warn("loadAndRenderStudentScores error:", e);
+        renderStudentScoresView(null);
+      }
+    }
+
+    function renderStudentScoresView(cloudData) {
+      if (!elements.studentScoresList) return;
+
+      if (!cloudData || (!cloudData.scores?.length && !cloudData.moodJournal)) {
+        elements.studentScoresList.innerHTML = `
+          <div class="text-center py-4 px-3 rounded-2xl bg-slate-50 border border-slate-200/60 text-xs text-slate-400">
+            <i class="fa-regular fa-clipboard text-lg mb-1 block text-slate-300"></i>
+            學生端尚未登記平時小考成績
+          </div>
+        `;
+        if (elements.studentScoresAvgBadge) {
+          elements.studentScoresAvgBadge.textContent = "尚無成績";
+        }
+        if (elements.studentMoodDisplayBox) {
+          elements.studentMoodDisplayBox.classList.add("hidden");
+        }
+        return;
+      }
+
+      const scores = Array.isArray(cloudData.scores) ? cloudData.scores : [];
+      if (scores.length > 0) {
+        const sum = scores.reduce((acc, s) => acc + (parseFloat(s.score) || 0), 0);
+        const avg = (sum / scores.length).toFixed(1);
+        if (elements.studentScoresAvgBadge) {
+          elements.studentScoresAvgBadge.textContent = `平均 ${avg} 分 (${scores.length} 次)`;
+        }
+
+        // Show recent scores
+        elements.studentScoresList.innerHTML = scores.slice(0, 5).map(s => {
+          let badgeColor = 'bg-slate-100 text-slate-700';
+          if (s.correction === '全對免訂正') badgeColor = 'bg-emerald-100 text-emerald-800';
+          else if (s.correction === '已完成訂正') badgeColor = 'bg-sky-100 text-sky-800';
+          else if (s.correction === '待訂正/需請教') badgeColor = 'bg-rose-100 text-rose-800';
+
+          return `
+            <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/60 flex items-center justify-between gap-2">
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5 mb-0.5">
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-200 text-slate-700">${escapeHtml(s.subject || '科目')}</span>
+                  <span class="text-xs font-bold text-slate-800 truncate">${escapeHtml(s.name || '測驗')}</span>
+                </div>
+                <div class="flex items-center gap-2 text-[10px] text-slate-400">
+                  <span>${s.date || ''}</span>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${badgeColor}">${escapeHtml(s.correction || '')}</span>
+                  ${s.remark ? `<span class="truncate max-w-[120px] text-slate-500">📝 ${escapeHtml(s.remark)}</span>` : ''}
+                </div>
+              </div>
+              <div class="text-right flex-shrink-0">
+                <span class="text-base font-black ${s.score >= 90 ? 'text-emerald-600' : (s.score >= 60 ? 'text-indigo-600' : 'text-rose-600')}">${s.score}</span>
+                <span class="text-[10px] text-slate-400 block font-medium">分</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        elements.studentScoresList.innerHTML = `
+          <div class="text-center py-4 px-3 rounded-2xl bg-slate-50 border border-slate-200/60 text-xs text-slate-400">
+            <i class="fa-regular fa-clipboard text-lg mb-1 block text-slate-300"></i>
+            學生端尚未登記平時小考成績
+          </div>
+        `;
+        if (elements.studentScoresAvgBadge) {
+          elements.studentScoresAvgBadge.textContent = "尚無成績";
+        }
+      }
+
+      // Mood Journal display
+      const todayStr = getTodayDateString();
+      const todayMood = cloudData.moodJournal ? cloudData.moodJournal[todayStr] : null;
+      if (todayMood && (todayMood.mood || todayMood.text)) {
+        if (elements.studentMoodDisplayBox) {
+          elements.studentMoodDisplayBox.classList.remove("hidden");
+          if (elements.studentMoodEmoji) elements.studentMoodEmoji.textContent = todayMood.mood || "😊";
+          if (elements.studentMoodText) elements.studentMoodText.textContent = todayMood.text || "（今日無文字日記）";
+        }
+      } else {
+        if (elements.studentMoodDisplayBox) {
+          elements.studentMoodDisplayBox.classList.add("hidden");
+        }
       }
     }
 
@@ -1605,6 +1865,88 @@
         elements.modalSeatSelect.value = "";
         closeSettingsModal();
       });
+
+      // Toggle PIN visibility
+      if (elements.btnTogglePinVisibility) {
+        elements.btnTogglePinVisibility.addEventListener('click', () => {
+          const isPass = elements.inputParentPin.type === "password";
+          elements.inputParentPin.type = isPass ? "text" : "password";
+          elements.iconPinEye.className = isPass ? "fa-regular fa-eye-slash text-sm" : "fa-regular fa-eye text-sm";
+        });
+      }
+
+      // Cancel Unlock & Pick Another Seat
+      if (elements.btnCancelUnlockSeat) {
+        elements.btnCancelUnlockSeat.addEventListener('click', () => {
+          setStudentSeat(null);
+          openSettingsModal();
+        });
+      }
+
+      // Relock Seat Button
+      if (elements.relockSeatBtn) {
+        elements.relockSeatBtn.addEventListener('click', () => {
+          if (state.studentSeat) {
+            relockSeat(state.studentSeat);
+            showToast(`已重新上鎖 ${state.studentSeat} 號學生看板`, "info");
+            renderStudentPersonalSection(state.classData);
+          }
+        });
+      }
+
+      // PIN Form Submit & Verification
+      if (elements.parentPinForm) {
+        elements.parentPinForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const enteredPin = elements.inputParentPin.value.trim();
+          const seat = state.studentSeat;
+          if (!seat || !enteredPin) return;
+
+          elements.btnSubmitPin.disabled = true;
+          elements.pinSubmitText.textContent = "驗證中...";
+          elements.pinSubmitIcon.className = "fa-solid fa-spinner fa-spin";
+          elements.pinErrorBox.classList.add("hidden");
+
+          try {
+            const studentDocId = `studentScores_${state.accessCode}_seat${seat}`;
+            const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/userProfiles/${studentDocId}`;
+            const resp = await fetch(url);
+            let cloudData = null;
+            if (resp.status === 200) {
+              const json = await resp.json();
+              cloudData = parseRestDocument(json);
+            }
+
+            const expectedPin = (cloudData && cloudData.parentPin) ? String(cloudData.parentPin).trim() : String(1000 + Number(seat));
+
+            if (enteredPin === expectedPin) {
+              unlockSeat(seat);
+              showToast(`驗證成功！已解鎖 ${seat} 號學生專區`, "success");
+              renderStudentPersonalSection(state.classData);
+            } else {
+              elements.pinErrorBox.classList.remove("hidden");
+              elements.pinErrorMsg.textContent = "密碼不正確！請向孩子確認學生端顯示之 4 位數查閱密碼。";
+              elements.inputParentPin.focus();
+              elements.inputParentPin.select();
+            }
+          } catch (err) {
+            console.error("PIN verification error:", err);
+            const defaultPin = String(1000 + Number(seat));
+            if (enteredPin === defaultPin) {
+              unlockSeat(seat);
+              showToast(`驗證成功！已解鎖 ${seat} 號學生專區`, "success");
+              renderStudentPersonalSection(state.classData);
+            } else {
+              elements.pinErrorBox.classList.remove("hidden");
+              elements.pinErrorMsg.textContent = "驗證失敗，請檢查網路連線或向孩子確認密碼！";
+            }
+          } finally {
+            elements.btnSubmitPin.disabled = false;
+            elements.pinSubmitText.textContent = "驗證並解鎖";
+            elements.pinSubmitIcon.className = "fa-solid fa-unlock-keyhole";
+          }
+        });
+      }
 
       // Switch Class / Logout
       const handleSwitchClass = () => {
