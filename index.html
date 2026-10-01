@@ -249,264 +249,551 @@
         <button id="sync-retry-btn" class="px-3 py-1 rounded-xl bg-amber-200/80 hover:bg-amber-300 font-bold text-xs text-amber-900">重新整理</button>
       </div>
 
+      <!-- Navigation Tabs for Parent Dashboard -->
+      <nav class="bg-slate-200/80 p-1.5 rounded-2xl flex items-center gap-1.5 shadow-inner" id="parent-main-tabs">
+        <button
+          type="button"
+          id="parent-tab-hw-btn"
+          data-tab="hw"
+          class="flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all bg-white text-indigo-700 shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <i class="fa-solid fa-clipboard-list"></i>
+          <span>今日作業進度</span>
+        </button>
+
+        <button
+          type="button"
+          id="parent-tab-scores-btn"
+          data-tab="scores"
+          class="flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5 cursor-pointer relative"
+        >
+          <i class="fa-solid fa-chart-line text-emerald-600"></i>
+          <span>成績與學習分析</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-500 absolute top-2 right-2"></span>
+        </button>
+
+        <button
+          type="button"
+          id="parent-tab-class-btn"
+          data-tab="class"
+          class="flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <i class="fa-solid fa-school text-indigo-500"></i>
+          <span>全班作業總覽</span>
+        </button>
+
+        <button
+          type="button"
+          id="parent-tab-contact-btn"
+          data-tab="contact"
+          class="flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <i class="fa-solid fa-book-open text-teal-600"></i>
+          <span>聯絡簿與心情</span>
+        </button>
+      </nav>
+
       <!-- ============================================== -->
-      <!-- MODULE 1: STUDENT PERSONAL PROGRESS CARD       -->
+      <!-- TAB 1: HOMEWORK & CHECKLIST PANEL              -->
       <!-- ============================================== -->
-      <section id="student-progress-section" class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80 transition-all">
-        
-        <!-- State A: Student Seat Bound -->
-        <div id="student-bound-view">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-slate-100">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-extrabold text-xl shadow-md shadow-indigo-500/20">
-                <span id="student-seat-display">?</span>
-              </div>
-              <div>
-                <div class="flex items-center gap-2">
-                  <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">座號 <span id="student-seat-title">--</span> 號 學習進度概況</h2>
-                  <button id="change-seat-quick-btn" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 underline underline-offset-2">
-                    更換座號
-                  </button>
-                  <span class="text-slate-300">·</span>
-                  <button id="relock-seat-btn" class="text-xs font-semibold text-slate-500 hover:text-rose-600 flex items-center gap-1 transition-colors cursor-pointer" title="重新鎖定並保護學生個人隱私">
-                    <i class="fa-solid fa-lock text-[10px]"></i> 重新上鎖
-                  </button>
+      <div id="panel-parent-hw" class="space-y-6">
+        <!-- MODULE 1: STUDENT PERSONAL PROGRESS CARD -->
+        <section id="student-progress-section" class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80 transition-all">
+          
+          <!-- State A: Student Seat Bound -->
+          <div id="student-bound-view">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-slate-100">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-extrabold text-xl shadow-md shadow-indigo-500/20">
+                  <span id="student-seat-display">?</span>
                 </div>
-                <p id="student-status-summary" class="text-xs text-slate-500 mt-0.5">點選下方標籤可快速篩選相關作業</p>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">座號 <span id="student-seat-title">--</span> 號 學習進度概況</h2>
+                    <button id="change-seat-quick-btn" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 underline underline-offset-2">
+                      更換座號
+                    </button>
+                    <span id="hw-scores-relock-divider" class="text-slate-300 hidden">·</span>
+                    <button id="relock-seat-btn" class="text-xs font-semibold text-slate-500 hover:text-rose-600 hidden items-center gap-1 transition-colors cursor-pointer" title="重新鎖定學生成績分析">
+                      <i class="fa-solid fa-lock text-[10px]"></i> 鎖定成績
+                    </button>
+                  </div>
+                  <p id="student-status-summary" class="text-xs text-slate-500 mt-0.5">點選下方標籤可快速篩選相關作業</p>
+                </div>
+              </div>
+
+              <!-- Last Updated Time on Card -->
+              <div class="text-xs text-slate-400 flex items-center gap-1.5 sm:self-start">
+                <i class="fa-regular fa-clock text-slate-400"></i>
+                <span>最後更新：<span id="card-updated-time">剛剛</span></span>
               </div>
             </div>
 
-            <!-- Last Updated Time on Card -->
-            <div class="text-xs text-slate-400 flex items-center gap-1.5 sm:self-start">
-              <i class="fa-regular fa-clock text-slate-400"></i>
-              <span>最後更新：<span id="card-updated-time">剛剛</span></span>
-            </div>
-          </div>
-
-          <!-- KPI Metric Cards: 3 stats -->
-          <div class="grid grid-cols-3 gap-3 sm:gap-4 mt-5">
-            <!-- Completed -->
-            <div class="bg-emerald-50/70 border border-emerald-100/90 rounded-2xl p-3.5 sm:p-4.5 flex flex-col items-center justify-center text-center transition-transform active:scale-[0.98]">
-              <span class="text-xs font-bold text-emerald-700 flex items-center gap-1 mb-1">
-                <i class="fa-solid fa-circle-check text-emerald-500"></i> 已完成
-              </span>
-              <span id="stat-completed-count" class="text-2xl sm:text-3xl font-black text-emerald-600">0</span>
-              <span class="text-[10px] sm:text-xs text-emerald-600/80 mt-0.5">項作業</span>
-            </div>
-
-            <!-- Needs Correction -->
-            <div class="bg-amber-50/70 border border-amber-100/90 rounded-2xl p-3.5 sm:p-4.5 flex flex-col items-center justify-center text-center transition-transform active:scale-[0.98]">
-              <span class="text-xs font-bold text-amber-700 flex items-center gap-1 mb-1">
-                <i class="fa-solid fa-circle-exclamation text-amber-500"></i> 待訂正
-              </span>
-              <span id="stat-correction-count" class="text-2xl sm:text-3xl font-black text-amber-600">0</span>
-              <span class="text-[10px] sm:text-xs text-amber-600/80 mt-0.5">項作業</span>
-            </div>
-
-            <!-- Missing / Not Submitted -->
-            <div class="bg-rose-50/70 border border-rose-100/90 rounded-2xl p-3.5 sm:p-4.5 flex flex-col items-center justify-center text-center transition-transform active:scale-[0.98]">
-              <span class="text-xs font-bold text-rose-700 flex items-center gap-1 mb-1">
-                <i class="fa-solid fa-circle-xmark text-rose-500"></i> 未繳交
-              </span>
-              <span id="stat-missing-count" class="text-2xl sm:text-3xl font-black text-rose-600">0</span>
-              <span class="text-[10px] sm:text-xs text-rose-600/80 mt-0.5">項作業</span>
-            </div>
-          </div>
-
-          <!-- Uncompleted Items Highlight Box (重點提醒) -->
-          <div id="uncompleted-alert-box" class="mt-5 p-4 rounded-2xl bg-amber-50/80 border border-amber-200">
-            <div class="flex items-center gap-2 mb-2.5">
-              <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold">
-                <i class="fa-solid fa-bell"></i>
-              </span>
-              <h3 class="text-sm font-bold text-amber-900">重點提醒：待完成或需訂正作業</h3>
-            </div>
-            <div id="uncompleted-items-list" class="space-y-2">
-              <!-- Dynamically populated or empty -->
-            </div>
-          </div>
-
-          <!-- All Homeworks Expandable Breakdown -->
-          <div class="mt-5 pt-4 border-t border-slate-100">
-            <div class="flex items-center justify-between mb-3">
-              <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">今日個人各項作業明細</span>
-              <span id="personal-hw-count-badge" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">共 0 項</span>
-            </div>
-            <div id="personal-homework-list" class="space-y-2">
-              <!-- Rendered items -->
-            </div>
-          </div>
-
-          <!-- Student Quiz Scores & Mood Journal Section -->
-          <div id="student-scores-section" class="mt-6 pt-5 border-t border-slate-100">
-            <div class="flex items-center justify-between mb-3">
-              <div class="flex items-center gap-2">
-                <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">
-                  <i class="fa-solid fa-chart-line"></i>
+            <!-- KPI Metric Cards: 3 stats -->
+            <div class="grid grid-cols-3 gap-3 sm:gap-4 mt-5">
+              <!-- Completed -->
+              <div class="bg-emerald-50/70 border border-emerald-100/90 rounded-2xl p-3.5 sm:p-4.5 flex flex-col items-center justify-center text-center transition-transform active:scale-[0.98]">
+                <span class="text-xs font-bold text-emerald-700 flex items-center gap-1 mb-1">
+                  <i class="fa-solid fa-circle-check text-emerald-500"></i> 已完成
                 </span>
-                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">學生平時小考成績與心得</span>
+                <span id="stat-completed-count" class="text-2xl sm:text-3xl font-black text-emerald-600">0</span>
+                <span class="text-[10px] sm:text-xs text-emerald-600/80 mt-0.5">項作業</span>
               </div>
-              <span id="student-scores-avg-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                載入中...
-              </span>
-            </div>
 
-            <!-- Scores List Container -->
-            <div id="student-scores-list" class="space-y-2 mb-3">
-              <!-- Dynamically populated -->
-            </div>
-
-            <!-- Today's Mood / Reflection if available -->
-            <div id="student-mood-display-box" class="hidden p-3.5 rounded-2xl bg-indigo-50/70 border border-indigo-100">
-              <div class="flex items-center gap-2 mb-1">
-                <span class="text-xs font-bold text-indigo-900 flex items-center gap-1.5">
-                  <i class="fa-regular fa-face-smile text-indigo-600"></i> 今日孩子的心情日記
+              <!-- Needs Correction -->
+              <div class="bg-amber-50/70 border border-amber-100/90 rounded-2xl p-3.5 sm:p-4.5 flex flex-col items-center justify-center text-center transition-transform active:scale-[0.98]">
+                <span class="text-xs font-bold text-amber-700 flex items-center gap-1 mb-1">
+                  <i class="fa-solid fa-circle-exclamation text-amber-500"></i> 待訂正
                 </span>
-                <span id="student-mood-emoji" class="text-base"></span>
+                <span id="stat-correction-count" class="text-2xl sm:text-3xl font-black text-amber-600">0</span>
+                <span class="text-[10px] sm:text-xs text-amber-600/80 mt-0.5">項作業</span>
               </div>
-              <p id="student-mood-text" class="text-xs text-indigo-950 font-medium leading-relaxed pl-5"></p>
+
+              <!-- Missing / Not Submitted -->
+              <div class="bg-rose-50/70 border border-rose-100/90 rounded-2xl p-3.5 sm:p-4.5 flex flex-col items-center justify-center text-center transition-transform active:scale-[0.98]">
+                <span class="text-xs font-bold text-rose-700 flex items-center gap-1 mb-1">
+                  <i class="fa-solid fa-circle-xmark text-rose-500"></i> 未繳交
+                </span>
+                <span id="stat-missing-count" class="text-2xl sm:text-3xl font-black text-rose-600">0</span>
+                <span class="text-[10px] sm:text-xs text-rose-600/80 mt-0.5">項作業</span>
+              </div>
+            </div>
+
+            <!-- Uncompleted Items Highlight Box (重點提醒) -->
+            <div id="uncompleted-alert-box" class="mt-5 p-4 rounded-2xl bg-amber-50/80 border border-amber-200">
+              <div class="flex items-center gap-2 mb-2.5">
+                <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center text-xs font-bold">
+                  <i class="fa-solid fa-bell"></i>
+                </span>
+                <h3 class="text-sm font-bold text-amber-900">重點提醒：待完成或需訂正作業</h3>
+              </div>
+              <div id="uncompleted-items-list" class="space-y-2">
+                <!-- Dynamically populated or empty -->
+              </div>
+            </div>
+
+            <!-- All Homeworks Expandable Breakdown -->
+            <div class="mt-5 pt-4 border-t border-slate-100">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">今日個人各項作業明細</span>
+                <span id="personal-hw-count-badge" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">共 0 項</span>
+              </div>
+              <div id="personal-homework-list" class="space-y-2">
+                <!-- Rendered items -->
+              </div>
+            </div>
+
+            <!-- Student Quiz Scores Preview & Quick Link -->
+            <div id="student-scores-section" class="mt-6 pt-5 border-t border-slate-100">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">
+                    <i class="fa-solid fa-chart-line"></i>
+                  </span>
+                  <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">學生平時小考成績摘要</span>
+                  <span id="student-scores-avg-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    載入中...
+                  </span>
+                </div>
+                <button id="quick-jump-scores-tab-btn" type="button" class="text-xs font-extrabold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl transition-colors flex items-center gap-1.5 cursor-pointer self-start sm:self-auto border border-emerald-200">
+                  <span>查看成績與學習分析獨立分頁 (19科分析與趨勢)</span>
+                  <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+              </div>
+
+              <!-- Scores List Container -->
+              <div id="student-scores-list" class="space-y-2 mb-3">
+                <!-- Dynamically populated -->
+              </div>
             </div>
           </div>
+
+          <!-- State C: Seat Selected but Locked (Parent PIN Protection) -->
+          <div id="student-locked-view" class="hidden text-center py-8 px-4">
+            <div class="w-16 h-16 rounded-3xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4 border border-indigo-100 shadow-sm">
+              <i class="fa-solid fa-lock text-2xl text-indigo-600"></i>
+            </div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold mb-2">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>座號 <span id="locked-seat-display">--</span> 號 學生隱私安全防護</span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">請輸入學生端查閱密碼 (PIN)</h2>
+            <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 mb-6 leading-relaxed">
+              為保護學生個人成績與作業隱私，查看前需輸入孩子在學生端顯示之 4 位數家長查閱密碼（預設為 1000 + 座號）。
+            </p>
+
+            <form id="parent-pin-form" class="max-w-xs mx-auto space-y-4">
+              <div class="relative">
+                <input
+                  type="password"
+                  id="input-parent-pin"
+                  name="parentPin"
+                  placeholder="4 位數密碼"
+                  maxlength="6"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
+                  autocomplete="off"
+                  class="w-full text-center font-mono tracking-[0.4em] text-2xl sm:text-3xl font-extrabold py-3.5 px-4 bg-slate-50 border border-slate-300 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder:text-slate-300 placeholder:tracking-normal placeholder:text-base placeholder:font-normal"
+                  required
+                />
+                <button
+                  type="button"
+                  id="btn-toggle-pin-visibility"
+                  class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                  title="顯示/隱藏密碼"
+                >
+                  <i class="fa-regular fa-eye text-sm" id="icon-pin-eye"></i>
+                </button>
+              </div>
+
+              <!-- PIN Error Alert -->
+              <div id="pin-error-box" class="hidden p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm flex items-start gap-2 text-left">
+                <i class="fa-solid fa-circle-exclamation mt-0.5 text-rose-500 flex-shrink-0"></i>
+                <span id="pin-error-msg" class="leading-snug">密碼不正確，請確認孩子學生端顯示之密碼！</span>
+              </div>
+
+              <button
+                type="submit"
+                id="btn-submit-pin"
+                class="touch-target w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-bold text-sm sm:text-base shadow-lg shadow-indigo-500/25 transition-all cursor-pointer disabled:opacity-50"
+              >
+                <i id="pin-submit-icon" class="fa-solid fa-unlock-keyhole"></i>
+                <span id="pin-submit-text">驗證並解鎖</span>
+              </button>
+            </form>
+
+            <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-slate-400">
+              <button id="btn-cancel-unlock-seat" type="button" class="text-indigo-600 hover:underline font-semibold flex items-center gap-1 cursor-pointer">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>切換選擇其他座號</span>
+              </button>
+              <span class="hidden sm:inline">·</span>
+              <span class="text-slate-400">💡 提示：密碼由孩子在學生端產生；預設為 1000 + 座號</span>
+            </div>
+          </div>
+
+          <!-- State B: No Seat Selected Prompt -->
+          <div id="student-unbound-view" class="hidden text-center py-6 sm:py-8">
+            <div class="w-16 h-16 rounded-3xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4 border border-indigo-100">
+              <i class="fa-solid fa-id-card-clip text-2xl"></i>
+            </div>
+            <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">請設定學生的座號</h2>
+            <p class="text-sm text-slate-500 max-w-md mx-auto mt-1 mb-5">
+              設定座號後，系統將為您呈現專屬的個人作業狀態、未繳通知與訂正提醒。
+            </p>
+            <div class="flex flex-wrap justify-center gap-2 max-w-lg mx-auto" id="quick-seat-picker-grid">
+              <!-- Seat number buttons rendered dynamically -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 2: DEDICATED SCORES & ANALYTICS PANEL      -->
+      <!-- ============================================== -->
+      <section id="panel-parent-scores" class="space-y-6 hidden">
+        <!-- State A: Unbound (No Seat Selected) -->
+        <div id="parent-scores-unbound-view" class="bg-white rounded-3xl p-8 sm:p-10 shadow-sm border border-slate-200/80 text-center hidden">
+          <div class="w-16 h-16 rounded-3xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4 border border-indigo-100">
+            <i class="fa-solid fa-chart-line text-2xl"></i>
+          </div>
+          <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">請先設定學生座號</h2>
+          <p class="text-sm text-slate-500 max-w-md mx-auto mt-1 mb-5">
+            設定座號並完成密碼驗證後，即可在此查看孩子各科詳細小考成績、歷史走勢與進步趨勢分析。
+          </p>
+          <button type="button" class="btn-goto-pick-seat px-6 py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md shadow-indigo-600/20 cursor-pointer">
+            立即選取座號
+          </button>
         </div>
 
-        <!-- State C: Seat Selected but Locked (Parent PIN Protection) -->
-        <div id="student-locked-view" class="hidden text-center py-8 px-4">
-          <div class="w-16 h-16 rounded-3xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4 border border-indigo-100 shadow-sm">
-            <i class="fa-solid fa-lock text-2xl text-indigo-600"></i>
+        <!-- State B: Seat Selected but Locked (PIN Required) -->
+        <div id="parent-scores-locked-view" class="bg-white rounded-3xl p-8 sm:p-10 shadow-sm border border-slate-200/80 text-center hidden">
+          <div class="w-16 h-16 rounded-3xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4 border border-emerald-100 shadow-sm">
+            <i class="fa-solid fa-shield-halved text-2xl"></i>
           </div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold mb-2">
-            <i class="fa-solid fa-shield-halved"></i>
-            <span>座號 <span id="locked-seat-display">--</span> 號 學生隱私安全防護</span>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-bold mb-2">
+            <i class="fa-solid fa-lock"></i>
+            <span>座號 <span class="parent-locked-seat-num">--</span> 號 學生個人成績防護</span>
           </div>
-          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">請輸入學生端查閱密碼 (PIN)</h2>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">輸入查閱密碼以解鎖成績分析</h2>
           <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 mb-6 leading-relaxed">
-            為保護學生個人成績與作業隱私，查看前需輸入孩子在學生端顯示之 4 位數家長查閱密碼。
+            為維護學生在校成績與個人隱私，請輸入孩子學生端顯示之專屬密碼（預設為 1000 + 座號）。
           </p>
 
-          <form id="parent-pin-form" class="max-w-xs mx-auto space-y-4">
+          <form id="parent-scores-pin-form" class="max-w-xs mx-auto space-y-4">
             <div class="relative">
               <input
                 type="password"
-                id="input-parent-pin"
-                name="parentPin"
+                id="input-scores-pin"
+                class="w-full text-center font-mono tracking-[0.4em] text-2xl sm:text-3xl font-extrabold py-3.5 px-4 bg-slate-50 border border-slate-300 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all placeholder:text-slate-300 placeholder:tracking-normal placeholder:text-base placeholder:font-normal"
                 placeholder="4 位數密碼"
                 maxlength="6"
                 inputmode="numeric"
-                pattern="[0-9]*"
-                autocomplete="off"
-                class="w-full text-center font-mono tracking-[0.4em] text-2xl sm:text-3xl font-extrabold py-3.5 px-4 bg-slate-50 border border-slate-300 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder:text-slate-300 placeholder:tracking-normal placeholder:text-base placeholder:font-normal"
                 required
               />
               <button
                 type="button"
-                id="btn-toggle-pin-visibility"
+                id="btn-toggle-scores-pin"
                 class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
                 title="顯示/隱藏密碼"
               >
-                <i class="fa-regular fa-eye text-sm" id="icon-pin-eye"></i>
+                <i class="fa-regular fa-eye text-sm" id="icon-scores-pin-eye"></i>
               </button>
             </div>
 
-            <!-- PIN Error Alert -->
-            <div id="pin-error-box" class="hidden p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm flex items-start gap-2 text-left">
+            <!-- Error alert -->
+            <div id="scores-pin-error-box" class="hidden p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm flex items-start gap-2 text-left">
               <i class="fa-solid fa-circle-exclamation mt-0.5 text-rose-500 flex-shrink-0"></i>
-              <span id="pin-error-msg" class="leading-snug">密碼不正確，請確認孩子學生端顯示之密碼！</span>
+              <span id="scores-pin-error-msg" class="leading-snug">密碼不正確！請向孩子確認學生端顯示之專屬查閱密碼。</span>
             </div>
 
             <button
               type="submit"
-              id="btn-submit-pin"
-              class="touch-target w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-bold text-sm sm:text-base shadow-lg shadow-indigo-500/25 transition-all cursor-pointer disabled:opacity-50"
+              id="btn-submit-scores-pin"
+              class="touch-target w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-sm sm:text-base shadow-lg shadow-emerald-500/25 transition-all cursor-pointer disabled:opacity-50"
             >
-              <i id="pin-submit-icon" class="fa-solid fa-unlock-keyhole"></i>
-              <span id="pin-submit-text">驗證並解鎖</span>
+              <i id="scores-pin-submit-icon" class="fa-solid fa-unlock-keyhole"></i>
+              <span id="scores-pin-submit-text">解鎖並查閱成績分析</span>
             </button>
           </form>
 
           <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-slate-400">
-            <button id="btn-cancel-unlock-seat" type="button" class="text-indigo-600 hover:underline font-semibold flex items-center gap-1 cursor-pointer">
-              <i class="fa-solid fa-arrow-left"></i>
-              <span>切換選擇其他座號</span>
-            </button>
-            <span class="hidden sm:inline">·</span>
             <span class="text-slate-400">💡 提示：密碼由孩子在學生端產生；預設為 1000 + 座號</span>
           </div>
         </div>
 
-        <!-- State B: No Seat Selected Prompt -->
-        <div id="student-unbound-view" class="hidden text-center py-6 sm:py-8">
-          <div class="w-16 h-16 rounded-3xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4 border border-indigo-100">
-            <i class="fa-solid fa-id-card-clip text-2xl"></i>
+        <!-- State C: Seat Unlocked - Comprehensive Scores Analytics View -->
+        <div id="parent-scores-unlocked-view" class="space-y-6 hidden">
+          <!-- Student & Class Header Card -->
+          <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-extrabold text-xl shadow-md shadow-emerald-500/20">
+                <span id="scores-view-seat-badge">?</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">座號 <span id="scores-view-seat-title">--</span> 號 各科成績與學習表現深度分析</h2>
+                  <button id="scores-view-relock-btn" class="text-xs font-semibold text-slate-500 hover:text-rose-600 flex items-center gap-1 transition-colors cursor-pointer" title="重新鎖定並保護學生個人隱私">
+                    <i class="fa-solid fa-lock text-[10px]"></i> 重新上鎖
+                  </button>
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">跨領域 19 門學科小考成績統計、歷史趨勢與錯題追蹤</p>
+              </div>
+            </div>
+
+            <!-- Last Updated Badge -->
+            <div class="text-xs text-slate-400 flex items-center gap-1.5 sm:self-start">
+              <i class="fa-regular fa-clock text-slate-400"></i>
+              <span>同步狀態：<strong class="text-emerald-700">雲端即時同步</strong></span>
+            </div>
           </div>
-          <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">請設定學生的座號</h2>
-          <p class="text-sm text-slate-500 max-w-md mx-auto mt-1 mb-5">
-            設定座號後，系統將為您呈現專屬的個人作業狀態、未繳通知與訂正提醒。
-          </p>
-          <div class="flex flex-wrap justify-center gap-2 max-w-lg mx-auto" id="quick-seat-picker-grid">
-            <!-- Seat number buttons rendered dynamically -->
+
+          <!-- Overall KPI Metrics Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-xs text-center">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">累計測驗總數</span>
+              <span id="parent-stat-total-tests" class="text-2xl sm:text-3xl font-black text-slate-900">0</span>
+              <span class="text-[11px] text-slate-400 block mt-0.5" id="parent-stat-today-sub">今日 0 筆</span>
+            </div>
+            <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-xs text-center">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">歷次總平均</span>
+              <span id="parent-stat-overall-avg" class="text-2xl sm:text-3xl font-black text-emerald-600">--</span>
+              <span class="text-[11px] font-bold text-emerald-700 block mt-0.5" id="parent-stat-overall-grade">尚無紀錄</span>
+            </div>
+            <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-xs text-center">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">最高成績紀錄</span>
+              <span id="parent-stat-highest-score" class="text-2xl sm:text-3xl font-black text-indigo-600">--</span>
+              <span class="text-[11px] text-slate-400 block mt-0.5 truncate" id="parent-stat-highest-subject">--</span>
+            </div>
+            <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200/80 shadow-xs text-center">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">訂正完成率</span>
+              <span id="parent-stat-correction-rate" class="text-2xl sm:text-3xl font-black text-teal-600">--%</span>
+              <span class="text-[11px] text-slate-400 block mt-0.5" id="parent-stat-correction-sub">0 筆待訂正</span>
+            </div>
+          </div>
+
+          <!-- Progress Trend Card (SVG Visualizer) -->
+          <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80 space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-chart-line text-sm"></i>
+                </span>
+                <div>
+                  <h3 class="text-base font-extrabold text-slate-900">學期成績進步趨勢走勢圖</h3>
+                  <p class="text-xs text-slate-400">掌握歷次小考成績起伏與持續進步軌跡</p>
+                </div>
+              </div>
+              <span id="parent-trend-status-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-slate-100 text-slate-600 self-start sm:self-auto">
+                暫無足夠趨勢數據
+              </span>
+            </div>
+
+            <!-- SVG Trend Chart Container -->
+            <div id="parent-score-trend-chart-container" class="w-full h-44 sm:h-56 relative flex items-center justify-center bg-slate-50/60 rounded-2xl p-2 border border-slate-100">
+              <!-- Rendered via JS SVG -->
+            </div>
+          </div>
+
+          <!-- 19 Subjects Performance Analytics Card -->
+          <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                  <i class="fa-solid fa-layer-group text-emerald-600"></i>
+                  <span>19 門領域學科成績深度分析</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">點選科目卡片可快速過濾該科歷史測驗紀錄</p>
+              </div>
+              <!-- Domain Filter Tabs -->
+              <div class="flex items-center gap-1 overflow-x-auto pb-1 custom-scrollbar text-xs font-bold" id="parent-domain-analytics-filter">
+                <button type="button" data-domain="all" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-extrabold cursor-pointer">全部學科</button>
+                <button type="button" data-domain="lang-math" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">語文與數學</button>
+                <button type="button" data-domain="social" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">社會</button>
+                <button type="button" data-domain="nature" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">自然</button>
+                <button type="button" data-domain="arts-tech" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">藝術與科技</button>
+                <button type="button" data-domain="health-comp" class="parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">健體綜合</button>
+              </div>
+            </div>
+
+            <!-- Subject Analytics List / Cards -->
+            <div id="parent-subject-analytics-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- History Scores Query & List -->
+          <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">測驗紀錄詳細明細</span>
+                <span id="parent-scores-count-badge" class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-extrabold text-xs">0 筆測驗</span>
+              </div>
+              
+              <!-- Filter Controls Toolbar -->
+              <div class="flex flex-wrap items-center gap-2 text-xs">
+                <!-- Time Range Filter -->
+                <select id="parent-filter-score-range" class="py-1.5 px-2.5 rounded-xl border border-slate-200 bg-slate-50 font-bold text-slate-700 focus:outline-hidden focus:ring-1 focus:ring-emerald-500">
+                  <option value="all" selected>全部歷史時間</option>
+                  <option value="today">僅看今日小考</option>
+                  <option value="7days">近 7 天</option>
+                  <option value="30days">近 30 天</option>
+                </select>
+
+                <!-- Subject Filter -->
+                <select id="parent-filter-score-subject" class="py-1.5 px-2.5 rounded-xl border border-slate-200 bg-slate-50 font-bold text-slate-700 focus:outline-hidden focus:ring-1 focus:ring-emerald-500">
+                  <option value="all">所有科目</option>
+                  <!-- Populated by JS -->
+                </select>
+
+                <!-- Correction Filter -->
+                <select id="parent-filter-score-correction" class="py-1.5 px-2.5 rounded-xl border border-slate-200 bg-slate-50 font-bold text-slate-700 focus:outline-hidden focus:ring-1 focus:ring-emerald-500">
+                  <option value="all">全部訂正狀態</option>
+                  <option value="全對免訂正">✨ 全對免訂正</option>
+                  <option value="已完成訂正">✅ 已完成訂正</option>
+                  <option value="待訂正/需請教">✏️ 待訂正/需請教</option>
+                </select>
+
+                <!-- Sort Order -->
+                <select id="parent-sort-score-order" class="py-1.5 px-2.5 rounded-xl border border-slate-200 bg-slate-50 font-bold text-slate-700 focus:outline-hidden focus:ring-1 focus:ring-emerald-500">
+                  <option value="date-desc">日期：新到舊</option>
+                  <option value="date-asc">日期：舊到新</option>
+                  <option value="score-desc">分數：高到低</option>
+                  <option value="score-asc">分數：低到高</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- List Container -->
+            <div id="parent-detailed-scores-list" class="space-y-3">
+              <!-- Populated by JS -->
+            </div>
           </div>
         </div>
       </section>
 
       <!-- ============================================== -->
-      <!-- MODULE 2: 7-DAY CONTACT BOOK (聯絡簿檢視區塊)     -->
+      <!-- TAB 3: CLASS HOMEWORK OVERVIEW PANEL           -->
       <!-- ============================================== -->
-      <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-          <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold border border-emerald-100">
-              <i class="fa-solid fa-book-open text-sm"></i>
+      <div id="panel-parent-class" class="space-y-6 hidden">
+        <!-- MODULE 3: CLASS HOMEWORK OVERVIEW (全班作業總覽)  -->
+        <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold border border-indigo-100">
+                <i class="fa-solid fa-chart-pie text-sm"></i>
+              </div>
+              <div>
+                <h2 class="text-lg font-bold text-slate-900">今日全班作業進度總覽</h2>
+                <p class="text-xs text-slate-400">點選作業卡片可查看全班點收狀態矩陣</p>
+              </div>
             </div>
+            <span id="class-hw-total-count" class="text-xs font-bold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 self-start sm:self-auto border border-indigo-100/80">
+              共 0 項作業
+            </span>
+          </div>
+
+          <!-- Homeworks List -->
+          <div id="class-homework-list" class="space-y-3.5">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 4: 7-DAY CONTACT BOOK & MOOD DIARY PANEL   -->
+      <!-- ============================================== -->
+      <div id="panel-parent-contact" class="space-y-6 hidden">
+        <!-- MODULE 2: 7-DAY CONTACT BOOK (聯絡簿檢視區塊)     -->
+        <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold border border-emerald-100">
+                <i class="fa-solid fa-book-open text-sm"></i>
+              </div>
+              <div>
+                <h2 class="text-lg font-bold text-slate-900">班級聯絡簿</h2>
+                <p class="text-xs text-slate-400">每日交代事項與功課清單</p>
+              </div>
+            </div>
+
+            <!-- Date Selector Helper -->
+            <div class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 self-start sm:self-auto">
+              <i class="fa-regular fa-calendar-days text-indigo-500"></i>
+              <span>選取日期：<strong id="selected-date-label" class="text-slate-800 font-bold">--</strong></span>
+            </div>
+          </div>
+
+          <!-- 7-Day Horizontal Date Switcher -->
+          <div class="relative mb-5">
+            <div id="contact-date-slider" class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+              <!-- 7 Date buttons injected here -->
+            </div>
+          </div>
+
+          <!-- Contact Book Content Display -->
+          <div id="contact-book-container" class="rounded-2xl bg-slate-50/80 border border-slate-200/70 p-4 sm:p-6 transition-all min-h-[140px] flex flex-col justify-center">
+            <!-- Content or Empty state will render here -->
+          </div>
+        </section>
+
+        <!-- Mood Reflection Card in Contact Tab -->
+        <div id="contact-tab-mood-display-box" class="hidden bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200/80">
+          <div class="flex items-center gap-2.5 mb-2">
+            <span class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+              <i class="fa-regular fa-face-smile text-sm"></i>
+            </span>
             <div>
-              <h2 class="text-lg font-bold text-slate-900">班級聯絡簿</h2>
-              <p class="text-xs text-slate-400">每日交代事項與功課清單</p>
+              <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <span>孩子今日心情日記</span>
+                <span id="contact-tab-mood-emoji" class="text-base"></span>
+              </h3>
+              <p class="text-xs text-slate-400">由孩子在學生端登記的心情札記與生活心得</p>
             </div>
           </div>
-
-          <!-- Date Selector Helper -->
-          <div class="text-xs font-semibold text-slate-500 flex items-center gap-1.5 self-start sm:self-auto">
-            <i class="fa-regular fa-calendar-days text-indigo-500"></i>
-            <span>選取日期：<strong id="selected-date-label" class="text-slate-800 font-bold">--</strong></span>
-          </div>
+          <p id="contact-tab-mood-text" class="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium bg-slate-50 p-4 rounded-2xl border border-slate-100"></p>
         </div>
-
-        <!-- 7-Day Horizontal Date Switcher -->
-        <div class="relative mb-5">
-          <div id="contact-date-slider" class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
-            <!-- 7 Date buttons injected here -->
-          </div>
-        </div>
-
-        <!-- Contact Book Content Display -->
-        <div id="contact-book-container" class="rounded-2xl bg-slate-50/80 border border-slate-200/70 p-4 sm:p-6 transition-all min-h-[140px] flex flex-col justify-center">
-          <!-- Content or Empty state will render here -->
-        </div>
-      </section>
-
-      <!-- ============================================== -->
-      <!-- MODULE 3: CLASS HOMEWORK OVERVIEW (全班作業總覽)  -->
-      <!-- ============================================== -->
-      <section class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
-          <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold border border-indigo-100">
-              <i class="fa-solid fa-chart-pie text-sm"></i>
-            </div>
-            <div>
-              <h2 class="text-lg font-bold text-slate-900">今日全班作業進度總覽</h2>
-              <p class="text-xs text-slate-400">點選作業卡片可查看全班點收狀態矩陣</p>
-            </div>
-          </div>
-          <span id="class-hw-total-count" class="text-xs font-bold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 self-start sm:self-auto border border-indigo-100/80">
-            共 0 項作業
-          </span>
-        </div>
-
-        <!-- Homeworks List -->
-        <div id="class-homework-list" class="space-y-3.5">
-          <!-- Dynamically populated -->
-        </div>
-      </section>
+      </div>
 
     </main>
 
@@ -769,18 +1056,69 @@
       pinSubmitIcon: document.getElementById("pin-submit-icon"),
       btnCancelUnlockSeat: document.getElementById("btn-cancel-unlock-seat"),
 
-      // Student Scores & Mood
+      // Parent Navigation Tabs & Panels
+      parentTabHwBtn: document.getElementById("parent-tab-hw-btn"),
+      parentTabScoresBtn: document.getElementById("parent-tab-scores-btn"),
+      parentTabClassBtn: document.getElementById("parent-tab-class-btn"),
+      parentTabContactBtn: document.getElementById("parent-tab-contact-btn"),
+      panelParentHw: document.getElementById("panel-parent-hw"),
+      panelParentScores: document.getElementById("panel-parent-scores"),
+      panelParentClass: document.getElementById("panel-parent-class"),
+      panelParentContact: document.getElementById("panel-parent-contact"),
+
+      // Student Scores Preview & Quick Link
       studentScoresSection: document.getElementById("student-scores-section"),
       studentScoresList: document.getElementById("student-scores-list"),
       studentScoresAvgBadge: document.getElementById("student-scores-avg-badge"),
       studentMoodDisplayBox: document.getElementById("student-mood-display-box"),
       studentMoodEmoji: document.getElementById("student-mood-emoji"),
       studentMoodText: document.getElementById("student-mood-text"),
+      quickJumpScoresTabBtn: document.getElementById("quick-jump-scores-tab-btn"),
+
+      // Dedicated Scores & Analytics Panel Elements
+      parentScoresUnboundView: document.getElementById("parent-scores-unbound-view"),
+      parentScoresLockedView: document.getElementById("parent-scores-locked-view"),
+      parentScoresUnlockedView: document.getElementById("parent-scores-unlocked-view"),
+      scoresViewSeatBadge: document.getElementById("scores-view-seat-badge"),
+      scoresViewSeatTitle: document.getElementById("scores-view-seat-title"),
+      scoresViewRelockBtn: document.getElementById("scores-view-relock-btn"),
+      parentStatTotalTests: document.getElementById("parent-stat-total-tests"),
+      parentStatTodaySub: document.getElementById("parent-stat-today-sub"),
+      parentStatOverallAvg: document.getElementById("parent-stat-overall-avg"),
+      parentStatOverallGrade: document.getElementById("parent-stat-overall-grade"),
+      parentStatHighestScore: document.getElementById("parent-stat-highest-score"),
+      parentStatHighestSubject: document.getElementById("parent-stat-highest-subject"),
+      parentStatCorrectionRate: document.getElementById("parent-stat-correction-rate"),
+      parentStatCorrectionSub: document.getElementById("parent-stat-correction-sub"),
+      parentTrendStatusBadge: document.getElementById("parent-trend-status-badge"),
+      parentScoreTrendChartContainer: document.getElementById("parent-score-trend-chart-container"),
+      parentDomainAnalyticsFilter: document.getElementById("parent-domain-analytics-filter"),
+      parentSubjectAnalyticsGrid: document.getElementById("parent-subject-analytics-grid"),
+      parentScoresCountBadge: document.getElementById("parent-scores-count-badge"),
+      parentFilterScoreRange: document.getElementById("parent-filter-score-range"),
+      parentFilterScoreSubject: document.getElementById("parent-filter-score-subject"),
+      parentFilterScoreCorrection: document.getElementById("parent-filter-score-correction"),
+      parentSortScoreOrder: document.getElementById("parent-sort-score-order"),
+      parentDetailedScoresList: document.getElementById("parent-detailed-scores-list"),
+
+      // Scores PIN Form in Scores Panel
+      parentScoresPinForm: document.getElementById("parent-scores-pin-form"),
+      inputScoresPin: document.getElementById("input-scores-pin"),
+      btnToggleScoresPin: document.getElementById("btn-toggle-scores-pin"),
+      iconScoresPinEye: document.getElementById("icon-scores-pin-eye"),
+      scoresPinErrorBox: document.getElementById("scores-pin-error-box"),
+      scoresPinErrorMsg: document.getElementById("scores-pin-error-msg"),
+      btnSubmitScoresPin: document.getElementById("btn-submit-scores-pin"),
+      scoresPinSubmitIcon: document.getElementById("scores-pin-submit-icon"),
+      scoresPinSubmitText: document.getElementById("scores-pin-submit-text"),
 
       // Contact Book Section
       selectedDateLabel: document.getElementById("selected-date-label"),
       contactDateSlider: document.getElementById("contact-date-slider"),
       contactBookContainer: document.getElementById("contact-book-container"),
+      contactTabMoodDisplayBox: document.getElementById("contact-tab-mood-display-box"),
+      contactTabMoodEmoji: document.getElementById("contact-tab-mood-emoji"),
+      contactTabMoodText: document.getElementById("contact-tab-mood-text"),
 
       // Class Overview Section
       classHwTotalCount: document.getElementById("class-hw-total-count"),
@@ -1288,25 +1626,29 @@
         return;
       }
 
-      // Check PIN Lock
-      if (!isSeatUnlocked(seat)) {
-        elements.studentBoundView.classList.add("hidden");
-        elements.studentUnboundView.classList.add("hidden");
-        elements.studentLockedView.classList.remove("hidden");
-        elements.lockedSeatDisplay.textContent = `${seat}`;
-        elements.inputParentPin.value = "";
-        elements.pinErrorBox.classList.add("hidden");
-        elements.navSeatLabel.textContent = `${seat} 號 (需解鎖)`;
-        return;
-      }
-
-      // Show bound view
+      // 🌟 作業繳交情形與繳交統計完全免密碼！直接呈現作業資訊
       elements.studentBoundView.classList.remove("hidden");
       elements.studentLockedView.classList.add("hidden");
       elements.studentUnboundView.classList.add("hidden");
       elements.studentSeatDisplay.textContent = `${seat}`;
       elements.studentSeatTitle.textContent = `${seat}`;
       elements.navSeatLabel.textContent = `${seat} 號學生`;
+
+      const isScoresUnlocked = isSeatUnlocked(seat);
+      if (elements.relockSeatBtn) {
+        if (isScoresUnlocked) {
+          elements.relockSeatBtn.classList.remove("hidden");
+          elements.relockSeatBtn.classList.add("inline-flex");
+        } else {
+          elements.relockSeatBtn.classList.add("hidden");
+          elements.relockSeatBtn.classList.remove("inline-flex");
+        }
+      }
+      const divider = document.getElementById("hw-scores-relock-divider");
+      if (divider) {
+        if (isScoresUnlocked) divider.classList.remove("hidden");
+        else divider.classList.add("hidden");
+      }
 
       let completedCount = 0;
       let correctionCount = 0;
@@ -1458,6 +1800,41 @@
     function renderStudentScoresView(cloudData) {
       if (!elements.studentScoresList) return;
 
+      const seat = state.studentSeat;
+      // 🌟 只有成績需要密碼：若尚未解鎖成績，顯示成績防護提示並提供解鎖入口
+      if (seat && !isSeatUnlocked(seat)) {
+        elements.studentScoresList.innerHTML = `
+          <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50/80 via-teal-50/50 to-indigo-50/50 border border-emerald-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg shrink-0 shadow-xs">
+                <i class="fa-solid fa-shield-halved"></i>
+              </div>
+              <div>
+                <div class="text-xs sm:text-sm font-extrabold text-slate-900">孩子小考成績已受 PIN 密碼保護</div>
+                <div class="text-[11px] text-slate-500">作業繳交情況完全公開，各科小考成績需輸入學生端密碼查閱</div>
+              </div>
+            </div>
+            <button id="btn-goto-scores-tab-unlock" type="button" class="touch-target px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5">
+              <i class="fa-solid fa-key"></i>
+              <span>輸入密碼查閱成績</span>
+            </button>
+          </div>
+        `;
+        const gotoBtn = document.getElementById("btn-goto-scores-tab-unlock");
+        if (gotoBtn) {
+          gotoBtn.addEventListener("click", () => {
+            switchParentTab("scores");
+          });
+        }
+        if (elements.studentScoresAvgBadge) {
+          elements.studentScoresAvgBadge.textContent = "需密碼保護";
+        }
+        if (elements.studentMoodDisplayBox) {
+          elements.studentMoodDisplayBox.classList.add("hidden");
+        }
+        return;
+      }
+
       if (!cloudData || (!cloudData.scores?.length && !cloudData.moodJournal)) {
         elements.studentScoresList.innerHTML = `
           <div class="text-center py-4 px-3 rounded-2xl bg-slate-50 border border-slate-200/60 text-xs text-slate-400">
@@ -1534,6 +1911,568 @@
         if (elements.studentMoodDisplayBox) {
           elements.studentMoodDisplayBox.classList.add("hidden");
         }
+      }
+    }
+
+    // ==========================================
+    // MODULE: PARENT DEDICATED SCORES & ANALYTICS
+    // ==========================================
+
+    const PARENT_DOMAINS_CONFIG = [
+      { id: "lang-math", name: "語文與數學", color: "bg-indigo-500", subjects: ["國語文", "英語文", "數學"] },
+      { id: "social", name: "社會領域", color: "bg-amber-500", subjects: ["歷史", "地理", "公民與社會"] },
+      { id: "nature", name: "自然科學", color: "bg-emerald-500", subjects: ["生物", "理化", "地球科學"] },
+      { id: "arts-tech", name: "藝術與科技", color: "bg-purple-500", subjects: ["音樂", "視覺藝術", "表演藝術", "資訊科技", "生活科技"] },
+      { id: "health-comp", name: "健體與綜合活動", color: "bg-rose-500", subjects: ["健康教育", "體育", "家政", "童軍", "輔導"] }
+    ];
+
+    const PARENT_ALL_19_SUBJECTS = PARENT_DOMAINS_CONFIG.flatMap(d => d.subjects);
+    let parentActiveDomainFilter = "all";
+
+    async function renderParentScoresSection() {
+      const seat = state.studentSeat;
+
+      // 1. Seat unbound check
+      if (!seat) {
+        elements.parentScoresUnboundView?.classList.remove("hidden");
+        elements.parentScoresLockedView?.classList.add("hidden");
+        elements.parentScoresUnlockedView?.classList.add("hidden");
+        return;
+      }
+
+      // 2. Lock check
+      if (!isSeatUnlocked(seat)) {
+        elements.parentScoresUnboundView?.classList.add("hidden");
+        elements.parentScoresLockedView?.classList.remove("hidden");
+        elements.parentScoresUnlockedView?.classList.add("hidden");
+        document.querySelectorAll('.parent-locked-seat-num').forEach(el => el.textContent = `${seat}`);
+        if (elements.inputScoresPin) elements.inputScoresPin.value = "";
+        elements.scoresPinErrorBox?.classList.add("hidden");
+        return;
+      }
+
+      // 3. Unlocked view
+      elements.parentScoresUnboundView?.classList.add("hidden");
+      elements.parentScoresLockedView?.classList.add("hidden");
+      elements.parentScoresUnlockedView?.classList.remove("hidden");
+
+      if (elements.scoresViewSeatBadge) elements.scoresViewSeatBadge.textContent = `${seat}`;
+      if (elements.scoresViewSeatTitle) elements.scoresViewSeatTitle.textContent = `${seat}`;
+
+      // Fetch cloud data if not loaded
+      if (!state.cloudStudentData) {
+        try {
+          const studentDocId = `studentScores_${state.accessCode}_seat${seat}`;
+          const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/userProfiles/${studentDocId}`;
+          const resp = await fetch(url);
+          if (resp.status === 200) {
+            const json = await resp.json();
+            state.cloudStudentData = parseRestDocument(json);
+          }
+        } catch (e) {}
+      }
+
+      const cloudData = state.cloudStudentData;
+      const allScores = (cloudData && Array.isArray(cloudData.scores)) ? cloudData.scores : [];
+      const today = getTodayDateString();
+      const todayScores = allScores.filter(s => s.date === today);
+
+      // KPI Metrics
+      if (elements.parentStatTotalTests) elements.parentStatTotalTests.textContent = `${allScores.length}`;
+      if (elements.parentStatTodaySub) elements.parentStatTodaySub.textContent = `今日 ${todayScores.length} 筆`;
+      if (elements.parentScoresCountBadge) elements.parentScoresCountBadge.textContent = `${allScores.length} 筆測驗`;
+
+      if (allScores.length === 0) {
+        if (elements.parentStatOverallAvg) elements.parentStatOverallAvg.textContent = '--';
+        if (elements.parentStatOverallGrade) elements.parentStatOverallGrade.textContent = '尚無紀錄';
+        if (elements.parentStatHighestScore) elements.parentStatHighestScore.textContent = '--';
+        if (elements.parentStatHighestSubject) elements.parentStatHighestSubject.textContent = '--';
+        if (elements.parentStatCorrectionRate) elements.parentStatCorrectionRate.textContent = '--%';
+        if (elements.parentStatCorrectionSub) elements.parentStatCorrectionSub.textContent = '0 筆待訂正';
+      } else {
+        const total = allScores.reduce((sum, s) => sum + (parseFloat(s.score) || 0), 0);
+        const avg = (total / allScores.length).toFixed(1);
+        if (elements.parentStatOverallAvg) elements.parentStatOverallAvg.textContent = `${avg}`;
+
+        let grade = "需加油";
+        if (avg >= 90) grade = "優等 (A+)";
+        else if (avg >= 80) grade = "甲等 (A)";
+        else if (avg >= 70) grade = "乙等 (B)";
+        else if (avg >= 60) grade = "丙等 (C)";
+        if (elements.parentStatOverallGrade) elements.parentStatOverallGrade.textContent = grade;
+
+        let highest = allScores[0];
+        allScores.forEach(s => {
+          if ((parseFloat(s.score) || 0) > (parseFloat(highest.score) || 0)) {
+            highest = s;
+          }
+        });
+        if (elements.parentStatHighestScore) elements.parentStatHighestScore.textContent = `${highest.score}分`;
+        if (elements.parentStatHighestSubject) elements.parentStatHighestSubject.textContent = `${highest.subject} (${highest.name || ''})`;
+
+        const completedCount = allScores.filter(s => s.correction === "全對免訂正" || s.correction === "已完成訂正").length;
+        const corRate = Math.round((completedCount / allScores.length) * 100);
+        const pendingCount = allScores.length - completedCount;
+        if (elements.parentStatCorrectionRate) elements.parentStatCorrectionRate.textContent = `${corRate}%`;
+        if (elements.parentStatCorrectionSub) elements.parentStatCorrectionSub.textContent = `${pendingCount} 筆待訂正`;
+      }
+
+      // Render Visualizations
+      renderParentScoreTrendChart(allScores);
+      renderParentSubjectAnalytics(allScores);
+      populateParentSubjectFilter(allScores);
+      renderParentDetailedScoresList();
+    }
+
+    function renderParentScoreTrendChart(scores) {
+      if (!elements.parentScoreTrendChartContainer) return;
+      if (!scores || scores.length < 2) {
+        elements.parentScoreTrendChartContainer.innerHTML = `
+          <div class="text-center text-xs text-slate-400 py-8">
+            <i class="fa-solid fa-chart-line text-2xl text-slate-300 block mb-1.5"></i>
+            累積登記 2 筆以上測驗後，即在此繪製孩子進步走勢圖
+          </div>
+        `;
+        if (elements.parentTrendStatusBadge) {
+          elements.parentTrendStatusBadge.className = "px-3 py-1 rounded-full text-xs font-extrabold bg-slate-100 text-slate-500 self-start sm:self-auto";
+          elements.parentTrendStatusBadge.textContent = "累積中 (至少 2 筆)";
+        }
+        return;
+      }
+
+      const chronological = [...scores].sort((a, b) => (a.date || '').localeCompare(b.date || '') || (parseFloat(a.id?.split('_')?.[1] || 0) - parseFloat(b.id?.split('_')?.[1] || 0)));
+      const n = chronological.length;
+      let trendText = "🎯 穩定發揮中";
+      let trendClass = "bg-indigo-50 text-indigo-700 border border-indigo-200";
+
+      const recentCount = Math.min(3, Math.floor(n / 2) || 1);
+      const recentSlice = chronological.slice(-recentCount);
+      const priorSlice = chronological.slice(-recentCount * 2, -recentCount);
+
+      if (priorSlice.length > 0) {
+        const avgRecent = recentSlice.reduce((s, x) => s + parseFloat(x.score), 0) / recentSlice.length;
+        const avgPrior = priorSlice.reduce((s, x) => s + parseFloat(x.score), 0) / priorSlice.length;
+        const diff = Math.round((avgRecent - avgPrior) * 10) / 10;
+        if (diff >= 3) {
+          trendText = `🔥 持續進步中 (+${diff} 分)`;
+          trendClass = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+        } else if (diff <= -3) {
+          trendText = `⚠️ 略微下滑 (${diff} 分) 需加強`;
+          trendClass = "bg-amber-50 text-amber-700 border border-amber-200";
+        } else {
+          trendText = `🎯 穩定持平 (波動 ${diff >= 0 ? '+' : ''}${diff} 分)`;
+          trendClass = "bg-indigo-50 text-indigo-700 border border-indigo-200";
+        }
+      } else {
+        const lastScore = parseFloat(chronological[n - 1].score);
+        const firstScore = parseFloat(chronological[0].score);
+        const diff = Math.round(lastScore - firstScore);
+        if (diff > 0) {
+          trendText = `📈 較前次進步 (+${diff} 分)`;
+          trendClass = "bg-emerald-50 text-emerald-700 border border-emerald-200";
+        } else if (diff < 0) {
+          trendText = `📉 較前次退步 (${diff} 分)`;
+          trendClass = "bg-amber-50 text-amber-700 border border-amber-200";
+        }
+      }
+
+      if (elements.parentTrendStatusBadge) {
+        elements.parentTrendStatusBadge.className = `px-3 py-1 rounded-full text-xs font-extrabold ${trendClass} self-start sm:self-auto`;
+        elements.parentTrendStatusBadge.textContent = trendText;
+      }
+
+      const width = 600;
+      const height = 180;
+      const padLeft = 40;
+      const padRight = 30;
+      const padTop = 25;
+      const padBottom = 35;
+      const chartW = width - padLeft - padRight;
+      const chartH = height - padTop - padBottom;
+
+      const scoreVals = chronological.map(c => parseFloat(c.score) || 0);
+      const minScore = Math.max(0, Math.floor(Math.min(...scoreVals) / 10) * 10 - 10);
+      const maxScore = Math.min(100, Math.ceil(Math.max(...scoreVals) / 10) * 10 + 10);
+      const scoreRange = maxScore - minScore || 20;
+
+      const points = chronological.map((item, idx) => {
+        const x = padLeft + (idx / (chronological.length - 1)) * chartW;
+        const val = parseFloat(item.score) || 0;
+        const y = padTop + chartH - ((val - minScore) / scoreRange) * chartH;
+        return { x, y, item, val };
+      });
+
+      const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+      const areaD = `${pathD} L ${points[points.length - 1].x.toFixed(1)} ${height - padBottom} L ${points[0].x.toFixed(1)} ${height - padBottom} Z`;
+
+      let svgHtml = `
+        <svg viewBox="0 0 ${width} ${height}" class="w-full h-full" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="parentTrendGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#10b981" stop-opacity="0.0"/>
+            </linearGradient>
+          </defs>
+          <line x1="${padLeft}" y1="${padTop}" x2="${width - padRight}" y2="${padTop}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="${padLeft - 6}" y="${padTop + 4}" font-size="10" font-weight="bold" fill="#94a3b8" text-anchor="end">${maxScore}</text>
+
+          <line x1="${padLeft}" y1="${padTop + chartH / 2}" x2="${width - padRight}" y2="${padTop + chartH / 2}" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3 3"/>
+          <text x="${padLeft - 6}" y="${padTop + chartH / 2 + 4}" font-size="10" font-weight="bold" fill="#94a3b8" text-anchor="end">${Math.round((maxScore + minScore) / 2)}</text>
+
+          <line x1="${padLeft}" y1="${height - padBottom}" x2="${width - padRight}" y2="${height - padBottom}" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text x="${padLeft - 6}" y="${height - padBottom + 4}" font-size="10" font-weight="bold" fill="#94a3b8" text-anchor="end">${minScore}</text>
+
+          <path d="${areaD}" fill="url(#parentTrendGrad)" />
+          <path d="${pathD}" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      `;
+
+      points.forEach((p) => {
+        const item = p.item;
+        const sub = escapeHtml(item.subject);
+        const name = escapeHtml(item.name);
+        const date = escapeHtml(item.date || '');
+        const tooltip = `${date} [${sub}] ${name}：${p.val}分`;
+        svgHtml += `
+          <g class="cursor-pointer group">
+            <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5" fill="#ffffff" stroke="#059669" stroke-width="3"/>
+            <text x="${p.x.toFixed(1)}" y="${(p.y - 10).toFixed(1)}" font-size="11" font-weight="900" fill="#0f172a" text-anchor="middle">${p.val}</text>
+            <text x="${p.x.toFixed(1)}" y="${height - padBottom + 16}" font-size="9" font-weight="bold" fill="#64748b" text-anchor="middle">${date.slice(5)}</text>
+            <title>${tooltip}</title>
+          </g>
+        `;
+      });
+
+      svgHtml += `</svg>`;
+      elements.parentScoreTrendChartContainer.innerHTML = svgHtml;
+    }
+
+    function renderParentSubjectAnalytics(scores) {
+      if (!elements.parentSubjectAnalyticsGrid) return;
+
+      const subjectMap = {};
+      scores.forEach(s => {
+        const sub = s.subject || '其他';
+        if (!subjectMap[sub]) {
+          subjectMap[sub] = { subject: sub, scores: [], pendingCorrections: 0 };
+        }
+        subjectMap[sub].scores.push(parseFloat(s.score) || 0);
+        if (s.correction === '待訂正/需請教') {
+          subjectMap[sub].pendingCorrections++;
+        }
+      });
+
+      let subjectsToShow = [...PARENT_ALL_19_SUBJECTS];
+      if (parentActiveDomainFilter !== 'all') {
+        const dom = PARENT_DOMAINS_CONFIG.find(d => d.id === parentActiveDomainFilter);
+        if (dom) subjectsToShow = [...dom.subjects];
+      }
+
+      if (parentActiveDomainFilter === 'all') {
+        Object.keys(subjectMap).forEach(sub => {
+          if (!subjectsToShow.includes(sub)) {
+            subjectsToShow.push(sub);
+          }
+        });
+      }
+
+      elements.parentSubjectAnalyticsGrid.innerHTML = subjectsToShow.map(sub => {
+        const data = subjectMap[sub];
+        const count = data ? data.scores.length : 0;
+        const avg = count > 0 ? (data.scores.reduce((a, b) => a + b, 0) / count).toFixed(1) : null;
+        const max = count > 0 ? Math.max(...data.scores) : null;
+        const pending = data ? data.pendingCorrections : 0;
+
+        let domainObj = PARENT_DOMAINS_CONFIG.find(d => d.subjects.includes(sub));
+        const dotColor = domainObj ? domainObj.color : 'bg-slate-400';
+
+        let avgBadge = avg !== null ? `${avg} 分` : '未登記';
+        let avgColor = 'text-slate-400';
+        let barWidth = avg !== null ? `${Math.min(100, Math.max(0, avg))}%` : '0%';
+        let barColor = 'bg-slate-300';
+
+        if (avg !== null) {
+          if (avg >= 90) {
+            avgColor = 'text-emerald-600';
+            barColor = 'bg-emerald-500';
+          } else if (avg >= 80) {
+            avgColor = 'text-teal-600';
+            barColor = 'bg-teal-500';
+          } else if (avg >= 60) {
+            avgColor = 'text-amber-600';
+            barColor = 'bg-amber-500';
+          } else {
+            avgColor = 'text-rose-600';
+            barColor = 'bg-rose-500';
+          }
+        }
+
+        return `
+          <div
+            data-sub="${escapeHtml(sub)}"
+            class="parent-subject-card p-3.5 rounded-2xl bg-slate-50/70 hover:bg-emerald-50/60 border border-slate-200/70 hover:border-emerald-300 transition-all cursor-pointer group"
+            title="點擊依【${escapeHtml(sub)}】快速篩選歷史成績"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <span class="w-2 h-2 rounded-full ${dotColor} flex-shrink-0"></span>
+                <span class="text-xs font-black text-slate-800 group-hover:text-emerald-700 truncate">${escapeHtml(sub)}</span>
+              </div>
+              <span class="text-xs font-black ${avgColor}">${avgBadge}</span>
+            </div>
+
+            <div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mb-2">
+              <div class="h-full ${barColor} rounded-full transition-all" style="width: ${barWidth}"></div>
+            </div>
+
+            <div class="flex items-center justify-between text-[10px] text-slate-400 font-bold">
+              <span>測驗 ${count} 次 ${max !== null ? `· 最高 ${max}分` : ''}</span>
+              ${pending > 0 ? `<span class="text-rose-600 font-extrabold"><i class="fa-solid fa-pencil mr-0.5"></i>${pending} 待訂正</span>` : `<span class="text-emerald-600">全訂正</span>`}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      elements.parentSubjectAnalyticsGrid.querySelectorAll('.parent-subject-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const sub = card.getAttribute('data-sub');
+          if (elements.parentFilterScoreSubject) {
+            elements.parentFilterScoreSubject.value = sub;
+            renderParentDetailedScoresList();
+            showToast(`已為您篩選【${sub}】歷史成績`, "info");
+            elements.parentFilterScoreSubject.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        });
+      });
+    }
+
+    function populateParentSubjectFilter(scores) {
+      if (!elements.parentFilterScoreSubject) return;
+      const currentVal = elements.parentFilterScoreSubject.value || "all";
+      const recordedSubs = new Set(scores.map(s => s.subject).filter(Boolean));
+      PARENT_ALL_19_SUBJECTS.forEach(s => recordedSubs.add(s));
+
+      let html = '<option value="all">所有科目</option>';
+      Array.from(recordedSubs).forEach(sub => {
+        html += `<option value="${escapeHtml(sub)}">${escapeHtml(sub)}</option>`;
+      });
+      elements.parentFilterScoreSubject.innerHTML = html;
+      elements.parentFilterScoreSubject.value = recordedSubs.has(currentVal) ? currentVal : "all";
+    }
+
+    function renderParentDetailedScoresList() {
+      if (!elements.parentDetailedScoresList) return;
+      const cloudData = state.cloudStudentData;
+      const allScores = (cloudData && Array.isArray(cloudData.scores)) ? cloudData.scores : [];
+      const today = getTodayDateString();
+
+      const rangeVal = elements.parentFilterScoreRange ? elements.parentFilterScoreRange.value : "all";
+      const subjectVal = elements.parentFilterScoreSubject ? elements.parentFilterScoreSubject.value : "all";
+      const correctionVal = elements.parentFilterScoreCorrection ? elements.parentFilterScoreCorrection.value : "all";
+      const sortVal = elements.parentSortScoreOrder ? elements.parentSortScoreOrder.value : "date-desc";
+
+      const now = new Date();
+      let minDateStr = "";
+      if (rangeVal === "today") {
+        minDateStr = today;
+      } else if (rangeVal === "7days") {
+        const d = new Date(now);
+        d.setDate(d.getDate() - 7);
+        minDateStr = d.toISOString().slice(0, 10);
+      } else if (rangeVal === "30days") {
+        const d = new Date(now);
+        d.setDate(d.getDate() - 30);
+        minDateStr = d.toISOString().slice(0, 10);
+      }
+
+      let filtered = allScores.filter(s => {
+        if (rangeVal === "today" && s.date !== today) return false;
+        if ((rangeVal === "7days" || rangeVal === "30days") && s.date < minDateStr) return false;
+        if (subjectVal !== "all" && s.subject !== subjectVal) return false;
+        if (correctionVal !== "all" && s.correction !== correctionVal) return false;
+        return true;
+      });
+
+      filtered.sort((a, b) => {
+        if (sortVal === "date-desc") {
+          return (b.date || "").localeCompare(a.date || "") || (b.id || "").localeCompare(a.id || "");
+        } else if (sortVal === "date-asc") {
+          return (a.date || "").localeCompare(b.date || "") || (a.id || "").localeCompare(b.id || "");
+        } else if (sortVal === "score-desc") {
+          return (parseFloat(b.score) || 0) - (parseFloat(a.score) || 0);
+        } else if (sortVal === "score-asc") {
+          return (parseFloat(a.score) || 0) - (parseFloat(b.score) || 0);
+        }
+        return 0;
+      });
+
+      if (filtered.length === 0) {
+        elements.parentDetailedScoresList.innerHTML = `
+          <div class="text-center py-12 text-slate-400 text-sm">
+            <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-300 mx-auto flex items-center justify-center text-xl mb-2">
+              <i class="fa-solid fa-folder-open"></i>
+            </div>
+            查無符合條件的成績紀錄<br>
+            <span class="text-xs text-slate-400 mt-1 inline-block">可調整上方篩選條件，或等待孩子在學生端登記小考</span>
+          </div>
+        `;
+        return;
+      }
+
+      elements.parentDetailedScoresList.innerHTML = filtered.map(s => {
+        const scoreVal = parseFloat(s.score) || 0;
+        let scoreColor = "text-emerald-600 bg-emerald-50 border-emerald-200";
+        if (scoreVal < 60) {
+          scoreColor = "text-rose-600 bg-rose-50 border-rose-200";
+        } else if (scoreVal < 80) {
+          scoreColor = "text-amber-600 bg-amber-50 border-amber-200";
+        }
+
+        let corBadge = "";
+        if (s.correction === "全對免訂正") {
+          corBadge = `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800">✨ 全對免訂正</span>`;
+        } else if (s.correction === "已完成訂正") {
+          corBadge = `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-teal-100 text-teal-800">✅ 已完成訂正</span>`;
+        } else {
+          corBadge = `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-100 text-rose-800">✏️ 待訂正/需請教</span>`;
+        }
+
+        return `
+          <div class="p-3.5 sm:p-4 rounded-2xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3 transition-colors">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-12 h-12 rounded-2xl border font-black text-lg flex items-center justify-center flex-shrink-0 ${scoreColor}">
+                ${s.score}
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-slate-200 text-slate-700">
+                    ${escapeHtml(s.subject)}
+                  </span>
+                  <span class="font-bold text-slate-900 text-sm truncate">
+                    ${escapeHtml(s.name)}
+                  </span>
+                  <span class="text-[11px] text-slate-400 font-mono">
+                    ${escapeHtml(s.date || '')}
+                  </span>
+                </div>
+                <div class="flex items-center gap-2 mt-1 flex-wrap">
+                  ${corBadge}
+                  ${s.remark ? `<span class="text-xs text-slate-500 truncate"><i class="fa-regular fa-comment-dots text-slate-400 mr-1"></i>${escapeHtml(s.remark)}</span>` : ''}
+                </div>
+              </div>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <span class="text-xs font-bold text-slate-400 block">${scoreVal >= 60 ? '及格' : '不及格'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function switchParentTab(tabId) {
+      const tabs = [
+        { id: "hw", btn: elements.parentTabHwBtn, panel: elements.panelParentHw },
+        { id: "scores", btn: elements.parentTabScoresBtn, panel: elements.panelParentScores },
+        { id: "class", btn: elements.parentTabClassBtn, panel: elements.panelParentClass },
+        { id: "contact", btn: elements.parentTabContactBtn, panel: elements.panelParentContact }
+      ];
+
+      tabs.forEach(t => {
+        if (t.id === tabId) {
+          t.panel?.classList.remove("hidden");
+          if (t.btn) {
+            t.btn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all bg-white text-indigo-700 shadow-sm flex items-center justify-center gap-1.5 cursor-pointer";
+          }
+        } else {
+          t.panel?.classList.add("hidden");
+          if (t.btn) {
+            t.btn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition-all text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1.5 cursor-pointer";
+          }
+        }
+      });
+
+      if (tabId === "scores") {
+        renderParentScoresSection();
+      } else if (tabId === "contact") {
+        renderContactTabMood();
+      }
+    }
+
+    function renderContactTabMood() {
+      const cloudData = state.cloudStudentData;
+      const todayStr = getTodayDateString();
+      const todayMood = cloudData?.moodJournal ? cloudData.moodJournal[todayStr] : null;
+      if (todayMood && (todayMood.mood || todayMood.text) && isSeatUnlocked(state.studentSeat)) {
+        elements.contactTabMoodDisplayBox?.classList.remove("hidden");
+        if (elements.contactTabMoodEmoji) elements.contactTabMoodEmoji.textContent = todayMood.mood || "😊";
+        if (elements.contactTabMoodText) elements.contactTabMoodText.textContent = todayMood.text || "（今日無文字日記）";
+      } else {
+        elements.contactTabMoodDisplayBox?.classList.add("hidden");
+      }
+    }
+
+    async function verifyAndUnlockPin(enteredPin, isFromScoresPanel = false) {
+      const seat = state.studentSeat;
+      if (!seat || !enteredPin) return;
+
+      const submitBtn = isFromScoresPanel ? elements.btnSubmitScoresPin : elements.btnSubmitPin;
+      const submitIcon = isFromScoresPanel ? elements.scoresPinSubmitIcon : elements.pinSubmitIcon;
+      const submitText = isFromScoresPanel ? elements.scoresPinSubmitText : elements.pinSubmitText;
+      const errorBox = isFromScoresPanel ? elements.scoresPinErrorBox : elements.pinErrorBox;
+      const errorMsg = isFromScoresPanel ? elements.scoresPinErrorMsg : elements.pinErrorMsg;
+      const inputEl = isFromScoresPanel ? elements.inputScoresPin : elements.inputParentPin;
+
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitText) submitText.textContent = "驗證中...";
+      if (submitIcon) submitIcon.className = "fa-solid fa-spinner fa-spin";
+      if (errorBox) errorBox.classList.add("hidden");
+
+      try {
+        const studentDocId = `studentScores_${state.accessCode}_seat${seat}`;
+        const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/userProfiles/${studentDocId}`;
+        const resp = await fetch(url);
+        let cloudData = null;
+        if (resp.status === 200) {
+          const json = await resp.json();
+          cloudData = parseRestDocument(json);
+          state.cloudStudentData = cloudData;
+        }
+
+        const defaultPin = String(1000 + Number(seat));
+        const cloudPin = (cloudData && cloudData.parentPin && String(cloudData.parentPin).trim().length > 0)
+          ? String(cloudData.parentPin).trim()
+          : null;
+
+        const isMatch = (cloudPin && enteredPin === cloudPin) || (enteredPin === defaultPin);
+
+        if (isMatch) {
+          unlockSeat(seat);
+          showToast(`驗證成功！已解鎖 ${seat} 號學生專區與成績分析`, "success");
+          renderStudentPersonalSection(state.classData);
+          renderParentScoresSection();
+        } else {
+          if (errorBox) errorBox.classList.remove("hidden");
+          if (errorMsg) errorMsg.textContent = "密碼不正確！請向孩子確認學生端顯示之專屬查閱密碼。";
+          if (inputEl) {
+            inputEl.focus();
+            inputEl.select();
+          }
+        }
+      } catch (err) {
+        console.error("PIN verification error:", err);
+        const defaultPin = String(1000 + Number(seat));
+        if (enteredPin === defaultPin) {
+          unlockSeat(seat);
+          showToast(`驗證成功！已解鎖 ${seat} 號學生專區與成績分析`, "success");
+          renderStudentPersonalSection(state.classData);
+          renderParentScoresSection();
+        } else {
+          if (errorBox) errorBox.classList.remove("hidden");
+          if (errorMsg) errorMsg.textContent = "驗證失敗，請檢查網路連線或向孩子確認密碼！";
+        }
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitText) submitText.textContent = isFromScoresPanel ? "解鎖並查閱成績分析" : "驗證並解鎖";
+        if (submitIcon) submitIcon.className = "fa-solid fa-unlock-keyhole";
       }
     }
 
@@ -1883,70 +2822,83 @@
         });
       }
 
-      // Relock Seat Button
-      if (elements.relockSeatBtn) {
-        elements.relockSeatBtn.addEventListener('click', () => {
-          if (state.studentSeat) {
-            relockSeat(state.studentSeat);
-            showToast(`已重新上鎖 ${state.studentSeat} 號學生看板`, "info");
-            renderStudentPersonalSection(state.classData);
-          }
-        });
-      }
+      // Parent Navigation Tabs
+      elements.parentTabHwBtn?.addEventListener('click', () => switchParentTab('hw'));
+      elements.parentTabScoresBtn?.addEventListener('click', () => switchParentTab('scores'));
+      elements.parentTabClassBtn?.addEventListener('click', () => switchParentTab('class'));
+      elements.parentTabContactBtn?.addEventListener('click', () => switchParentTab('contact'));
 
-      // PIN Form Submit & Verification
+      // Quick jump to scores tab button
+      elements.quickJumpScoresTabBtn?.addEventListener('click', () => switchParentTab('scores'));
+
+      // Quick pick seat buttons in unbound view
+      document.querySelectorAll('.btn-goto-pick-seat').forEach(btn => {
+        btn.addEventListener('click', openSettingsModal);
+      });
+
+      // Relock Seat Button (HW & Scores views)
+      const handleRelock = () => {
+        if (state.studentSeat) {
+          relockSeat(state.studentSeat);
+          showToast(`已鎖定 ${state.studentSeat} 號學生成績分析（作業保持可查）`, "info");
+          renderStudentPersonalSection(state.classData);
+          renderParentScoresSection();
+        }
+      };
+      elements.relockSeatBtn?.addEventListener('click', handleRelock);
+      elements.scoresViewRelockBtn?.addEventListener('click', handleRelock);
+
+      // PIN Form Submit (HW Locked View)
       if (elements.parentPinForm) {
-        elements.parentPinForm.addEventListener('submit', async (e) => {
+        elements.parentPinForm.addEventListener('submit', (e) => {
           e.preventDefault();
           const enteredPin = elements.inputParentPin.value.trim();
-          const seat = state.studentSeat;
-          if (!seat || !enteredPin) return;
-
-          elements.btnSubmitPin.disabled = true;
-          elements.pinSubmitText.textContent = "驗證中...";
-          elements.pinSubmitIcon.className = "fa-solid fa-spinner fa-spin";
-          elements.pinErrorBox.classList.add("hidden");
-
-          try {
-            const studentDocId = `studentScores_${state.accessCode}_seat${seat}`;
-            const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/userProfiles/${studentDocId}`;
-            const resp = await fetch(url);
-            let cloudData = null;
-            if (resp.status === 200) {
-              const json = await resp.json();
-              cloudData = parseRestDocument(json);
-            }
-
-            const expectedPin = (cloudData && cloudData.parentPin) ? String(cloudData.parentPin).trim() : String(1000 + Number(seat));
-
-            if (enteredPin === expectedPin) {
-              unlockSeat(seat);
-              showToast(`驗證成功！已解鎖 ${seat} 號學生專區`, "success");
-              renderStudentPersonalSection(state.classData);
-            } else {
-              elements.pinErrorBox.classList.remove("hidden");
-              elements.pinErrorMsg.textContent = "密碼不正確！請向孩子確認學生端顯示之 4 位數查閱密碼。";
-              elements.inputParentPin.focus();
-              elements.inputParentPin.select();
-            }
-          } catch (err) {
-            console.error("PIN verification error:", err);
-            const defaultPin = String(1000 + Number(seat));
-            if (enteredPin === defaultPin) {
-              unlockSeat(seat);
-              showToast(`驗證成功！已解鎖 ${seat} 號學生專區`, "success");
-              renderStudentPersonalSection(state.classData);
-            } else {
-              elements.pinErrorBox.classList.remove("hidden");
-              elements.pinErrorMsg.textContent = "驗證失敗，請檢查網路連線或向孩子確認密碼！";
-            }
-          } finally {
-            elements.btnSubmitPin.disabled = false;
-            elements.pinSubmitText.textContent = "驗證並解鎖";
-            elements.pinSubmitIcon.className = "fa-solid fa-unlock-keyhole";
-          }
+          if (enteredPin) verifyAndUnlockPin(enteredPin, false);
         });
       }
+
+      // PIN Form Submit (Scores Locked View)
+      if (elements.parentScoresPinForm) {
+        elements.parentScoresPinForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const enteredPin = elements.inputScoresPin.value.trim();
+          if (enteredPin) verifyAndUnlockPin(enteredPin, true);
+        });
+      }
+
+      // Toggle PIN visibility (Scores view)
+      if (elements.btnToggleScoresPin) {
+        elements.btnToggleScoresPin.addEventListener('click', () => {
+          const isPass = elements.inputScoresPin.type === "password";
+          elements.inputScoresPin.type = isPass ? "text" : "password";
+          elements.iconScoresPinEye.className = isPass ? "fa-regular fa-eye-slash text-sm" : "fa-regular fa-eye text-sm";
+        });
+      }
+
+      // Domain analytics filter in Scores panel
+      if (elements.parentDomainAnalyticsFilter) {
+        elements.parentDomainAnalyticsFilter.querySelectorAll('.parent-domain-filter-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const domain = btn.getAttribute('data-domain');
+            parentActiveDomainFilter = domain;
+            elements.parentDomainAnalyticsFilter.querySelectorAll('.parent-domain-filter-btn').forEach(b => {
+              if (b === btn) {
+                b.className = "parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-emerald-600 text-white font-extrabold cursor-pointer";
+              } else {
+                b.className = "parent-domain-filter-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer";
+              }
+            });
+            const cloudData = state.cloudStudentData;
+            renderParentSubjectAnalytics((cloudData && Array.isArray(cloudData.scores)) ? cloudData.scores : []);
+          });
+        });
+      }
+
+      // Historical query filters in Scores panel
+      elements.parentFilterScoreRange?.addEventListener('change', renderParentDetailedScoresList);
+      elements.parentFilterScoreSubject?.addEventListener('change', renderParentDetailedScoresList);
+      elements.parentFilterScoreCorrection?.addEventListener('change', renderParentDetailedScoresList);
+      elements.parentSortScoreOrder?.addEventListener('change', renderParentDetailedScoresList);
 
       // Switch Class / Logout
       const handleSwitchClass = () => {
