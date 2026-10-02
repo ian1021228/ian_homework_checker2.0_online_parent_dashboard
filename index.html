@@ -422,7 +422,7 @@
             </div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">請輸入學生端專屬驗證碼 (PIN)</h2>
             <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 mb-6 leading-relaxed">
-              為保護學生個人成績與各項隱私，查看前需輸入 6 位數專屬 PIN 碼（預設為 100000 + 座號）。
+              為保護學生個人成績與各項隱私，查看前需輸入專屬 PIN 碼（預設為 <strong>班級代碼 + 座號</strong>，家長與學生共用相同密碼）。
             </p>
 
             <form id="parent-pin-form" class="max-w-xs mx-auto space-y-4">
@@ -431,12 +431,10 @@
                   type="password"
                   id="input-parent-pin"
                   name="parentPin"
-                  placeholder="6 位數 PIN 碼"
-                  maxlength="6"
-                  inputmode="numeric"
-                  pattern="[0-9]*"
+                  placeholder="請輸入專屬 PIN 碼"
+                  maxlength="20"
                   autocomplete="off"
-                  class="w-full text-center font-mono tracking-[0.4em] text-2xl sm:text-3xl font-extrabold py-3.5 px-4 bg-slate-50 border border-slate-300 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder:text-slate-300 placeholder:tracking-normal placeholder:text-base placeholder:font-normal"
+                  class="w-full text-center font-mono tracking-[0.2em] text-2xl sm:text-3xl font-extrabold py-3.5 px-4 bg-slate-50 border border-slate-300 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder:text-slate-300 placeholder:tracking-normal placeholder:text-base placeholder:font-normal uppercase"
                   required
                 />
                 <button
@@ -546,9 +544,9 @@
             <i class="fa-solid fa-lock"></i>
             <span>座號 <span class="parent-locked-seat-num">--</span> 號 學生個人成績防護</span>
           </div>
-          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">輸入 6 位數專屬 PIN 碼解鎖成績</h2>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">輸入專屬 PIN 碼解鎖成績</h2>
           <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 mb-6 leading-relaxed">
-            為維護學生在校成績與個人隱私，請輸入導師或孩子設定之 6 位數專屬密碼（預設為 100000 + 座號）。
+            為維護學生在校成績與個人隱私，請輸入專屬密碼（預設為 <strong>班級代碼 + 座號</strong>，家長與學生共用相同 PIN 碼）。
           </p>
 
           <form id="parent-scores-pin-form" class="max-w-xs mx-auto space-y-4">
@@ -556,10 +554,9 @@
               <input
                 type="password"
                 id="input-scores-pin"
-                class="w-full text-center font-mono tracking-[0.4em] text-2xl sm:text-3xl font-extrabold py-3.5 px-4 bg-slate-50 border border-slate-300 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all placeholder:text-slate-300 placeholder:tracking-normal placeholder:text-base placeholder:font-normal"
-                placeholder="6 位數 PIN 碼"
-                maxlength="6"
-                inputmode="numeric"
+                class="w-full text-center font-mono tracking-[0.2em] text-2xl sm:text-3xl font-extrabold py-3.5 px-4 bg-slate-50 border border-slate-300 rounded-2xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all placeholder:text-slate-300 placeholder:tracking-normal placeholder:text-base placeholder:font-normal uppercase"
+                placeholder="請輸入專屬 PIN 碼"
+                maxlength="20"
                 required
               />
               <button
@@ -710,10 +707,25 @@
                   <option value="today">僅看今日小考</option>
                   <option value="7days">近 7 天</option>
                   <option value="30days">近 30 天</option>
+                  <option value="custom">自訂日期範圍</option>
                 </select>
 
-                <!-- Subject Filter -->
-                <select id="parent-filter-score-subject" class="py-1.5 px-2.5 rounded-xl border border-slate-200 bg-slate-50 font-bold text-slate-700 focus:outline-hidden focus:ring-1 focus:ring-emerald-500">
+                <!-- 自訂日期輸入 (預設隱藏) -->
+                <div id="parent-filter-custom-date-container" class="hidden flex items-center gap-1">
+                  <input type="date" id="parent-filter-date-start" class="py-1 px-2 rounded-lg border border-slate-200 bg-slate-50 font-bold text-slate-700 text-xs">
+                  <span class="text-slate-400">至</span>
+                  <input type="date" id="parent-filter-date-end" class="py-1 px-2 rounded-lg border border-slate-200 bg-slate-50 font-bold text-slate-700 text-xs">
+                </div>
+
+                <!-- Multi-Subject Filter Button (科目複選) -->
+                <button type="button" id="btn-parent-open-multi-subject" class="py-1.5 px-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-white hover:border-emerald-500 font-bold text-slate-700 flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs">
+                  <i class="fa-solid fa-layer-group text-emerald-600"></i>
+                  <span id="parent-multi-subject-btn-label">篩選科目 (全部 21 科)</span>
+                  <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                </button>
+
+                <!-- Subject Filter (Legacy quick select) -->
+                <select id="parent-filter-score-subject" class="hidden py-1.5 px-2.5 rounded-xl border border-slate-200 bg-slate-50 font-bold text-slate-700 focus:outline-hidden focus:ring-1 focus:ring-emerald-500">
                   <option value="all">所有科目</option>
                   <!-- Populated by JS -->
                 </select>
@@ -1049,6 +1061,113 @@
     </div>
   </div>
 
+  <!-- 📊 家長端全班 6 大分數區段分析彈窗 (Score Bracket Analysis Modal) -->
+  <div id="modal-parent-score-bracket-analysis" class="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden transition-all duration-300">
+    <div class="relative w-full max-w-lg bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-teal-50 text-teal-600 flex items-center justify-center text-lg border border-teal-100">
+            <i class="fa-solid fa-chart-column"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span id="bracket-parent-subject-badge" class="px-2 py-0.5 rounded-md text-[10px] font-black bg-teal-100 text-teal-800">科目</span>
+              <h3 id="bracket-parent-exam-title" class="text-base font-black text-slate-900 line-clamp-1">考試名稱</h3>
+            </div>
+            <p id="bracket-parent-date" class="text-[11px] text-slate-400">測驗日期：--</p>
+          </div>
+        </div>
+        <button id="btn-close-parent-bracket-modal" type="button" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-colors cursor-pointer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- 孩子個人成績落點橫幅 -->
+      <div id="bracket-parent-child-score-banner" class="hidden"></div>
+
+      <!-- 全班 6 大分數區段分析長條圖 (100, 90~99, 80~89, 70~79, 60~69, <60) -->
+      <div>
+        <div class="flex items-center justify-between text-xs font-bold text-slate-600 mb-2">
+          <span>全班六大成績區段分佈</span>
+          <span class="text-[11px] text-slate-400">自動即時歸類分析</span>
+        </div>
+        <div id="bracket-parent-bars-container" class="space-y-2">
+          <!-- JS 動態生成 6 個區段條 -->
+        </div>
+      </div>
+
+      <!-- 全班統計數據指標 -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2 border-t border-slate-100">
+        <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+          <span class="text-[10px] font-bold text-slate-400 block">全班均分</span>
+          <span id="bracket-parent-class-avg" class="text-base font-black text-teal-700">--</span>
+        </div>
+        <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+          <span class="text-[10px] font-bold text-slate-400 block">填寫樣本數</span>
+          <span id="bracket-parent-sample-count" class="text-base font-black text-slate-800">--</span>
+        </div>
+        <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+          <span class="text-[10px] font-bold text-slate-400 block">全班最高分</span>
+          <span id="bracket-parent-highest" class="text-base font-black text-indigo-700">--</span>
+        </div>
+        <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-100 text-center">
+          <span class="text-[10px] font-bold text-slate-400 block">全班最低分</span>
+          <span id="bracket-parent-lowest" class="text-base font-black text-rose-600">--</span>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button id="btn-done-parent-bracket-modal" type="button" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer">
+          關閉檢視
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📚 家長端科目複選篩選彈窗 (Multi-Select Subjects Filter Modal) -->
+  <div id="modal-parent-multi-subject-filter" class="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden transition-all duration-300">
+    <div class="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg border border-indigo-100">
+            <i class="fa-solid fa-filter"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-slate-900">選擇篩選科目（可複選）</h3>
+            <p class="text-[11px] text-slate-400">走勢圖與歷史明細將同步套用複選條件</p>
+          </div>
+        </div>
+        <button id="btn-close-parent-multi-subject-modal" type="button" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-colors cursor-pointer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- 快捷操作列 -->
+      <div class="flex items-center justify-between gap-2 pb-1 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <button type="button" id="btn-parent-sub-select-all" class="text-xs font-bold text-indigo-600 hover:underline cursor-pointer">全選 21 科</button>
+          <span class="text-slate-300">|</span>
+          <button type="button" id="btn-parent-sub-clear-all" class="text-xs font-bold text-slate-400 hover:underline cursor-pointer">清空</button>
+        </div>
+        <span id="parent-multi-sub-selected-count-badge" class="text-xs font-extrabold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md border border-teal-200">已選 21 科</span>
+      </div>
+
+      <!-- 21 門科目六大領域核取清單 -->
+      <div id="parent-multi-subject-checkboxes-container" class="space-y-3 max-h-72 overflow-y-auto custom-scrollbar p-1">
+        <!-- JS 動態生成 -->
+      </div>
+
+      <div class="flex gap-2 pt-2 border-t border-slate-100">
+        <button id="btn-cancel-parent-multi-subject" type="button" class="flex-1 py-2.5 px-4 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-100 transition-colors cursor-pointer">
+          取消
+        </button>
+        <button id="btn-apply-parent-multi-subject" type="button" class="flex-1 py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-xs shadow-md shadow-teal-500/20 transition-all cursor-pointer">
+          套用篩選
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
   <div id="toast-container" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
@@ -1075,8 +1194,12 @@
 
     // Local Storage Keys
     const LS_ACCESS_CODE_KEY = "parent_access_code";
-    const LS_STUDENT_SEAT_KEY = "parent_student_seat";
     const LS_CLASS_CACHE_PREFIX = "parent_class_cache_";
+
+    function getParentSeatStorageKey(code) {
+      const c = String(code || state.accessCode || "").trim().toUpperCase();
+      return c ? `parent_seat_${c}` : null;
+    }
 
     // App Global State
     const state = {
@@ -1086,6 +1209,7 @@
       cloudStudentData: null,
       selectedContactDate: getTodayDateString(),
       unsubscribeSnapshot: null,
+      selectedSubjectsFilter: [], // array of subjects, empty or 21 means all
       isOnline: true
     };
 
@@ -1185,10 +1309,39 @@
       parentSubjectAnalyticsGrid: document.getElementById("parent-subject-analytics-grid"),
       parentScoresCountBadge: document.getElementById("parent-scores-count-badge"),
       parentFilterScoreRange: document.getElementById("parent-filter-score-range"),
+      parentFilterCustomDateContainer: document.getElementById("parent-filter-custom-date-container"),
+      parentFilterDateStart: document.getElementById("parent-filter-date-start"),
+      parentFilterDateEnd: document.getElementById("parent-filter-date-end"),
+      btnParentOpenMultiSubject: document.getElementById("btn-parent-open-multi-subject"),
+      parentMultiSubjectBtnLabel: document.getElementById("parent-multi-subject-btn-label"),
       parentFilterScoreSubject: document.getElementById("parent-filter-score-subject"),
       parentFilterScoreCorrection: document.getElementById("parent-filter-score-correction"),
       parentSortScoreOrder: document.getElementById("parent-sort-score-order"),
       parentDetailedScoresList: document.getElementById("parent-detailed-scores-list"),
+
+      // Bracket Modal Elements
+      modalParentScoreBracketAnalysis: document.getElementById("modal-parent-score-bracket-analysis"),
+      bracketParentSubjectBadge: document.getElementById("bracket-parent-subject-badge"),
+      bracketParentExamTitle: document.getElementById("bracket-parent-exam-title"),
+      bracketParentDate: document.getElementById("bracket-parent-date"),
+      bracketParentChildScoreBanner: document.getElementById("bracket-parent-child-score-banner"),
+      bracketParentBarsContainer: document.getElementById("bracket-parent-bars-container"),
+      bracketParentClassAvg: document.getElementById("bracket-parent-class-avg"),
+      bracketParentSampleCount: document.getElementById("bracket-parent-sample-count"),
+      bracketParentHighest: document.getElementById("bracket-parent-highest"),
+      bracketParentLowest: document.getElementById("bracket-parent-lowest"),
+      btnCloseParentBracketModal: document.getElementById("btn-close-parent-bracket-modal"),
+      btnDoneParentBracketModal: document.getElementById("btn-done-parent-bracket-modal"),
+
+      // Multi-Subject Modal Elements
+      modalParentMultiSubjectFilter: document.getElementById("modal-parent-multi-subject-filter"),
+      btnCloseParentMultiSubjectModal: document.getElementById("btn-close-parent-multi-subject-modal"),
+      btnCancelParentMultiSubject: document.getElementById("btn-cancel-parent-multi-subject"),
+      btnApplyParentMultiSubject: document.getElementById("btn-apply-parent-multi-subject"),
+      btnParentSubSelectAll: document.getElementById("btn-parent-sub-select-all"),
+      btnParentSubClearAll: document.getElementById("btn-parent-sub-clear-all"),
+      parentMultiSubSelectedCountBadge: document.getElementById("parent-multi-sub-selected-count-badge"),
+      parentMultiSubjectCheckboxesContainer: document.getElementById("parent-multi-subject-checkboxes-container"),
 
       // Scores PIN Form in Scores Panel
       parentScoresPinForm: document.getElementById("parent-scores-pin-form"),
@@ -1384,30 +1537,25 @@
     // ==========================================
 
     function init() {
+      // Clean obsolete legacy global key
+      try {
+        localStorage.removeItem("parent_student_seat");
+      } catch (e) {}
+
       // Check URL parameters for ?code=XXXX & ?seat=XX
       const urlParams = new URLSearchParams(window.location.search);
       const codeFromUrl = urlParams.get("code");
       const seatFromUrl = urlParams.get("seat");
-
-      if (seatFromUrl && parseInt(seatFromUrl, 10) > 0) {
-        state.studentSeat = parseInt(seatFromUrl, 10);
-        localStorage.setItem(LS_STUDENT_SEAT_KEY, String(state.studentSeat));
-      } else {
-        const savedSeat = localStorage.getItem(LS_STUDENT_SEAT_KEY);
-        if (savedSeat) {
-          state.studentSeat = parseInt(savedSeat, 10);
-        }
-      }
 
       const savedCode = localStorage.getItem(LS_ACCESS_CODE_KEY);
 
       if (codeFromUrl) {
         const clean = codeFromUrl.trim().toUpperCase();
         elements.inputAccessCode.value = clean;
-        connectToClass(clean);
+        connectToClass(clean, seatFromUrl);
       } else if (savedCode) {
         elements.inputAccessCode.value = savedCode;
-        connectToClass(savedCode);
+        connectToClass(savedCode, seatFromUrl);
       } else {
         showLoginView();
       }
@@ -1482,7 +1630,7 @@
       return parseClassData(decoded);
     }
 
-    function connectToClass(accessCode) {
+    function connectToClass(accessCode, seatOverride = null) {
       const cleanCode = accessCode.trim().toUpperCase();
       if (!cleanCode) {
         elements.loginErrorBox.classList.remove("hidden");
@@ -1493,13 +1641,29 @@
       setLoginLoading(true);
       elements.loginErrorBox.classList.add("hidden");
 
+      // 檢查座號覆蓋或載入該班級座號
+      const seatKey = getParentSeatStorageKey(cleanCode);
+      if (seatOverride && parseInt(seatOverride, 10) > 0) {
+        state.studentSeat = parseInt(seatOverride, 10);
+        if (seatKey) localStorage.setItem(seatKey, state.studentSeat.toString());
+      } else {
+        const savedSeat = seatKey ? localStorage.getItem(seatKey) : null;
+        if (savedSeat && parseInt(savedSeat, 10) > 0) {
+          state.studentSeat = parseInt(savedSeat, 10);
+        } else {
+          // 第一次進入該班級，絕不默認 1 號！強制為 null 以顯示座號選擇頁面
+          state.studentSeat = null;
+        }
+      }
+
+      state.accessCode = cleanCode;
+
       // ⚡ Step 1: Check fast local cache to instantly display dashboard on mobile (0ms perceived latency)
       try {
         const cachedRaw = localStorage.getItem(LS_CLASS_CACHE_PREFIX + cleanCode);
         if (cachedRaw) {
           const cachedData = JSON.parse(cachedRaw);
           if (cachedData && cachedData.className) {
-            state.accessCode = cleanCode;
             state.classData = cachedData;
             showDashboardView();
             renderParentDashboard(cachedData);
@@ -1536,10 +1700,21 @@
               try {
                 localStorage.setItem(LS_CLASS_CACHE_PREFIX + cleanCode, JSON.stringify(directData));
               } catch (e) {}
+
+              // 驗證座號是否超出班級範圍
+              const maxSeat = directData.lastMaxSeat || 35;
+              const missingSeats = parseMissingSeats(directData.lastMissingSeats);
+              if (state.studentSeat && (state.studentSeat > maxSeat || missingSeats.has(state.studentSeat))) {
+                state.studentSeat = null;
+                if (seatKey) localStorage.removeItem(seatKey);
+              }
+
               const currentUrl = new URL(window.location);
               currentUrl.searchParams.set("code", cleanCode);
               if (state.studentSeat) currentUrl.searchParams.set("seat", state.studentSeat);
+              else currentUrl.searchParams.delete("seat");
               window.history.replaceState({}, "", currentUrl);
+
               showDashboardView();
               renderParentDashboard(directData);
             }
@@ -1577,10 +1752,18 @@
             localStorage.setItem(LS_CLASS_CACHE_PREFIX + cleanCode, JSON.stringify(data));
           } catch (e) {}
 
+          const maxSeat = data.lastMaxSeat || 35;
+          const missingSeats = parseMissingSeats(data.lastMissingSeats);
+          if (state.studentSeat && (state.studentSeat > maxSeat || missingSeats.has(state.studentSeat))) {
+            state.studentSeat = null;
+            if (seatKey) localStorage.removeItem(seatKey);
+          }
+
           // Update URL without reload
           const currentUrl = new URL(window.location);
           currentUrl.searchParams.set("code", cleanCode);
           if (state.studentSeat) currentUrl.searchParams.set("seat", state.studentSeat);
+          else currentUrl.searchParams.delete("seat");
           window.history.replaceState({}, "", currentUrl);
 
           showDashboardView();
@@ -1674,20 +1857,24 @@
       }
 
       // If current seat is out of range or missing, clear it
+      const seatKey = getParentSeatStorageKey(state.accessCode);
       if (state.studentSeat && (state.studentSeat > maxSeat || missingSeats.has(state.studentSeat))) {
         state.studentSeat = null;
-        localStorage.removeItem(LS_STUDENT_SEAT_KEY);
+        if (seatKey) localStorage.removeItem(seatKey);
       }
     }
 
     function getTeacherConfiguredPin(seat) {
       const s = String(seat || state.studentSeat || "");
       if (!s) return null;
-      if (state.classData?.studentPins && state.classData.studentPins[s]) {
-        return String(state.classData.studentPins[s]).trim();
+      const legacyPin = String(100000 + Number(s));
+      const configured = state.classData?.studentPins?.[s];
+      if (configured && String(configured).trim() && String(configured).trim() !== legacyPin) {
+        return String(configured).trim().toUpperCase();
       }
-      if (state.cloudStudentData?.parentPin) {
-        return String(state.cloudStudentData.parentPin).trim();
+      // 預設 PIN 碼：班級代碼 + 座號 (家長與學生共用相同 PIN 碼)
+      if (state.accessCode) {
+        return `${state.accessCode}${s}`.trim().toUpperCase();
       }
       return null;
     }
@@ -1700,7 +1887,7 @@
       if (!isUnlocked) return false;
       const teacherPin = getTeacherConfiguredPin(seat);
       if (teacherPin) {
-        return localStorage.getItem(pinKey) === teacherPin;
+        return (localStorage.getItem(pinKey) || '').trim().toUpperCase() === teacherPin;
       }
       return false;
     }
@@ -1710,7 +1897,7 @@
       const key = `parent_unlocked_${state.accessCode}_seat${seat}`;
       const pinKey = `parent_unlocked_pin_${state.accessCode}_seat${seat}`;
       localStorage.setItem(key, "true");
-      if (pin) localStorage.setItem(pinKey, String(pin));
+      if (pin) localStorage.setItem(pinKey, String(pin).trim().toUpperCase());
     }
 
     function relockSeat(seat) {
@@ -1723,12 +1910,19 @@
 
     function setStudentSeat(seatNumber) {
       state.studentSeat = seatNumber ? parseInt(seatNumber, 10) : null;
+      const seatKey = getParentSeatStorageKey(state.accessCode);
       if (state.studentSeat) {
-        localStorage.setItem(LS_STUDENT_SEAT_KEY, state.studentSeat.toString());
+        if (seatKey) localStorage.setItem(seatKey, state.studentSeat.toString());
         showToast(`已選取學生座號：${state.studentSeat} 號`, "info");
+        const currentUrl = new URL(window.location);
+        currentUrl.searchParams.set("seat", state.studentSeat);
+        window.history.replaceState({}, "", currentUrl);
       } else {
-        localStorage.removeItem(LS_STUDENT_SEAT_KEY);
-        showToast("已清除座號綁定", "info");
+        if (seatKey) localStorage.removeItem(seatKey);
+        showToast("已清除座號綁定，請重新點選座號", "info");
+        const currentUrl = new URL(window.location);
+        currentUrl.searchParams.delete("seat");
+        window.history.replaceState({}, "", currentUrl);
       }
       
       if (state.classData) {
@@ -2080,15 +2274,93 @@
     const PARENT_ALL_19_SUBJECTS = PARENT_ALL_21_SUBJECTS; // Alias for backward compatibility
     let parentActiveDomainFilter = "all";
 
+    // ==========================================
+    // 6 大分數區段計算器 (100, 90~99, 80~89, 70~79, 60~69, <60)
+    // ==========================================
+    function calculateScoreSegments(scoresList) {
+      const segments = {
+        '100': { key: '100', label: '100 分', count: 0, color: 'bg-emerald-500', textColor: 'text-emerald-700', bgLight: 'bg-emerald-50', border: 'border-emerald-200' },
+        '90-99': { key: '90-99', label: '90 ~ 99 分', count: 0, color: 'bg-teal-500', textColor: 'text-teal-700', bgLight: 'bg-teal-50', border: 'border-teal-200' },
+        '80-89': { key: '80-89', label: '80 ~ 89 分', count: 0, color: 'bg-blue-500', textColor: 'text-blue-700', bgLight: 'bg-blue-50', border: 'border-blue-200' },
+        '70-79': { key: '70-79', label: '70 ~ 79 分', count: 0, color: 'bg-indigo-500', textColor: 'text-indigo-700', bgLight: 'bg-indigo-50', border: 'border-indigo-200' },
+        '60-69': { key: '60-69', label: '60 ~ 69 分', count: 0, color: 'bg-amber-500', textColor: 'text-amber-700', bgLight: 'bg-amber-50', border: 'border-amber-200' },
+        'below-60': { key: 'below-60', label: '低於 60 分', count: 0, color: 'bg-rose-500', textColor: 'text-rose-700', bgLight: 'bg-rose-50', border: 'border-rose-200' }
+      };
+
+      scoresList.forEach(s => {
+        const val = Number(s);
+        if (isNaN(val)) return;
+        if (val === 100) segments['100'].count++;
+        else if (val >= 90) segments['90-99'].count++;
+        else if (val >= 80) segments['80-89'].count++;
+        else if (val >= 70) segments['70-79'].count++;
+        else if (val >= 60) segments['60-69'].count++;
+        else segments['below-60'].count++;
+      });
+
+      return segments;
+    }
+
+    function getBracketKeyForScore(scoreVal) {
+      const val = Number(scoreVal);
+      if (isNaN(val)) return 'below-60';
+      if (val === 100) return '100';
+      if (val >= 90) return '90-99';
+      if (val >= 80) return '80-89';
+      if (val >= 70) return '70-79';
+      if (val >= 60) return '60-69';
+      return 'below-60';
+    }
+
+    // 整合家長端成績資料 (優先讀取 classData.exams 中本座號之 submissions，其次合併 cloudStudentData.scores)
+    function getParentCombinedScores() {
+      const seatStr = String(state.studentSeat || '');
+      const combined = [];
+      const seenIds = new Set();
+
+      // 1. 取得教師端出題且此學生已填寫的測驗
+      const classExams = Array.isArray(state.classData?.exams) ? state.classData.exams : [];
+      classExams.forEach(exam => {
+        const sub = exam.submissions?.[seatStr];
+        if (sub && sub.score !== undefined && sub.score !== null && sub.score !== '') {
+          seenIds.add(exam.id);
+          combined.push({
+            id: exam.id,
+            examId: exam.id,
+            subject: exam.subject || '其他',
+            name: exam.name || '平時測驗',
+            date: exam.date || getTodayDateString(),
+            score: parseFloat(sub.score),
+            correction: sub.correction || '已完成訂正',
+            remark: sub.remark || '',
+            originalScore: (sub.originalScore !== undefined && sub.originalScore !== null) ? sub.originalScore : null,
+            lastModified: sub.lastModified || '',
+            isMakeup: Boolean(sub.isMakeup),
+            examObj: exam
+          });
+        }
+      });
+
+      // 2. 合併學生既有獨立紀錄 (雲端個人學生 scores)
+      const cloudScores = (state.cloudStudentData && Array.isArray(state.cloudStudentData.scores)) ? state.cloudStudentData.scores : [];
+      cloudScores.forEach(s => {
+        if (!seenIds.has(s.id) && !seenIds.has(s.examId)) {
+          combined.push(s);
+        }
+      });
+
+      return combined;
+    }
+
     async function renderParentScoresSection() {
       const seat = state.studentSeat;
 
       // 1. Seat unbound check
       if (!seat) {
-        elements.parentScoresUnboundView?.classList.remove("hidden");
-        elements.parentScoresUnconfiguredView?.classList.add("hidden");
-        elements.parentScoresLockedView?.classList.add("hidden");
-        elements.parentScoresUnlockedView?.classList.add("hidden");
+        elements.parentScoresUnboundView?.classList.remove('hidden');
+        elements.parentScoresUnconfiguredView?.classList.add('hidden');
+        elements.parentScoresLockedView?.classList.add('hidden');
+        elements.parentScoresUnlockedView?.classList.add('hidden');
         return;
       }
 
@@ -2107,39 +2379,34 @@
         } catch (e) {}
       }
 
-      // If teacher has NOT configured PIN, show unconfigured view
+      // 2. Unconfigured PIN check
       if (!teacherPin) {
-        elements.parentScoresUnboundView?.classList.add("hidden");
-        elements.parentScoresUnconfiguredView?.classList.remove("hidden");
-        elements.parentScoresLockedView?.classList.add("hidden");
-        elements.parentScoresUnlockedView?.classList.add("hidden");
-        document.querySelectorAll('.parent-unconfigured-seat-num').forEach(el => el.textContent = `${seat}`);
+        elements.parentScoresUnboundView?.classList.add('hidden');
+        elements.parentScoresUnconfiguredView?.classList.remove('hidden');
+        elements.parentScoresLockedView?.classList.add('hidden');
+        elements.parentScoresUnlockedView?.classList.add('hidden');
         return;
       }
 
-      elements.parentScoresUnconfiguredView?.classList.add("hidden");
-
-      // 2. Lock check
+      // 3. Locked view check
       if (!isSeatUnlocked(seat)) {
-        elements.parentScoresUnboundView?.classList.add("hidden");
-        elements.parentScoresLockedView?.classList.remove("hidden");
-        elements.parentScoresUnlockedView?.classList.add("hidden");
-        document.querySelectorAll('.parent-locked-seat-num').forEach(el => el.textContent = `${seat}`);
-        if (elements.inputScoresPin) elements.inputScoresPin.value = "";
-        elements.scoresPinErrorBox?.classList.add("hidden");
+        elements.parentScoresUnboundView?.classList.add('hidden');
+        elements.parentScoresUnconfiguredView?.classList.add('hidden');
+        elements.parentScoresLockedView?.classList.remove('hidden');
+        elements.parentScoresUnlockedView?.classList.add('hidden');
+        if (elements.scoresViewSeatBadge) elements.scoresViewSeatBadge.textContent = `${seat} 號`;
+        if (elements.scoresViewSeatTitle) elements.scoresViewSeatTitle.textContent = `${seat} 號 學生專屬成績分析`;
         return;
       }
 
-      // 3. Unlocked view
-      elements.parentScoresUnboundView?.classList.add("hidden");
-      elements.parentScoresLockedView?.classList.add("hidden");
-      elements.parentScoresUnlockedView?.classList.remove("hidden");
+      // 4. Unlocked View
+      elements.parentScoresUnboundView?.classList.add('hidden');
+      elements.parentScoresUnconfiguredView?.classList.add('hidden');
+      elements.parentScoresLockedView?.classList.add('hidden');
+      elements.parentScoresUnlockedView?.classList.remove('hidden');
 
-      if (elements.scoresViewSeatBadge) elements.scoresViewSeatBadge.textContent = `${seat}`;
-      if (elements.scoresViewSeatTitle) elements.scoresViewSeatTitle.textContent = `${seat}`;
-
-      // Fetch cloud data if not loaded
-      if (!state.cloudStudentData) {
+      // Fetch latest student scores if needed
+      if (!state.cloudStudentData && state.accessCode) {
         try {
           const studentDocId = `studentScores_${state.accessCode}_seat${seat}`;
           const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/userProfiles/${studentDocId}`;
@@ -2151,8 +2418,7 @@
         } catch (e) {}
       }
 
-      const cloudData = state.cloudStudentData;
-      const allScores = (cloudData && Array.isArray(cloudData.scores)) ? cloudData.scores : [];
+      const allScores = getParentCombinedScores();
       const today = getTodayDateString();
       const todayScores = allScores.filter(s => s.date === today);
 
@@ -2196,10 +2462,43 @@
         if (elements.parentStatCorrectionSub) elements.parentStatCorrectionSub.textContent = `${pendingCount} 筆待訂正`;
       }
 
+      // Filter for Trend Chart based on time and multi-subject selection
+      const rangeVal = elements.parentFilterScoreRange ? elements.parentFilterScoreRange.value : "all";
+      const customStart = elements.parentFilterDateStart?.value || '';
+      const customEnd = elements.parentFilterDateEnd?.value || '';
+      const selectedSubs = state.selectedSubjectsFilter || [];
+      const hasSubFilter = selectedSubs.length > 0 && selectedSubs.length < PARENT_ALL_21_SUBJECTS.length;
+
+      const now = new Date();
+      let minDateStr = "";
+      if (rangeVal === "today") {
+        minDateStr = today;
+      } else if (rangeVal === "7days") {
+        const d = new Date(now);
+        d.setDate(d.getDate() - 7);
+        minDateStr = d.toISOString().slice(0, 10);
+      } else if (rangeVal === "30days") {
+        const d = new Date(now);
+        d.setDate(d.getDate() - 30);
+        minDateStr = d.toISOString().slice(0, 10);
+      }
+
+      let chartScores = allScores.filter(s => {
+        if (rangeVal === "today" && s.date !== today) return false;
+        if ((rangeVal === "7days" || rangeVal === "30days") && s.date < minDateStr) return false;
+        if (rangeVal === "custom") {
+          if (customStart && s.date < customStart) return false;
+          if (customEnd && s.date > customEnd) return false;
+        }
+        if (hasSubFilter && !selectedSubs.includes(s.subject)) return false;
+        return true;
+      });
+
       // Render Visualizations
-      renderParentScoreTrendChart(allScores);
+      renderParentScoreTrendChart(chartScores);
       renderParentSubjectAnalytics(allScores);
       populateParentSubjectFilter(allScores);
+      updateParentMultiSubjectBtnLabel();
       renderParentDetailedScoresList();
     }
 
@@ -2440,8 +2739,7 @@
 
     function renderParentDetailedScoresList() {
       if (!elements.parentDetailedScoresList) return;
-      const cloudData = state.cloudStudentData;
-      const allScores = (cloudData && Array.isArray(cloudData.scores)) ? cloudData.scores : [];
+      const allScores = getParentCombinedScores();
       const today = getTodayDateString();
 
       const rangeVal = elements.parentFilterScoreRange ? elements.parentFilterScoreRange.value : "all";
@@ -2463,10 +2761,21 @@
         minDateStr = d.toISOString().slice(0, 10);
       }
 
+      const customStart = elements.parentFilterDateStart?.value || '';
+      const customEnd = elements.parentFilterDateEnd?.value || '';
+
+      const selectedSubs = state.selectedSubjectsFilter || [];
+      const hasSubFilter = selectedSubs.length > 0 && selectedSubs.length < PARENT_ALL_21_SUBJECTS.length;
+
       let filtered = allScores.filter(s => {
         if (rangeVal === "today" && s.date !== today) return false;
         if ((rangeVal === "7days" || rangeVal === "30days") && s.date < minDateStr) return false;
+        if (rangeVal === "custom") {
+          if (customStart && s.date < customStart) return false;
+          if (customEnd && s.date > customEnd) return false;
+        }
         if (subjectVal !== "all" && s.subject !== subjectVal) return false;
+        if (hasSubFilter && !selectedSubs.includes(s.subject)) return false;
         if (correctionVal !== "all" && s.correction !== correctionVal) return false;
         return true;
       });
@@ -2515,12 +2824,33 @@
           corBadge = `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-100 text-rose-800">✏️ 待訂正/需請教</span>`;
         }
 
+        const isMakeupBadge = s.isMakeup
+          ? `<span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-300">補考</span>`
+          : '';
+
+        // 小字備註原分數與最後修改時間
+        let modifiedNote = '';
+        if (s.originalScore !== null && s.originalScore !== undefined && s.originalScore !== s.score) {
+          modifiedNote = `<div class="text-[11px] text-amber-700 font-semibold mt-1 flex items-center gap-1">
+            <i class="fa-solid fa-clock-rotate-left text-[10px]"></i>
+            <span>原分數：${s.originalScore} 分 ｜ 最後修改時間：${escapeHtml(s.lastModified || '未知')}</span>
+          </div>`;
+        } else if (s.lastModified) {
+          modifiedNote = `<div class="text-[10px] text-slate-400 mt-0.5">登記時間：${escapeHtml(s.lastModified)}</div>`;
+        }
+
         return `
-          <div class="p-3.5 sm:p-4 rounded-2xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3 transition-colors">
-            <div class="flex items-center gap-3 min-w-0">
-              <div class="w-12 h-12 rounded-2xl border font-black text-lg flex items-center justify-center flex-shrink-0 ${scoreColor}">
+          <div class="p-3.5 sm:p-4 rounded-2xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors">
+            <div class="flex items-start sm:items-center gap-3 min-w-0">
+              <!-- 點擊方格可查看 6 大區段 -->
+              <button
+                type="button"
+                data-exam-id="${s.examId || s.id}"
+                class="btn-parent-view-bracket touch-target w-12 h-12 rounded-2xl border-2 font-black text-lg flex items-center justify-center flex-shrink-0 cursor-pointer shadow-xs hover:scale-105 active:scale-95 transition-transform ${scoreColor}"
+                title="點擊查看全班 6 大分數區段分析"
+              >
                 ${s.score}
-              </div>
+              </button>
               <div class="min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
                   <span class="px-2 py-0.5 rounded-md text-[10px] font-black bg-slate-200 text-slate-700">
@@ -2530,21 +2860,218 @@
                     ${escapeHtml(s.name)}
                   </span>
                   <span class="text-[11px] text-slate-400 font-mono">
-                    ${escapeHtml(s.date || '')}
+                    📅 ${escapeHtml(s.date || '')}
                   </span>
+                  ${isMakeupBadge}
                 </div>
                 <div class="flex items-center gap-2 mt-1 flex-wrap">
                   ${corBadge}
                   ${s.remark ? `<span class="text-xs text-slate-500 truncate"><i class="fa-regular fa-comment-dots text-slate-400 mr-1"></i>${escapeHtml(s.remark)}</span>` : ''}
                 </div>
+                ${modifiedNote}
               </div>
             </div>
-            <div class="text-right flex-shrink-0">
+            <div class="flex items-center gap-2 self-end sm:self-center flex-shrink-0">
+              <button
+                type="button"
+                data-exam-id="${s.examId || s.id}"
+                class="btn-parent-view-bracket touch-target px-3 py-1.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-700 text-xs font-bold border border-teal-200 flex items-center gap-1 cursor-pointer transition-colors"
+                title="查看全班 6 大分數區段落點"
+              >
+                <i class="fa-solid fa-chart-column text-teal-600"></i>
+                <span>全班區段</span>
+              </button>
               <span class="text-xs font-bold text-slate-400 block">${scoreVal >= 60 ? '及格' : '不及格'}</span>
             </div>
           </div>
         `;
       }).join('');
+
+      elements.parentDetailedScoresList.querySelectorAll('.btn-parent-view-bracket').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const examId = btn.getAttribute('data-exam-id');
+          openParentScoreBracketModal(examId);
+        });
+      });
+    }
+
+    // 打開【家長端全班 6 大分數區段分析】彈窗
+    function openParentScoreBracketModal(examId) {
+      if (!elements.modalParentScoreBracketAnalysis) return;
+      const combined = getParentCombinedScores();
+      const myRecord = combined.find(s => s.id === examId || s.examId === examId);
+      const curClass = state.classData;
+      const exam = curClass?.exams?.find(e => e.id === examId) || myRecord?.examObj;
+
+      const examTitle = exam ? exam.name : (myRecord?.name || '平時小考');
+      const subject = exam ? exam.subject : (myRecord?.subject || '學科');
+      const examDate = exam ? exam.date : (myRecord?.date || '');
+
+      if (elements.bracketParentExamTitle) elements.bracketParentExamTitle.textContent = examTitle;
+      if (elements.bracketParentSubjectBadge) elements.bracketParentSubjectBadge.textContent = subject;
+      if (elements.bracketParentDate) elements.bracketParentDate.textContent = `測驗日期：${examDate || '未定'}`;
+
+      let classScores = [];
+      if (exam && exam.submissions) {
+        classScores = Object.values(exam.submissions).map(s => Number(s.score)).filter(s => !isNaN(s));
+      } else if (myRecord && !isNaN(myRecord.score)) {
+        classScores = [Number(myRecord.score)];
+      }
+
+      const totalSamples = classScores.length;
+      const segments = calculateScoreSegments(classScores);
+
+      const myScore = myRecord ? Number(myRecord.score) : null;
+      const myBracketKey = myScore !== null ? getBracketKeyForScore(myScore) : null;
+
+      // 孩子個人落點橫幅
+      if (myScore !== null && elements.bracketParentChildScoreBanner) {
+        elements.bracketParentChildScoreBanner.className = "p-3 rounded-2xl bg-teal-50 border border-teal-200 text-teal-900 text-xs font-extrabold flex items-center justify-between";
+        elements.bracketParentChildScoreBanner.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="w-7 h-7 rounded-xl bg-teal-600 text-white flex items-center justify-center font-black">${myScore}</span>
+            <span>孩子成績：<strong>${myScore} 分</strong></span>
+          </div>
+          <span class="px-2 py-0.5 rounded-lg bg-teal-200 text-teal-800 text-[11px]">
+            落點區段：【${segments[myBracketKey]?.label || ''}】
+          </span>
+        `;
+        elements.bracketParentChildScoreBanner.classList.remove('hidden');
+      } else if (elements.bracketParentChildScoreBanner) {
+        elements.bracketParentChildScoreBanner.classList.add('hidden');
+      }
+
+      // 渲染 6 大區段長條圖
+      if (elements.bracketParentBarsContainer) {
+        const bracketOrder = ['100', '90-99', '80-89', '70-79', '60-69', 'below-60'];
+        elements.bracketParentBarsContainer.innerHTML = bracketOrder.map(key => {
+          const seg = segments[key];
+          const pct = totalSamples > 0 ? Math.round((seg.count / totalSamples) * 100) : 0;
+          const isChildBracket = key === myBracketKey;
+
+          return `
+            <div class="p-2.5 rounded-xl border transition-all ${isChildBracket ? 'bg-teal-50/70 border-teal-400 ring-2 ring-teal-400/20' : 'bg-slate-50/50 border-slate-200/60'}">
+              <div class="flex items-center justify-between text-xs mb-1.5 font-bold">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full ${seg.color}"></span>
+                  <span class="${isChildBracket ? 'text-teal-900 font-black' : 'text-slate-700'}">${seg.label}</span>
+                  ${isChildBracket ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-600 text-white">👈 孩子落點</span>` : ''}
+                </div>
+                <span class="font-mono ${isChildBracket ? 'text-teal-800 font-black' : 'text-slate-600'}">
+                  ${seg.count} 人 (${pct}%)
+                </span>
+              </div>
+              <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                <div class="h-full ${seg.color} rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 全班統計指標
+      if (totalSamples > 0) {
+        const sum = classScores.reduce((a, b) => a + b, 0);
+        const avg = (sum / totalSamples).toFixed(1);
+        const max = Math.max(...classScores);
+        const min = Math.min(...classScores);
+
+        if (elements.bracketParentClassAvg) elements.bracketParentClassAvg.textContent = `${avg} 分`;
+        if (elements.bracketParentSampleCount) elements.bracketParentSampleCount.textContent = `${totalSamples} 份`;
+        if (elements.bracketParentHighest) elements.bracketParentHighest.textContent = `${max} 分`;
+        if (elements.bracketParentLowest) elements.bracketParentLowest.textContent = `${min} 分`;
+      } else {
+        if (elements.bracketParentClassAvg) elements.bracketParentClassAvg.textContent = '--';
+        if (elements.bracketParentSampleCount) elements.bracketParentSampleCount.textContent = '0 份';
+        if (elements.bracketParentHighest) elements.bracketParentHighest.textContent = '--';
+        if (elements.bracketParentLowest) elements.bracketParentLowest.textContent = '--';
+      }
+
+      elements.modalParentScoreBracketAnalysis.classList.remove('hidden');
+    }
+
+    function closeParentScoreBracketModal() {
+      elements.modalParentScoreBracketAnalysis?.classList.add('hidden');
+    }
+
+    // 初始化【家長端科目複選】彈窗內容
+    function initParentMultiSubjectFilter() {
+      if (!elements.parentMultiSubjectCheckboxesContainer) return;
+      if (!state.selectedSubjectsFilter || state.selectedSubjectsFilter.length === 0) {
+        state.selectedSubjectsFilter = [...PARENT_ALL_21_SUBJECTS];
+      }
+
+      elements.parentMultiSubjectCheckboxesContainer.innerHTML = PARENT_DOMAINS_CONFIG.map(domain => {
+        return `
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/70 space-y-2">
+            <div class="flex items-center justify-between text-xs font-extrabold text-slate-800">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full ${domain.color}"></span>
+                <span>${domain.name}</span>
+              </div>
+              <button type="button" class="btn-parent-domain-select-all text-[11px] text-teal-600 hover:underline cursor-pointer" data-domain="${domain.id}">
+                該領域全選
+              </button>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+              ${domain.subjects.map(sub => {
+                const isChecked = state.selectedSubjectsFilter.includes(sub);
+                return `
+                  <label class="flex items-center gap-1.5 p-1.5 rounded-xl hover:bg-white cursor-pointer text-xs font-bold text-slate-700 select-none">
+                    <input type="checkbox" value="${escapeHtml(sub)}" class="chk-parent-multi-sub accent-teal-600 w-4 h-4 rounded" ${isChecked ? 'checked' : ''}>
+                    <span class="truncate">${escapeHtml(sub)}</span>
+                  </label>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      elements.parentMultiSubjectCheckboxesContainer.querySelectorAll('.btn-parent-domain-select-all').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const domId = btn.getAttribute('data-domain');
+          const dom = PARENT_DOMAINS_CONFIG.find(d => d.id === domId);
+          if (dom) {
+            const container = btn.closest('.p-3');
+            container.querySelectorAll('.chk-parent-multi-sub').forEach(chk => chk.checked = true);
+            updateParentMultiSubBadge();
+          }
+        });
+      });
+
+      elements.parentMultiSubjectCheckboxesContainer.querySelectorAll('.chk-parent-multi-sub').forEach(chk => {
+        chk.addEventListener('change', updateParentMultiSubBadge);
+      });
+
+      updateParentMultiSubBadge();
+    }
+
+    function updateParentMultiSubBadge() {
+      if (!elements.parentMultiSubjectCheckboxesContainer) return;
+      const checkedCount = elements.parentMultiSubjectCheckboxesContainer.querySelectorAll('.chk-parent-multi-sub:checked').length;
+      if (elements.parentMultiSubSelectedCountBadge) {
+        elements.parentMultiSubSelectedCountBadge.textContent = `已選 ${checkedCount} / 21 科`;
+      }
+    }
+
+    function updateParentMultiSubjectBtnLabel() {
+      if (!elements.parentMultiSubjectBtnLabel) return;
+      const sel = state.selectedSubjectsFilter || [];
+      if (sel.length === 0 || sel.length === PARENT_ALL_21_SUBJECTS.length) {
+        elements.parentMultiSubjectBtnLabel.textContent = "篩選科目 (全部 21 科)";
+      } else {
+        elements.parentMultiSubjectBtnLabel.textContent = `篩選科目 (已選 ${sel.length} 科)`;
+      }
+    }
+
+    function openParentMultiSubjectModal() {
+      initParentMultiSubjectFilter();
+      elements.modalParentMultiSubjectFilter?.classList.remove('hidden');
+    }
+
+    function closeParentMultiSubjectModal() {
+      elements.modalParentMultiSubjectFilter?.classList.add('hidden');
     }
 
     function switchParentTab(tabId) {
@@ -2606,34 +3133,25 @@
       if (errorBox) errorBox.classList.add("hidden");
 
       try {
-        let teacherPin = getTeacherConfiguredPin(seat);
-        if (!teacherPin && state.accessCode) {
-          const studentDocId = `studentScores_${state.accessCode}_seat${seat}`;
-          const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/userProfiles/${studentDocId}`;
-          const resp = await fetch(url);
-          if (resp.status === 200) {
-            const json = await resp.json();
-            state.cloudStudentData = parseRestDocument(json);
-            teacherPin = getTeacherConfiguredPin(seat);
-          }
-        }
+        const cleanEntered = enteredPin.trim().toUpperCase();
+        const teacherPin = getTeacherConfiguredPin(seat);
 
         if (!teacherPin) {
           if (errorBox) errorBox.classList.remove("hidden");
-          if (errorMsg) errorMsg.textContent = "導師尚未開通此座號的成績專屬 PIN 碼！請聯繫導師在教師端開通。";
+          if (errorMsg) errorMsg.textContent = "請確認學生座號與班級代碼！";
           return;
         }
 
-        const isMatch = (enteredPin === teacherPin);
+        const isMatch = (cleanEntered === teacherPin);
 
         if (isMatch) {
-          unlockSeat(seat, enteredPin);
+          unlockSeat(seat, cleanEntered);
           showToast(`驗證成功！已解鎖 ${seat} 號學生專區與成績分析`, "success");
           renderStudentPersonalSection(state.classData);
           renderParentScoresSection();
         } else {
           if (errorBox) errorBox.classList.remove("hidden");
-          if (errorMsg) errorMsg.textContent = "密碼不正確！請向孩子或導師確認 6 位數專屬 PIN 碼。若忘記密碼請聯繫導師一鍵重設。";
+          if (errorMsg) errorMsg.textContent = "PIN 碼不正確！預設為【班級代碼 + 座號】（家長與學生共用相同密碼）。若有疑問請向導師確認。";
           if (inputEl) {
             inputEl.focus();
             inputEl.select();
@@ -2641,9 +3159,10 @@
         }
       } catch (err) {
         console.error("PIN verification error:", err);
+        const cleanEntered = enteredPin.trim().toUpperCase();
         const teacherPin = getTeacherConfiguredPin(seat);
-        if (teacherPin && enteredPin === teacherPin) {
-          unlockSeat(seat, enteredPin);
+        if (teacherPin && cleanEntered === teacherPin) {
+          unlockSeat(seat, cleanEntered);
           showToast(`驗證成功！已解鎖 ${seat} 號學生專區與成績分析`, "success");
           renderStudentPersonalSection(state.classData);
           renderParentScoresSection();
@@ -3076,8 +3595,43 @@
         });
       }
 
+      // Multi-Subject Filter in Scores panel
+      elements.btnParentOpenMultiSubject?.addEventListener('click', openParentMultiSubjectModal);
+      elements.btnCloseParentMultiSubjectModal?.addEventListener('click', closeParentMultiSubjectModal);
+      elements.btnCancelParentMultiSubject?.addEventListener('click', closeParentMultiSubjectModal);
+      elements.btnApplyParentMultiSubject?.addEventListener('click', () => {
+        const chks = elements.parentMultiSubjectCheckboxesContainer.querySelectorAll('.chk-parent-multi-sub:checked');
+        state.selectedSubjectsFilter = Array.from(chks).map(c => c.value);
+        updateParentMultiSubjectBtnLabel();
+        closeParentMultiSubjectModal();
+        renderParentScoresSection();
+        showToast(`已套用科目篩選（已選 ${state.selectedSubjectsFilter.length} 科）`, "success");
+      });
+      elements.btnParentSubSelectAll?.addEventListener('click', () => {
+        elements.parentMultiSubjectCheckboxesContainer.querySelectorAll('.chk-parent-multi-sub').forEach(c => c.checked = true);
+        updateParentMultiSubBadge();
+      });
+      elements.btnParentSubClearAll?.addEventListener('click', () => {
+        elements.parentMultiSubjectCheckboxesContainer.querySelectorAll('.chk-parent-multi-sub').forEach(c => c.checked = false);
+        updateParentMultiSubBadge();
+      });
+
+      // Bracket Modal Close buttons
+      elements.btnCloseParentBracketModal?.addEventListener('click', closeParentScoreBracketModal);
+      elements.btnDoneParentBracketModal?.addEventListener('click', closeParentScoreBracketModal);
+
       // Historical query filters in Scores panel
-      elements.parentFilterScoreRange?.addEventListener('change', renderParentDetailedScoresList);
+      elements.parentFilterScoreRange?.addEventListener('change', () => {
+        const val = elements.parentFilterScoreRange.value;
+        if (val === 'custom') {
+          elements.parentFilterCustomDateContainer?.classList.remove('hidden');
+        } else {
+          elements.parentFilterCustomDateContainer?.classList.add('hidden');
+        }
+        renderParentScoresSection();
+      });
+      elements.parentFilterDateStart?.addEventListener('change', renderParentScoresSection);
+      elements.parentFilterDateEnd?.addEventListener('change', renderParentScoresSection);
       elements.parentFilterScoreSubject?.addEventListener('change', renderParentDetailedScoresList);
       elements.parentFilterScoreCorrection?.addEventListener('change', renderParentDetailedScoresList);
       elements.parentSortScoreOrder?.addEventListener('change', renderParentDetailedScoresList);
@@ -3088,13 +3642,19 @@
           state.unsubscribeSnapshot();
           state.unsubscribeSnapshot = null;
         }
+        if (state.accessCode) {
+          const seatKey = getParentSeatStorageKey(state.accessCode);
+          if (seatKey) localStorage.removeItem(seatKey);
+        }
         localStorage.removeItem(LS_ACCESS_CODE_KEY);
         state.accessCode = "";
+        state.studentSeat = null;
         state.classData = null;
         
-        // Remove code from URL
+        // Remove code and seat from URL
         const currentUrl = new URL(window.location);
         currentUrl.searchParams.delete("code");
+        currentUrl.searchParams.delete("seat");
         window.history.replaceState({}, "", currentUrl);
 
         closeSettingsModal();
@@ -3115,6 +3675,12 @@
       });
       elements.matrixModal.addEventListener('click', (e) => {
         if (e.target === elements.matrixModal) closeMatrixModal();
+      });
+      elements.modalParentScoreBracketAnalysis?.addEventListener('click', (e) => {
+        if (e.target === elements.modalParentScoreBracketAnalysis) closeParentScoreBracketModal();
+      });
+      elements.modalParentMultiSubjectFilter?.addEventListener('click', (e) => {
+        if (e.target === elements.modalParentMultiSubjectFilter) closeParentMultiSubjectModal();
       });
 
       // Retry banner button
