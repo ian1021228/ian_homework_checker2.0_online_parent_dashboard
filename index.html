@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>作業點收系統 — 家長端即時查詢儀表板</title>
-  <meta name="description" content="作業點收系統家長端即時查詢儀表板，支援即時同步、學生個人作業進度、7天聯絡簿與班級作業總覽">
-  <meta property="og:title" content="作業點收系統 — 家長端即時查詢儀表板">
-  <meta property="og:description" content="作業點收系統家長端即時查詢儀表板，支援即時同步、學生個人作業進度、7天聯絡簿與班級作業總覽">
+  <title>班級經營系統 — 家長端即時查詢儀表板</title>
+  <meta name="description" content="班級經營系統家長端即時查詢儀表板，支援即時同步、學生個人作業進度、7天聯絡簿與班級作業總覽">
+  <meta property="og:title" content="班級經營系統 — 家長端即時查詢儀表板">
+  <meta property="og:description" content="班級經營系統家長端即時查詢儀表板，支援即時同步、學生個人作業進度、7天聯絡簿與班級作業總覽">
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" type="image/png" href="homework-checker-icon.png">
   <link rel="icon" type="image/svg+xml" href="homework-checker-icon.svg">
@@ -14,7 +14,7 @@
   <meta name="theme-color" content="#4f46e5">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="家長端看板">
+  <meta name="apple-mobile-web-app-title" content="班級經營系統家長端">
 
   <!-- Network Preconnect for ultra-fast mobile verification -->
   <link rel="preconnect" href="https://firestore.googleapis.com">
@@ -104,9 +104,9 @@
       <!-- App Header Icon -->
       <div class="text-center mb-8">
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl shadow-xl shadow-indigo-500/25 mb-4 overflow-hidden">
-          <img src="homework-checker-icon.svg" onerror="this.onerror=null; this.src='homework-checker-icon.png';" class="w-full h-full object-cover" alt="作業點收系統">
+          <img src="homework-checker-icon.svg" onerror="this.onerror=null; this.src='homework-checker-icon.png';" class="w-full h-full object-cover" alt="班級經營系統">
         </div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">作業點收系統</h1>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">班級經營系統</h1>
         <p class="mt-2 text-sm text-slate-500 font-medium">家長端即時查詢儀表板 · 掌握孩子學習每一刻</p>
       </div>
 
@@ -841,23 +841,20 @@
     </main>
 
     <!-- Footer -->
-    <footer class="mt-auto border-t border-slate-200/60 bg-white py-6">
-      <div class="max-w-5xl mx-auto px-4 text-center text-xs text-slate-400 space-y-1.5">
-        <p class="font-medium text-slate-500">作業點收系統 — 家長端即時查詢</p>
-        <p>資料由教師端即時加密同步 · 讓親師溝通更即時、更透明</p>
-        <div class="pt-2 flex justify-center items-center gap-4 text-slate-400">
-          <button id="footer-switch-class-btn" class="hover:text-indigo-600 transition-colors">切換班級</button>
-          <span>·</span>
-          <a href="https://docs.google.com/forms/d/19BPzX6vMrSnvW3j2s4OOvaiP3p1gS8auGbRt3f9aFkM/edit" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 transition-colors flex items-center gap-1">
-            <span>問題回報</span>
-            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-          </a>
+    <footer class="mt-auto bg-white border-t border-slate-200/80 py-4 px-4 text-center">
+      <button id="footer-switch-class-btn" class="hidden"></button>
+      <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+        <div class="flex flex-wrap items-center justify-center gap-y-1">
+          <span>班級經營系統 — 家長端 v2.1</span>
+          <span class="mx-2 text-slate-300">|</span>
+          <a href="https://docs.google.com/forms/d/19BPzX6vMrSnvW3j2s4OOvaiP3p1gS8auGbRt3f9aFkM/edit" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline font-bold">回報問題/提供建議</a>
+          <span class="mx-2 text-slate-300">|</span>
+          <a href="https://ian1021228.github.io/ian_homework_checker2.0_online_student_dashboard" class="text-indigo-600 hover:underline font-bold">學生端</a>
+          <span class="mx-2 text-slate-300">|</span>
+          <a href="https://ian1021228.github.io/homework_checker3.0/" class="text-slate-600 hover:underline font-semibold">首頁</a>
         </div>
-        <div class="pt-4 flex justify-center">
-          <div class="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-indigo-50 border border-indigo-200/80 shadow-sm text-indigo-900 text-xs sm:text-sm font-bold">
-            <i class="fa-solid fa-code text-indigo-600"></i>
-            <span>Created by 王禹硯（<a href="mailto:ianw.solar@gmail.com" class="text-indigo-600 hover:underline font-extrabold">ianw.solar@gmail.com</a>）</span>
-          </div>
+        <div class="font-medium text-slate-400">
+          <span class="hidden sm:inline-block mr-2 text-slate-300">｜</span>Created by 王禹硯（<a href="mailto:ianw.solar@gmail.com" class="text-indigo-600 hover:underline font-semibold">ianw.solar@gmail.com</a>）
         </div>
       </div>
     </footer>
@@ -981,7 +978,7 @@
 
         <!-- 5. Version & Sync Info -->
         <div class="pt-4 border-t border-slate-100 text-center text-xs text-slate-400 space-y-1">
-          <p>系統版本：v2.0 (家長端即時查詢版)</p>
+          <p>系統版本：v2.1 (家長端即時查詢版)</p>
           <p>最後同步時間：<span id="modal-last-synced-time" class="font-mono text-slate-600">--</span></p>
           <div class="pt-2 flex justify-center">
             <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200/80 text-indigo-900 text-xs font-bold">
