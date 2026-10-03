@@ -468,8 +468,7 @@
                 <i class="fa-solid fa-arrow-left"></i>
                 <span>切換選擇其他座號</span>
               </button>
-              <span class="hidden sm:inline">·</span>
-              <span class="text-slate-400">💡 提示：此密碼為 6 位數專屬 PIN 碼；預設為 100000 + 座號。若忘記密碼請聯繫導師一鍵重設。</span>
+              <span class="text-slate-400 flex items-center gap-1"><i class="fa-solid fa-lightbulb text-amber-500"></i> 提示：此密碼為 6 位數專屬 PIN 碼。若忘記密碼請聯繫導師重設。</span>
             </div>
           </div>
 
@@ -586,7 +585,7 @@
           </form>
 
           <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-slate-400">
-            <span class="text-slate-400">💡 提示：此密碼為 6 位數專屬 PIN 碼；預設為 100000 + 座號。若忘記密碼請聯繫導師一鍵重設。</span>
+            <span class="text-slate-400 flex items-center gap-1"><i class="fa-solid fa-lightbulb text-amber-500"></i> 提示：此密碼為 6 位數專屬 PIN 碼。若忘記密碼請聯繫導師重設。</span>
           </div>
         </div>
 
@@ -733,9 +732,9 @@
                 <!-- Correction Filter -->
                 <select id="parent-filter-score-correction" class="py-1.5 px-2.5 rounded-xl border border-slate-200 bg-slate-50 font-bold text-slate-700 focus:outline-hidden focus:ring-1 focus:ring-emerald-500">
                   <option value="all">全部訂正狀態</option>
-                  <option value="全對免訂正">✨ 全對免訂正</option>
-                  <option value="已完成訂正">✅ 已完成訂正</option>
-                  <option value="待訂正/需請教">✏️ 待訂正/需請教</option>
+                  <option value="全對免訂正">全對免訂正</option>
+                  <option value="已完成訂正">已完成訂正</option>
+                  <option value="待訂正/需請教">待訂正/需請教</option>
                 </select>
 
                 <!-- Sort Order -->
@@ -990,7 +989,7 @@
     </div>
   </div>
 
-  <!-- 📱 iOS PWA 安裝指引彈窗 (In-App iOS Installation Guide Modal) -->
+  <!-- iOS PWA 安裝指引彈窗 (In-App iOS Installation Guide Modal) -->
   <div id="modal-ios-pwa-guide" class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden transition-all duration-300">
     <div class="relative w-full max-w-sm bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -1061,7 +1060,7 @@
     </div>
   </div>
 
-  <!-- 📊 家長端全班 6 大分數區段分析彈窗 (Score Bracket Analysis Modal) -->
+  <!-- 家長端全班 6 大分數區段分析彈窗 (Score Bracket Analysis Modal) -->
   <div id="modal-parent-score-bracket-analysis" class="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden transition-all duration-300">
     <div class="relative w-full max-w-lg bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -1124,7 +1123,7 @@
     </div>
   </div>
 
-  <!-- 📚 家長端科目複選篩選彈窗 (Multi-Select Subjects Filter Modal) -->
+  <!-- 家長端科目複選篩選彈窗 (Multi-Select Subjects Filter Modal) -->
   <div id="modal-parent-multi-subject-filter" class="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden transition-all duration-300">
     <div class="relative w-full max-w-md bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -1414,6 +1413,26 @@
       return `${year}-${month}-${day}`;
     }
 
+    function getMoodBadgeHtml(moodStr) {
+      const m = String(moodStr || '').trim();
+      if (m.includes('雀躍') || m.includes('開心收穫') || m.includes('衝勁十足')) {
+        return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-black bg-amber-50 text-amber-700 border border-amber-200"><i class="fa-solid fa-face-laugh-squint text-amber-500"></i> 雀躍</span>';
+      }
+      if (m.includes('開心') || m.includes('充實愉快')) {
+        return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-black bg-emerald-50 text-emerald-700 border border-emerald-200"><i class="fa-solid fa-face-smile text-emerald-500"></i> 開心</span>';
+      }
+      if (m.includes('普通') || m.includes('努力思考')) {
+        return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-black bg-sky-50 text-sky-700 border border-sky-200"><i class="fa-solid fa-face-meh text-sky-500"></i> 普通</span>';
+      }
+      if (m.includes('難過') || m.includes('有點疲憊')) {
+        return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-black bg-indigo-50 text-indigo-700 border border-indigo-200"><i class="fa-solid fa-face-frown text-indigo-500"></i> 難過</span>';
+      }
+      if (m.includes('悲傷')) {
+        return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-black bg-rose-50 text-rose-700 border border-rose-200"><i class="fa-solid fa-face-sad-tear text-rose-500"></i> 悲傷</span>';
+      }
+      return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-black bg-slate-50 text-slate-700 border border-slate-200"><i class="fa-solid fa-face-smile text-emerald-500"></i> ' + (escapeHtml(m) || '開心') + '</span>';
+    }
+
     function formatRelativeTime(isoString) {
       if (!isoString) return "無紀錄";
       try {
@@ -1658,7 +1677,7 @@
 
       state.accessCode = cleanCode;
 
-      // ⚡ Step 1: Check fast local cache to instantly display dashboard on mobile (0ms perceived latency)
+      // Step 1: Check fast local cache to instantly display dashboard on mobile (0ms perceived latency)
       try {
         const cachedRaw = localStorage.getItem(LS_CLASS_CACHE_PREFIX + cleanCode);
         if (cachedRaw) {
@@ -1679,7 +1698,7 @@
         state.unsubscribeSnapshot = null;
       }
 
-      // ⚡ Step 2: Ultra-fast direct REST probe (returns in ~150ms on mobile 4G/5G, bypassing WebSocket handshake)
+      // Step 2: Ultra-fast direct REST probe (returns in ~150ms on mobile 4G/5G, bypassing WebSocket handshake)
       let resolvedByFastRest = false;
       const fetchDirectData = async () => {
         try {
@@ -1734,7 +1753,7 @@
 
       fetchDirectData();
 
-      // ⚡ Step 3: Concurrently connect real-time onSnapshot for continuous live updates
+      // Step 3: Concurrently connect real-time onSnapshot for continuous live updates
       const classDocRef = doc(db, 'artifacts', APP_COLLECTION_ID, 'public', 'data', 'parentClasses', cleanCode);
 
       state.unsubscribeSnapshot = onSnapshot(classDocRef, (docSnap) => {
@@ -1948,7 +1967,7 @@
         return;
       }
 
-      // 🌟 作業繳交情形與繳交統計完全免密碼！直接呈現作業資訊
+      // 作業繳交情形與繳交統計完全免密碼！直接呈現作業資訊
       elements.studentBoundView.classList.remove("hidden");
       elements.studentLockedView.classList.add("hidden");
       elements.studentUnboundView.classList.add("hidden");
@@ -2123,7 +2142,7 @@
       if (!elements.studentScoresList) return;
 
       const seat = state.studentSeat;
-      // 🌟 只有成績需要密碼：若尚未解鎖成績，顯示成績防護提示並提供解鎖入口
+      // 只有成績需要密碼：若尚未解鎖成績，顯示成績防護提示並提供解鎖入口
       if (seat && !isSeatUnlocked(seat)) {
         const teacherPin = getTeacherConfiguredPin(seat);
         if (!teacherPin) {
@@ -2219,7 +2238,7 @@
                 <div class="flex items-center gap-2 text-[10px] text-slate-400">
                   <span>${s.date || ''}</span>
                   <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${badgeColor}">${escapeHtml(s.correction || '')}</span>
-                  ${s.remark ? `<span class="truncate max-w-[120px] text-slate-500">📝 ${escapeHtml(s.remark)}</span>` : ''}
+                  ${s.remark ? `<span class="truncate max-w-[120px] text-slate-500 flex items-center gap-1"><i class="fa-solid fa-pen text-slate-400"></i> ${escapeHtml(s.remark)}</span>` : ''}
                 </div>
               </div>
               <div class="text-right flex-shrink-0">
@@ -2247,7 +2266,7 @@
       if (todayMood && (todayMood.mood || todayMood.text)) {
         if (elements.studentMoodDisplayBox) {
           elements.studentMoodDisplayBox.classList.remove("hidden");
-          if (elements.studentMoodEmoji) elements.studentMoodEmoji.textContent = todayMood.mood || "😊";
+          if (elements.studentMoodEmoji) elements.studentMoodEmoji.innerHTML = getMoodBadgeHtml(todayMood.mood);
           if (elements.studentMoodText) elements.studentMoodText.textContent = todayMood.text || "（今日無文字日記）";
         }
       } else {
@@ -2520,7 +2539,7 @@
 
       const chronological = [...scores].sort((a, b) => (a.date || '').localeCompare(b.date || '') || (parseFloat(a.id?.split('_')?.[1] || 0) - parseFloat(b.id?.split('_')?.[1] || 0)));
       const n = chronological.length;
-      let trendText = "🎯 穩定發揮中";
+      let trendText = `<i class="fa-solid fa-bullseye text-indigo-500 mr-1"></i> 穩定發揮中`;
       let trendClass = "bg-indigo-50 text-indigo-700 border border-indigo-200";
 
       const recentCount = Math.min(3, Math.floor(n / 2) || 1);
@@ -2532,13 +2551,13 @@
         const avgPrior = priorSlice.reduce((s, x) => s + parseFloat(x.score), 0) / priorSlice.length;
         const diff = Math.round((avgRecent - avgPrior) * 10) / 10;
         if (diff >= 3) {
-          trendText = `🔥 持續進步中 (+${diff} 分)`;
+          trendText = `<i class="fa-solid fa-fire text-emerald-500 mr-1"></i> 持續進步中 (+${diff} 分)`;
           trendClass = "bg-emerald-50 text-emerald-700 border border-emerald-200";
         } else if (diff <= -3) {
-          trendText = `⚠️ 略微下滑 (${diff} 分) 需加強`;
+          trendText = `<i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1"></i> 略微下滑 (${diff} 分) 需加強`;
           trendClass = "bg-amber-50 text-amber-700 border border-amber-200";
         } else {
-          trendText = `🎯 穩定持平 (波動 ${diff >= 0 ? '+' : ''}${diff} 分)`;
+          trendText = `<i class="fa-solid fa-bullseye text-indigo-500 mr-1"></i> 穩定持平 (波動 ${diff >= 0 ? '+' : ''}${diff} 分)`;
           trendClass = "bg-indigo-50 text-indigo-700 border border-indigo-200";
         }
       } else {
@@ -2546,17 +2565,17 @@
         const firstScore = parseFloat(chronological[0].score);
         const diff = Math.round(lastScore - firstScore);
         if (diff > 0) {
-          trendText = `📈 較前次進步 (+${diff} 分)`;
+          trendText = `<i class="fa-solid fa-arrow-trend-up text-emerald-500 mr-1"></i> 較前次進步 (+${diff} 分)`;
           trendClass = "bg-emerald-50 text-emerald-700 border border-emerald-200";
         } else if (diff < 0) {
-          trendText = `📉 較前次退步 (${diff} 分)`;
+          trendText = `<i class="fa-solid fa-arrow-trend-down text-amber-500 mr-1"></i> 較前次退步 (${diff} 分)`;
           trendClass = "bg-amber-50 text-amber-700 border border-amber-200";
         }
       }
 
       if (elements.parentTrendStatusBadge) {
-        elements.parentTrendStatusBadge.className = `px-3 py-1 rounded-full text-xs font-extrabold ${trendClass} self-start sm:self-auto`;
-        elements.parentTrendStatusBadge.textContent = trendText;
+        elements.parentTrendStatusBadge.className = `px-3 py-1 rounded-full text-xs font-extrabold ${trendClass} self-start sm:self-auto inline-flex items-center gap-1`;
+        elements.parentTrendStatusBadge.innerHTML = trendText;
       }
 
       const width = 600;
@@ -2817,11 +2836,11 @@
 
         let corBadge = "";
         if (s.correction === "全對免訂正") {
-          corBadge = `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800">✨ 全對免訂正</span>`;
+          corBadge = `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800 inline-flex items-center gap-1"><i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i> 全對免訂正</span>`;
         } else if (s.correction === "已完成訂正") {
-          corBadge = `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-teal-100 text-teal-800">✅ 已完成訂正</span>`;
+          corBadge = `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-teal-100 text-teal-800 inline-flex items-center gap-1"><i class="fa-solid fa-check text-teal-600"></i> 已完成訂正</span>`;
         } else {
-          corBadge = `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-100 text-rose-800">✏️ 待訂正/需請教</span>`;
+          corBadge = `<span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-rose-100 text-rose-800 inline-flex items-center gap-1"><i class="fa-solid fa-pen text-rose-600"></i> 待訂正/需請教</span>`;
         }
 
         const isMakeupBadge = s.isMakeup
@@ -2860,7 +2879,7 @@
                     ${escapeHtml(s.name)}
                   </span>
                   <span class="text-[11px] text-slate-400 font-mono">
-                    📅 ${escapeHtml(s.date || '')}
+                    <i class="fa-regular fa-calendar mr-1"></i> ${escapeHtml(s.date || '')}
                   </span>
                   ${isMakeupBadge}
                 </div>
@@ -2955,7 +2974,7 @@
                 <div class="flex items-center gap-2">
                   <span class="w-2.5 h-2.5 rounded-full ${seg.color}"></span>
                   <span class="${isChildBracket ? 'text-teal-900 font-black' : 'text-slate-700'}">${seg.label}</span>
-                  ${isChildBracket ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-600 text-white">👈 孩子落點</span>` : ''}
+                  ${isChildBracket ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-600 text-white inline-flex items-center gap-1"><i class="fa-solid fa-location-dot"></i> 孩子落點</span>` : ''}
                 </div>
                 <span class="font-mono ${isChildBracket ? 'text-teal-800 font-black' : 'text-slate-600'}">
                   ${seg.count} 人 (${pct}%)
@@ -3109,7 +3128,7 @@
       const todayMood = cloudData?.moodJournal ? cloudData.moodJournal[todayStr] : null;
       if (todayMood && (todayMood.mood || todayMood.text) && isSeatUnlocked(state.studentSeat)) {
         elements.contactTabMoodDisplayBox?.classList.remove("hidden");
-        if (elements.contactTabMoodEmoji) elements.contactTabMoodEmoji.textContent = todayMood.mood || "😊";
+        if (elements.contactTabMoodEmoji) elements.contactTabMoodEmoji.innerHTML = getMoodBadgeHtml(todayMood.mood);
         if (elements.contactTabMoodText) elements.contactTabMoodText.textContent = todayMood.text || "（今日無文字日記）";
       } else {
         elements.contactTabMoodDisplayBox?.classList.add("hidden");
@@ -3440,7 +3459,7 @@
 
           seatBox.className = `p-2 rounded-xl ${colorClass} border text-center transition-all ${myBadge} flex flex-col items-center justify-center min-h-[56px]`;
           seatBox.innerHTML = `
-            <div class="text-xs font-black">${seatNum} 號 ${isMyStudent ? '★' : ''}</div>
+            <div class="text-xs font-black inline-flex items-center justify-center gap-1"><span>${seatNum} 號</span>${isMyStudent ? '<i class="fa-solid fa-star text-amber-300"></i>' : ''}</div>
             <div class="text-[10px] font-bold truncate max-w-full mt-0.5">${escapeHtml(meta.text)}</div>
           `;
         }
@@ -3708,7 +3727,7 @@
             elements.parentPwaInstallBadge.className = "px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800";
           }
           if (elements.parentPwaInstallBtnText) {
-            elements.parentPwaInstallBtnText.textContent = "✅ 已安裝為桌面 App（可離線使用）";
+            elements.parentPwaInstallBtnText.innerHTML = '<i class="fa-solid fa-check text-emerald-600 mr-1"></i> 已安裝為桌面 App（可離線使用）';
           }
         }
       }
@@ -3724,7 +3743,7 @@
       window.addEventListener('appinstalled', () => {
         parentDeferredInstallPrompt = null;
         updateParentPwaInstallState();
-        showToast("🎉 恭喜！家長端看板已成功安裝至您的桌面/主畫面", "success");
+        showToast("恭喜！家長端看板已成功安裝至您的桌面/主畫面", "success");
       });
 
       const isIosDevice = () => {
@@ -3744,7 +3763,7 @@
             parentDeferredInstallPrompt.prompt();
             const { outcome } = await parentDeferredInstallPrompt.userChoice;
             if (outcome === 'accepted') {
-              showToast("🎉 感謝安裝！已將家長端看板新增至主畫面", "success");
+              showToast("感謝安裝！已將家長端看板新增至主畫面", "success");
             }
             parentDeferredInstallPrompt = null;
           } else if (isIosDevice()) {
