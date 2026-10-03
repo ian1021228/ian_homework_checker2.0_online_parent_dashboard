@@ -252,6 +252,128 @@
         <button id="sync-retry-btn" class="px-3 py-1 rounded-xl bg-amber-200/80 hover:bg-amber-300 font-bold text-xs text-amber-900">重新整理</button>
       </div>
 
+      <!-- 每日摘要一覽卡片（今日親師速報） -->
+      <section id="daily-bulletin-card" class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-5 sm:p-6 shadow-xl border border-indigo-800/50 relative overflow-hidden transition-all">
+        <!-- Background subtle lighting effects -->
+        <div class="absolute -right-12 -bottom-12 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-12 -top-12 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Header of Bulletin -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-indigo-800/50 relative z-10">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-amber-400/20 border border-amber-400/30 text-amber-300 flex items-center justify-center text-lg sm:text-xl shrink-0 shadow-inner">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
+                  <span>今日親師速報</span>
+                </h2>
+                <span id="bulletin-seat-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                  座號 -- 號
+                </span>
+                <span class="text-[11px] text-indigo-300 hidden sm:inline">每日摘要一覽（一眼看懂）</span>
+              </div>
+              <p class="text-xs text-indigo-200/80 mt-0.5">
+                下班後一分鐘掌握孩子今日學習動態 · <span id="bulletin-date-text" class="font-mono text-indigo-200 font-semibold">--</span>
+              </p>
+            </div>
+          </div>
+          <div class="text-xs text-indigo-300/80 flex items-center gap-2 self-start sm:self-center font-medium">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>即時數據彙整</span>
+          </div>
+        </div>
+
+        <!-- Unbound state notice -->
+        <div id="bulletin-unbound-notice" class="hidden py-6 text-center text-xs sm:text-sm text-indigo-200 relative z-10">
+          <p class="mb-3 font-medium">您尚未綁定或選擇學生座號，請先選擇座號即可在此一眼看懂貴子弟的今日作業、小考與聯絡簿！</p>
+          <button type="button" id="btn-bulletin-bind-seat" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-indigo-950 font-black text-xs shadow-md transition-all cursor-pointer inline-flex items-center gap-1.5 transform hover:-translate-y-0.5">
+            <i class="fa-solid fa-user-check"></i>
+            <span>選擇學生座號</span>
+          </button>
+        </div>
+
+        <!-- 4-Grid Metrics List -->
+        <div id="bulletin-content-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5 pt-4 relative z-10">
+          
+          <!-- Metric 1: 今日作業 -->
+          <div id="bulletin-item-hw" class="bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-2xl p-3.5 border border-white/10 transition-all cursor-pointer group flex flex-col justify-between" title="點擊切換至今日作業進度">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-indigo-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-clipboard-check text-emerald-400 text-sm"></i>
+                <span>今日作業</span>
+              </span>
+              <span id="bulletin-hw-badge" class="px-2 py-0.5 rounded-md text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                --
+              </span>
+            </div>
+            <div id="bulletin-hw-summary" class="text-sm font-extrabold text-white leading-snug">
+              載入中...
+            </div>
+            <div class="text-[10px] text-indigo-300 mt-2.5 flex items-center justify-between group-hover:text-white transition-colors">
+              <span>查看詳細作業</span>
+              <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- Metric 2: 今日小考 -->
+          <div id="bulletin-item-scores" class="bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-2xl p-3.5 border border-white/10 transition-all cursor-pointer group flex flex-col justify-between" title="點擊切換至成績與學習分析">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-indigo-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-award text-amber-400 text-sm"></i>
+                <span>今日小考</span>
+              </span>
+              <span class="text-[10px] text-amber-300/80 font-bold">小考成績</span>
+            </div>
+            <div id="bulletin-scores-summary" class="text-sm font-extrabold text-white leading-snug">
+              今日無小考紀錄
+            </div>
+            <div class="text-[10px] text-indigo-300 mt-2.5 flex items-center justify-between group-hover:text-white transition-colors">
+              <span>查閱成績表現</span>
+              <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- Metric 3: 今日聯絡事項 -->
+          <div id="bulletin-item-contact" class="bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-2xl p-3.5 border border-white/10 transition-all cursor-pointer group flex flex-col justify-between" title="點擊切換至聯絡簿">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-indigo-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-book-open text-sky-400 text-sm"></i>
+                <span>今日聯絡事項</span>
+              </span>
+              <span class="text-[10px] text-sky-300/80 font-bold">親師交代</span>
+            </div>
+            <div id="bulletin-contact-summary" class="text-sm font-extrabold text-white leading-snug">
+              共 0 則事項
+            </div>
+            <div class="text-[10px] text-indigo-300 mt-2.5 flex items-center justify-between group-hover:text-white transition-colors">
+              <span>閱讀聯絡簿</span>
+              <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>
+            </div>
+          </div>
+
+          <!-- Metric 4: 孩子今日心情 -->
+          <div id="bulletin-item-mood" class="bg-white/10 hover:bg-white/15 backdrop-blur-md rounded-2xl p-3.5 border border-white/10 transition-all cursor-pointer group flex flex-col justify-between" title="點擊切換至心情日記">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-indigo-200 flex items-center gap-1.5">
+                <i class="fa-solid fa-heart text-rose-400 text-sm"></i>
+                <span>孩子今日心情</span>
+              </span>
+              <span class="text-[10px] text-rose-300/80 font-bold">生活札記</span>
+            </div>
+            <div id="bulletin-mood-summary" class="text-sm font-extrabold text-white leading-snug flex items-center gap-1.5">
+              尚未填寫心情
+            </div>
+            <div class="text-[10px] text-indigo-300 mt-2.5 flex items-center justify-between group-hover:text-white transition-colors">
+              <span>深入了解生活感受</span>
+              <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
       <!-- Navigation Tabs for Parent Dashboard -->
       <nav class="bg-slate-200/80 p-1.5 rounded-2xl flex items-center gap-1.5 shadow-inner" id="parent-main-tabs">
         <button
@@ -1239,6 +1361,23 @@
       openSettingsBtn: document.getElementById("open-settings-btn"),
       footerSwitchClassBtn: document.getElementById("footer-switch-class-btn"),
 
+      // Daily Bulletin (今日親師速報)
+      dailyBulletinCard: document.getElementById("daily-bulletin-card"),
+      bulletinSeatBadge: document.getElementById("bulletin-seat-badge"),
+      bulletinDateText: document.getElementById("bulletin-date-text"),
+      bulletinUnboundNotice: document.getElementById("bulletin-unbound-notice"),
+      bulletinContentGrid: document.getElementById("bulletin-content-grid"),
+      bulletinItemHw: document.getElementById("bulletin-item-hw"),
+      bulletinHwSummary: document.getElementById("bulletin-hw-summary"),
+      bulletinHwBadge: document.getElementById("bulletin-hw-badge"),
+      bulletinItemScores: document.getElementById("bulletin-item-scores"),
+      bulletinScoresSummary: document.getElementById("bulletin-scores-summary"),
+      bulletinItemContact: document.getElementById("bulletin-item-contact"),
+      bulletinContactSummary: document.getElementById("bulletin-contact-summary"),
+      bulletinItemMood: document.getElementById("bulletin-item-mood"),
+      bulletinMoodSummary: document.getElementById("bulletin-mood-summary"),
+      btnBulletinBindSeat: document.getElementById("btn-bulletin-bind-seat"),
+
       // Student Section
       studentBoundView: document.getElementById("student-bound-view"),
       studentUnboundView: document.getElementById("student-unbound-view"),
@@ -1954,12 +2093,147 @@
     }
 
     // ==========================================
+    // MODULE 0: DAILY BULLETIN (今日親師速報)
+    // ==========================================
+
+    function renderDailyBulletin(data) {
+      if (!elements.dailyBulletinCard) return;
+      if (!data) data = state.classData || {};
+
+      const seat = state.studentSeat;
+      const todayStr = getTodayDateString();
+
+      if (elements.bulletinDateText) {
+        elements.bulletinDateText.textContent = todayStr;
+      }
+
+      if (!seat) {
+        elements.bulletinUnboundNotice?.classList.remove('hidden');
+        elements.bulletinContentGrid?.classList.add('hidden');
+        if (elements.bulletinSeatBadge) {
+          elements.bulletinSeatBadge.textContent = '未選擇座號';
+        }
+        return;
+      }
+
+      elements.bulletinUnboundNotice?.classList.add('hidden');
+      elements.bulletinContentGrid?.classList.remove('hidden');
+      if (elements.bulletinSeatBadge) {
+        elements.bulletinSeatBadge.textContent = `座號 ${seat} 號`;
+      }
+
+      // 1. 今日作業進度彙整
+      const homeworks = Array.isArray(data.homeworks) ? data.homeworks : [];
+      let completedCount = 0;
+      let correctionCount = 0;
+      let missingCount = 0;
+
+      homeworks.forEach((hw) => {
+        const studentRecord = (hw.students || []).find(s => s.seat === seat);
+        const statusKey = studentRecord ? studentRecord.status : 'not-submitted';
+        const meta = getStatusMeta(hw.typeId, statusKey, data);
+        if (meta.isCompleted) completedCount++;
+        else if (meta.isCorrection) correctionCount++;
+        else missingCount++;
+      });
+
+      const totalHw = homeworks.length;
+      const hwPct = totalHw > 0 ? Math.round((completedCount / totalHw) * 100) : 100;
+
+      if (elements.bulletinHwSummary) {
+        if (totalHw === 0) {
+          elements.bulletinHwSummary.textContent = "今日尚無指派作業";
+        } else {
+          elements.bulletinHwSummary.textContent = `已完成 ${completedCount} 項／共 ${totalHw} 項（${hwPct}%）`;
+        }
+      }
+
+      if (elements.bulletinHwBadge) {
+        if (totalHw === 0) {
+          elements.bulletinHwBadge.textContent = "無作業";
+          elements.bulletinHwBadge.className = "px-2 py-0.5 rounded-md text-[10px] font-black bg-slate-500/20 text-slate-300 border border-slate-400/30";
+        } else if (completedCount === totalHw) {
+          elements.bulletinHwBadge.textContent = "100%";
+          elements.bulletinHwBadge.className = "px-2 py-0.5 rounded-md text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-400/30";
+        } else {
+          elements.bulletinHwBadge.textContent = `${hwPct}%`;
+          elements.bulletinHwBadge.className = "px-2 py-0.5 rounded-md text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-400/30";
+        }
+      }
+
+      // 2. 今日小考成績彙整
+      const isScoresUnlocked = isSeatUnlocked(seat);
+      if (elements.bulletinScoresSummary) {
+        if (!isScoresUnlocked) {
+          elements.bulletinScoresSummary.innerHTML = '<span class="text-xs text-amber-300 font-bold flex items-center gap-1.5"><i class="fa-solid fa-lock text-[11px]"></i> 輸入 PIN 碼解鎖查閱</span>';
+        } else {
+          const allScores = getParentCombinedScores();
+          const todayScores = allScores.filter(s => s.date === todayStr);
+          if (todayScores.length > 0) {
+            const listText = todayScores.map(s => `${escapeHtml(s.subject || '科目')} ${s.score} 分`).join('、');
+            elements.bulletinScoresSummary.textContent = listText;
+          } else {
+            elements.bulletinScoresSummary.textContent = "今日無小考紀錄";
+          }
+        }
+      }
+
+      // 3. 今日聯絡事項彙整
+      const contactBook = data.contactBook || {};
+      const todayEntries = contactBook[todayStr] || [];
+      if (elements.bulletinContactSummary) {
+        if (todayEntries.length > 0) {
+          elements.bulletinContactSummary.textContent = `共 ${todayEntries.length} 則（皆已閱讀）`;
+        } else {
+          elements.bulletinContactSummary.textContent = "今日無特殊交代事項";
+        }
+      }
+
+      // 4. 孩子今日心情彙整
+      if (elements.bulletinMoodSummary) {
+        if (!isScoresUnlocked) {
+          elements.bulletinMoodSummary.innerHTML = '<span class="text-xs text-amber-300 font-bold flex items-center gap-1.5"><i class="fa-solid fa-lock text-[11px]"></i> 輸入 PIN 碼解鎖查閱</span>';
+        } else {
+          const cloudData = state.cloudStudentData;
+          const todayMood = cloudData?.moodJournal ? cloudData.moodJournal[todayStr] : null;
+          if (todayMood && (todayMood.mood || todayMood.text)) {
+            const m = String(todayMood.mood || '').trim();
+            let iconClass = 'fa-solid fa-face-smile text-emerald-400';
+            let moodLabel = m || '開心';
+            if (m.includes('雀躍') || m.includes('開心收穫') || m.includes('衝勁十足')) {
+              iconClass = 'fa-solid fa-face-laugh-squint text-amber-400';
+              moodLabel = '雀躍';
+            } else if (m.includes('開心') || m.includes('充實愉快')) {
+              iconClass = 'fa-solid fa-face-smile text-emerald-400';
+              moodLabel = '開心';
+            } else if (m.includes('普通') || m.includes('努力思考')) {
+              iconClass = 'fa-solid fa-face-meh text-sky-400';
+              moodLabel = '普通';
+            } else if (m.includes('難過') || m.includes('有點疲憊')) {
+              iconClass = 'fa-solid fa-face-frown text-indigo-300';
+              moodLabel = '難過';
+            } else if (m.includes('悲傷')) {
+              iconClass = 'fa-solid fa-face-sad-tear text-rose-400';
+              moodLabel = '悲傷';
+            }
+            elements.bulletinMoodSummary.innerHTML = `<i class="${iconClass}"></i> <span>${escapeHtml(moodLabel)}</span>`;
+          } else {
+            elements.bulletinMoodSummary.textContent = "孩子今日尚未填寫心情";
+          }
+        }
+      }
+    }
+
+    // ==========================================
     // MODULE 1: STUDENT PERSONAL PROGRESS RENDER
     // ==========================================
 
     function renderStudentPersonalSection(data) {
       const seat = state.studentSeat;
       const homeworks = data.homeworks || [];
+
+      // 同步更新最上方的「今日親師速報」卡片
+      renderDailyBulletin(data);
 
       if (!seat) {
         // Show unbound prompt view
@@ -2132,12 +2406,15 @@
           const cloudData = parseRestDocument(json);
           state.cloudStudentData = cloudData;
           renderStudentScoresView(cloudData);
+          renderDailyBulletin(state.classData);
         } else {
           renderStudentScoresView(null);
+          renderDailyBulletin(state.classData);
         }
       } catch (e) {
         console.warn("loadAndRenderStudentScores error:", e);
         renderStudentScoresView(null);
+        renderDailyBulletin(state.classData);
       }
     }
 
@@ -3553,6 +3830,13 @@
 
       // Quick jump to scores tab button
       elements.quickJumpScoresTabBtn?.addEventListener('click', () => switchParentTab('scores'));
+
+      // Daily Bulletin item jumps
+      elements.bulletinItemHw?.addEventListener('click', () => switchParentTab('hw'));
+      elements.bulletinItemScores?.addEventListener('click', () => switchParentTab('scores'));
+      elements.bulletinItemContact?.addEventListener('click', () => switchParentTab('contact'));
+      elements.bulletinItemMood?.addEventListener('click', () => switchParentTab('contact'));
+      elements.btnBulletinBindSeat?.addEventListener('click', openSettingsModal);
 
       // Quick pick seat buttons in unbound view
       document.querySelectorAll('.btn-goto-pick-seat').forEach(btn => {
