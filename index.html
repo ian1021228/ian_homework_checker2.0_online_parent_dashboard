@@ -267,15 +267,16 @@
             <div>
               <div class="flex items-center gap-2">
                 <h2 class="text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-2">
-                  <span>今日親師速報</span>
+                  <span id="bulletin-title-text">今日親師速報</span>
                 </h2>
                 <span id="bulletin-seat-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30">
                   座號 -- 號
                 </span>
+                <span id="bulletin-friday-tag" class="hidden px-2 py-0.5 rounded-full text-[11px] font-black bg-amber-400/20 text-amber-300 border border-amber-400/30">週五內容</span>
                 <span class="text-[11px] text-indigo-300 hidden sm:inline">每日摘要一覽（一眼看懂）</span>
               </div>
               <p class="text-xs text-indigo-200/80 mt-0.5">
-                下班後一分鐘掌握孩子今日學習動態 · <span id="bulletin-date-text" class="font-mono text-indigo-200 font-semibold">--</span>
+                <span id="bulletin-subtitle-desc">下班後一分鐘掌握孩子今日學習動態</span> · <span id="bulletin-date-text" class="font-mono text-indigo-200 font-semibold">--</span>
               </p>
             </div>
           </div>
@@ -302,7 +303,7 @@
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold text-indigo-200 flex items-center gap-1.5">
                 <i class="fa-solid fa-clipboard-check text-emerald-400 text-sm"></i>
-                <span>今日作業</span>
+                <span id="bulletin-hw-title">今日作業</span>
               </span>
               <span id="bulletin-hw-badge" class="px-2 py-0.5 rounded-md text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
                 --
@@ -322,7 +323,7 @@
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold text-indigo-200 flex items-center gap-1.5">
                 <i class="fa-solid fa-award text-amber-400 text-sm"></i>
-                <span>今日小考</span>
+                <span id="bulletin-scores-title">今日小考</span>
               </span>
               <span class="text-[10px] text-amber-300/80 font-bold">小考成績</span>
             </div>
@@ -340,7 +341,7 @@
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold text-indigo-200 flex items-center gap-1.5">
                 <i class="fa-solid fa-book-open text-sky-400 text-sm"></i>
-                <span>今日聯絡事項</span>
+                <span id="bulletin-contact-title">今日聯絡事項</span>
               </span>
               <span class="text-[10px] text-sky-300/80 font-bold">親師交代</span>
             </div>
@@ -358,7 +359,7 @@
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold text-indigo-200 flex items-center gap-1.5">
                 <i class="fa-solid fa-heart text-rose-400 text-sm"></i>
-                <span>孩子今日心情</span>
+                <span id="bulletin-mood-title">孩子今日心情</span>
               </span>
               <span class="text-[10px] text-rose-300/80 font-bold">生活札記</span>
             </div>
@@ -722,18 +723,24 @@
               <div>
                 <div class="flex items-center gap-2">
                   <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">座號 <span id="scores-view-seat-title">--</span> 號 各科成績與學習表現深度分析</h2>
-                  <button id="scores-view-relock-btn" class="text-xs font-semibold text-slate-500 hover:text-rose-600 flex items-center gap-1 transition-colors cursor-pointer" title="重新鎖定並保護學生個人隱私">
-                    <i class="fa-solid fa-lock text-[10px]"></i> 重新上鎖
-                  </button>
                 </div>
                 <p class="text-xs text-slate-500 mt-0.5">跨領域 21 門學科小考成績統計、歷史趨勢與錯題追蹤</p>
               </div>
             </div>
 
-            <!-- Last Updated Badge -->
-            <div class="text-xs text-slate-400 flex items-center gap-1.5 sm:self-start">
-              <i class="fa-regular fa-clock text-slate-400"></i>
-              <span>同步狀態：<strong class="text-emerald-700">雲端即時同步</strong></span>
+            <!-- Actions: 登記小考成績 & 重新上鎖 -->
+            <div class="flex items-center gap-2.5 flex-wrap self-start sm:self-center">
+              <button
+                type="button"
+                id="btn-parent-open-add-score"
+                class="touch-target px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs sm:text-sm shadow-md shadow-emerald-600/20 transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <i class="fa-solid fa-plus"></i>
+                <span>登記小考成績</span>
+              </button>
+              <button id="scores-view-relock-btn" class="touch-target px-3 py-2.5 rounded-2xl border border-slate-200 hover:bg-rose-50 text-slate-500 hover:text-rose-600 text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer" title="重新鎖定並保護學生個人隱私">
+                <i class="fa-solid fa-lock text-[10px]"></i> 重新上鎖
+              </button>
             </div>
           </div>
 
@@ -813,7 +820,7 @@
           </div>
 
           <!-- History Scores Query & List -->
-          <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80 space-y-4">
+          <div id="parent-scores-history-section" class="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-slate-200/80 space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <div class="flex items-center gap-2">
                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">測驗紀錄詳細明細</span>
@@ -1114,6 +1121,159 @@
     </div>
   </div>
 
+  <!-- ============================================================== -->
+  <!-- MODAL: ADD / EDIT SCORE MODAL FOR PARENTS (家長登記/編輯小考成績) -->
+  <!-- ============================================================== -->
+  <div id="parent-score-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs hidden transition-opacity">
+    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-100 overflow-hidden transform transition-all flex flex-col max-h-[92vh]">
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between flex-shrink-0 bg-slate-50/50">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <div>
+            <h3 id="parent-score-modal-title" class="text-base font-extrabold text-slate-900">登記小考／作業成績</h3>
+            <p class="text-xs text-slate-500">同步至學生端與雲端備份</p>
+          </div>
+        </div>
+        <button id="btn-parent-close-score-modal" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors cursor-pointer">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Body Form -->
+      <div class="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+        <input type="hidden" id="parent-edit-score-id" value="">
+
+        <!-- Subject Selection -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">
+              <i class="fa-solid fa-book text-emerald-600 mr-1"></i> 考試科目
+            </label>
+            <span class="text-[11px] text-slate-400 font-medium">點選快速填入或自行輸入</span>
+          </div>
+
+          <!-- Subject Picker Quick Buttons -->
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 mb-2">
+            <div class="flex flex-wrap gap-1.5" id="parent-subject-picker-group">
+              <button type="button" data-sub="國語文" class="btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:border-emerald-500 hover:bg-emerald-50 bg-white text-slate-700 transition-all cursor-pointer">國語文</button>
+              <button type="button" data-sub="英語文" class="btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:border-emerald-500 hover:bg-emerald-50 bg-white text-slate-700 transition-all cursor-pointer">英語文</button>
+              <button type="button" data-sub="數學" class="btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:border-emerald-500 hover:bg-emerald-50 bg-white text-slate-700 transition-all cursor-pointer">數學</button>
+              <button type="button" data-sub="自然" class="btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:border-emerald-500 hover:bg-emerald-50 bg-white text-slate-700 transition-all cursor-pointer">自然</button>
+              <button type="button" data-sub="社會" class="btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:border-emerald-500 hover:bg-emerald-50 bg-white text-slate-700 transition-all cursor-pointer">社會</button>
+              <button type="button" data-sub="理化" class="btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:border-emerald-500 hover:bg-emerald-50 bg-white text-slate-700 transition-all cursor-pointer">理化</button>
+              <button type="button" data-sub="歷史" class="btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:border-emerald-500 hover:bg-emerald-50 bg-white text-slate-700 transition-all cursor-pointer">歷史</button>
+              <button type="button" data-sub="地理" class="btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:border-emerald-500 hover:bg-emerald-50 bg-white text-slate-700 transition-all cursor-pointer">地理</button>
+              <button type="button" data-sub="生物" class="btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:border-emerald-500 hover:bg-emerald-50 bg-white text-slate-700 transition-all cursor-pointer">生物</button>
+              <button type="button" data-sub="其他" class="btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-xs font-bold hover:border-emerald-500 hover:bg-emerald-50 bg-white text-slate-700 transition-all cursor-pointer">其他</button>
+            </div>
+          </div>
+
+          <input
+            type="text"
+            id="parent-input-score-subject"
+            class="w-full py-2.5 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            placeholder="點上方按鈕或輸入科目名稱（例：國語文）"
+            value="國語文"
+            required
+          />
+        </div>
+
+        <!-- Exam / Homework Name -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+            <i class="fa-solid fa-tag text-emerald-600 mr-1"></i> 測驗名稱／課次範圍
+          </label>
+          <input
+            type="text"
+            id="parent-input-score-name"
+            class="w-full py-2.5 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            placeholder="例如：第一單元生字隨堂考、習作複習測驗"
+            required
+          />
+        </div>
+
+        <!-- Score & Date -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+              <i class="fa-solid fa-bullseye text-emerald-600 mr-1"></i> 測驗分數 (0 ~ 100)
+            </label>
+            <input
+              type="number"
+              id="parent-input-score-val"
+              min="0"
+              max="100"
+              step="0.5"
+              class="w-full py-2.5 px-3 rounded-xl border border-slate-200 bg-slate-50 text-base font-extrabold focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 text-center font-mono"
+              placeholder="95"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+              <i class="fa-regular fa-calendar text-emerald-600 mr-1"></i> 測驗日期
+            </label>
+            <input
+              type="date"
+              id="parent-input-score-date"
+              class="w-full py-2.5 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 text-center"
+            />
+          </div>
+        </div>
+
+        <!-- Correction Status -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+            <i class="fa-solid fa-pen-nib text-emerald-600 mr-1"></i> 訂正情形
+          </label>
+          <div class="grid grid-cols-3 gap-2" id="parent-correction-picker-group">
+            <button type="button" data-cor="全對免訂正" class="parent-cor-btn p-2 rounded-xl border border-slate-200 text-xs font-extrabold bg-white text-slate-700 transition-all cursor-pointer">全對免訂正</button>
+            <button type="button" data-cor="已完成訂正" class="parent-cor-btn p-2 rounded-xl border border-slate-200 text-xs font-extrabold bg-white text-slate-700 transition-all cursor-pointer">已完成訂正</button>
+            <button type="button" data-cor="待訂正/需請教" class="parent-cor-btn p-2 rounded-xl border border-slate-200 text-xs font-extrabold bg-white text-slate-700 transition-all cursor-pointer">待訂正/需請教</button>
+          </div>
+        </div>
+
+        <!-- Remark -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+            <i class="fa-regular fa-comment-dots text-emerald-600 mr-1"></i> 錯題檢討或家長備註（選填）
+          </label>
+          <input
+            type="text"
+            id="parent-input-score-remark"
+            class="w-full py-2.5 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            placeholder="例如：第 3 題粗心計算錯誤，已於聯絡簿提醒訂正"
+          />
+        </div>
+
+        <p class="text-[11px] text-slate-400 leading-snug">
+          ※ 登記或修改後將即時同步至雲端，學生端與家長端皆能同步查閱。
+        </p>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="px-6 py-4 border-t border-slate-100 flex items-center justify-end gap-2.5 flex-shrink-0 bg-slate-50/50">
+        <button
+          type="button"
+          id="btn-parent-cancel-score-modal"
+          class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold text-xs transition-colors cursor-pointer"
+        >
+          取消
+        </button>
+        <button
+          type="button"
+          id="btn-parent-save-score-modal"
+          class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-md shadow-emerald-500/20 transition-all cursor-pointer"
+        >
+          儲存並同步
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- iOS PWA 安裝指引彈窗 (In-App iOS Installation Guide Modal) -->
   <div id="modal-ios-pwa-guide" class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md hidden transition-all duration-300">
     <div class="relative w-full max-w-sm bg-white rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4">
@@ -1300,7 +1460,7 @@
   <!-- ============================================================== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
     // 1. Firebase Configuration
     const firebaseConfig = {
@@ -1336,6 +1496,7 @@
       selectedSubjectsFilter: [], // array of subjects, empty or 21 means all
       isOnline: true
     };
+    window.state = state;
 
     // DOM Elements
     const elements = {
@@ -1363,20 +1524,43 @@
 
       // Daily Bulletin (今日親師速報)
       dailyBulletinCard: document.getElementById("daily-bulletin-card"),
+      bulletinTitleText: document.getElementById("bulletin-title-text"),
+      bulletinFridayTag: document.getElementById("bulletin-friday-tag"),
+      bulletinSubtitleDesc: document.getElementById("bulletin-subtitle-desc"),
       bulletinSeatBadge: document.getElementById("bulletin-seat-badge"),
       bulletinDateText: document.getElementById("bulletin-date-text"),
       bulletinUnboundNotice: document.getElementById("bulletin-unbound-notice"),
       bulletinContentGrid: document.getElementById("bulletin-content-grid"),
       bulletinItemHw: document.getElementById("bulletin-item-hw"),
+      bulletinHwTitle: document.getElementById("bulletin-hw-title"),
       bulletinHwSummary: document.getElementById("bulletin-hw-summary"),
       bulletinHwBadge: document.getElementById("bulletin-hw-badge"),
       bulletinItemScores: document.getElementById("bulletin-item-scores"),
+      bulletinScoresTitle: document.getElementById("bulletin-scores-title"),
       bulletinScoresSummary: document.getElementById("bulletin-scores-summary"),
       bulletinItemContact: document.getElementById("bulletin-item-contact"),
+      bulletinContactTitle: document.getElementById("bulletin-contact-title"),
       bulletinContactSummary: document.getElementById("bulletin-contact-summary"),
       bulletinItemMood: document.getElementById("bulletin-item-mood"),
+      bulletinMoodTitle: document.getElementById("bulletin-mood-title"),
       bulletinMoodSummary: document.getElementById("bulletin-mood-summary"),
       btnBulletinBindSeat: document.getElementById("btn-bulletin-bind-seat"),
+
+      // Parent Score Modal Elements
+      btnParentOpenAddScore: document.getElementById("btn-parent-open-add-score"),
+      parentScoreModal: document.getElementById("parent-score-modal"),
+      parentScoreModalTitle: document.getElementById("parent-score-modal-title"),
+      btnParentCloseScoreModal: document.getElementById("btn-parent-close-score-modal"),
+      btnParentCancelScoreModal: document.getElementById("btn-parent-cancel-score-modal"),
+      btnParentSaveScoreModal: document.getElementById("btn-parent-save-score-modal"),
+      parentEditScoreId: document.getElementById("parent-edit-score-id"),
+      parentSubjectPickerGroup: document.getElementById("parent-subject-picker-group"),
+      parentInputScoreSubject: document.getElementById("parent-input-score-subject"),
+      parentInputScoreName: document.getElementById("parent-input-score-name"),
+      parentInputScoreVal: document.getElementById("parent-input-score-val"),
+      parentInputScoreDate: document.getElementById("parent-input-score-date"),
+      parentCorrectionPickerGroup: document.getElementById("parent-correction-picker-group"),
+      parentInputScoreRemark: document.getElementById("parent-input-score-remark"),
 
       // Student Section
       studentBoundView: document.getElementById("student-bound-view"),
@@ -1553,6 +1737,69 @@
       const month = String(now.getMonth() + 1).padStart(2, '0');
       const day = String(now.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
+    }
+
+    // 追蹤家長是否已點開閱讀該日聯絡簿（已查看則綠點消失）
+    function getParentViewedContactDates() {
+      try {
+        const raw = localStorage.getItem(`parent_viewed_contact_${state.accessCode || 'default'}`);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function markContactDateAsViewed(dateStr) {
+      if (!dateStr) return;
+      try {
+        const list = getParentViewedContactDates();
+        if (!list.includes(dateStr)) {
+          list.push(dateStr);
+          localStorage.setItem(`parent_viewed_contact_${state.accessCode || 'default'}`, JSON.stringify(list));
+        }
+      } catch (e) {}
+    }
+
+    function isContactDateViewed(dateStr) {
+      const list = getParentViewedContactDates();
+      return list.includes(dateStr);
+    }
+
+    // 週末且無指派作業時自動使用週五內容
+    function getEffectiveBulletinDate(data) {
+      const now = new Date();
+      const dayOfWeek = now.getDay(); // 0 是週日, 6 是週六
+      const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+      const todayStr = getTodayDateString();
+
+      const homeworks = Array.isArray(data?.homeworks) ? data.homeworks : [];
+      const hasHomework = homeworks.length > 0;
+
+      // 若為六日且沒有指派作業，所有內容都會使用週五，並標註為週五內容
+      if (isWeekend && !hasHomework) {
+        const d = new Date(now);
+        const daysToSubtract = (dayOfWeek === 6) ? 1 : 2; // 週六退 1 天到週五，週日退 2 天到週五
+        d.setDate(now.getDate() - daysToSubtract);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const fridayStr = `${yyyy}-${mm}-${dd}`;
+        return {
+          isFridayFallback: true,
+          effectiveDate: fridayStr,
+          todayDate: todayStr,
+          dayLabel: "週五內容",
+          displayDate: fridayStr
+        };
+      }
+
+      return {
+        isFridayFallback: false,
+        effectiveDate: todayStr,
+        todayDate: todayStr,
+        dayLabel: "今日即時",
+        displayDate: todayStr
+      };
     }
 
     function getMoodBadgeHtml(moodStr) {
@@ -2039,6 +2286,7 @@
       }
       return null;
     }
+    window.getTeacherConfiguredPin = getTeacherConfiguredPin;
 
     function isSeatUnlocked(seat) {
       if (!seat || !state.accessCode) return false;
@@ -2101,10 +2349,44 @@
       if (!data) data = state.classData || {};
 
       const seat = state.studentSeat;
-      const todayStr = getTodayDateString();
+      const effectiveInfo = getEffectiveBulletinDate(data);
+      const targetDate = effectiveInfo.effectiveDate;
 
       if (elements.bulletinDateText) {
-        elements.bulletinDateText.textContent = todayStr;
+        if (effectiveInfo.isFridayFallback) {
+          elements.bulletinDateText.textContent = `${effectiveInfo.todayDate}（週五：${targetDate}）`;
+        } else {
+          elements.bulletinDateText.textContent = targetDate;
+        }
+      }
+
+      if (elements.bulletinFridayTag) {
+        if (effectiveInfo.isFridayFallback) {
+          elements.bulletinFridayTag.classList.remove('hidden');
+        } else {
+          elements.bulletinFridayTag.classList.add('hidden');
+        }
+      }
+
+      if (elements.bulletinSubtitleDesc) {
+        if (effectiveInfo.isFridayFallback) {
+          elements.bulletinSubtitleDesc.textContent = "（週末無指派作業，為您自動呈現週五學習與小考紀錄）";
+        } else {
+          elements.bulletinSubtitleDesc.textContent = "今日孩子學習、小考與聯絡事項彙整";
+        }
+      }
+
+      if (elements.bulletinHwTitle) {
+        elements.bulletinHwTitle.textContent = effectiveInfo.isFridayFallback ? "週五作業" : "今日作業";
+      }
+      if (elements.bulletinScoresTitle) {
+        elements.bulletinScoresTitle.textContent = effectiveInfo.isFridayFallback ? "週五小考" : "今日小考";
+      }
+      if (elements.bulletinContactTitle) {
+        elements.bulletinContactTitle.textContent = effectiveInfo.isFridayFallback ? "週五聯絡事項" : "今日聯絡事項";
+      }
+      if (elements.bulletinMoodTitle) {
+        elements.bulletinMoodTitle.textContent = effectiveInfo.isFridayFallback ? "孩子週五心情" : "孩子今日心情";
       }
 
       if (!seat) {
@@ -2122,7 +2404,7 @@
         elements.bulletinSeatBadge.textContent = `座號 ${seat} 號`;
       }
 
-      // 1. 今日作業進度彙整
+      // 1. 作業進度彙整
       const homeworks = Array.isArray(data.homeworks) ? data.homeworks : [];
       let completedCount = 0;
       let correctionCount = 0;
@@ -2142,7 +2424,7 @@
 
       if (elements.bulletinHwSummary) {
         if (totalHw === 0) {
-          elements.bulletinHwSummary.textContent = "今日尚無指派作業";
+          elements.bulletinHwSummary.textContent = effectiveInfo.isFridayFallback ? "週五無指派作業" : "今日尚無指派作業";
         } else {
           elements.bulletinHwSummary.textContent = `已完成 ${completedCount} 項／共 ${totalHw} 項（${hwPct}%）`;
         }
@@ -2161,43 +2443,43 @@
         }
       }
 
-      // 2. 今日小考成績彙整
+      // 2. 小考成績彙整 (使用 targetDate)
       const isScoresUnlocked = isSeatUnlocked(seat);
       if (elements.bulletinScoresSummary) {
         if (!isScoresUnlocked) {
           elements.bulletinScoresSummary.innerHTML = '<span class="text-xs text-amber-300 font-bold flex items-center gap-1.5"><i class="fa-solid fa-lock text-[11px]"></i> 輸入 PIN 碼解鎖查閱</span>';
         } else {
           const allScores = getParentCombinedScores();
-          const todayScores = allScores.filter(s => s.date === todayStr);
-          if (todayScores.length > 0) {
-            const listText = todayScores.map(s => `${escapeHtml(s.subject || '科目')} ${s.score} 分`).join('、');
+          const targetScores = allScores.filter(s => s.date === targetDate);
+          if (targetScores.length > 0) {
+            const listText = targetScores.map(s => `${escapeHtml(s.subject || '科目')} ${s.score} 分`).join('、');
             elements.bulletinScoresSummary.textContent = listText;
           } else {
-            elements.bulletinScoresSummary.textContent = "今日無小考紀錄";
+            elements.bulletinScoresSummary.textContent = effectiveInfo.isFridayFallback ? "週五無小考紀錄" : "今日無小考紀錄";
           }
         }
       }
 
-      // 3. 今日聯絡事項彙整
+      // 3. 聯絡事項彙整 (使用 targetDate)
       const contactBook = data.contactBook || {};
-      const todayEntries = contactBook[todayStr] || [];
+      const targetEntries = contactBook[targetDate] || [];
       if (elements.bulletinContactSummary) {
-        if (todayEntries.length > 0) {
-          elements.bulletinContactSummary.textContent = `共 ${todayEntries.length} 則（皆已閱讀）`;
+        if (targetEntries.length > 0) {
+          elements.bulletinContactSummary.textContent = `共 ${targetEntries.length} 則（皆已閱讀）`;
         } else {
-          elements.bulletinContactSummary.textContent = "今日無特殊交代事項";
+          elements.bulletinContactSummary.textContent = effectiveInfo.isFridayFallback ? "週五無特殊交代事項" : "今日無特殊交代事項";
         }
       }
 
-      // 4. 孩子今日心情彙整
+      // 4. 孩子心情彙整 (使用 targetDate)
       if (elements.bulletinMoodSummary) {
         if (!isScoresUnlocked) {
           elements.bulletinMoodSummary.innerHTML = '<span class="text-xs text-amber-300 font-bold flex items-center gap-1.5"><i class="fa-solid fa-lock text-[11px]"></i> 輸入 PIN 碼解鎖查閱</span>';
         } else {
           const cloudData = state.cloudStudentData;
-          const todayMood = cloudData?.moodJournal ? cloudData.moodJournal[todayStr] : null;
-          if (todayMood && (todayMood.mood || todayMood.text)) {
-            const m = String(todayMood.mood || '').trim();
+          const targetMood = cloudData?.moodJournal ? cloudData.moodJournal[targetDate] : null;
+          if (targetMood && (targetMood.mood || targetMood.text)) {
+            const m = String(targetMood.mood || '').trim();
             let iconClass = 'fa-solid fa-face-smile text-emerald-400';
             let moodLabel = m || '開心';
             if (m.includes('雀躍') || m.includes('開心收穫') || m.includes('衝勁十足')) {
@@ -2218,7 +2500,7 @@
             }
             elements.bulletinMoodSummary.innerHTML = `<i class="${iconClass}"></i> <span>${escapeHtml(moodLabel)}</span>`;
           } else {
-            elements.bulletinMoodSummary.textContent = "孩子今日尚未填寫心情";
+            elements.bulletinMoodSummary.textContent = effectiveInfo.isFridayFallback ? "孩子週五尚未填寫心情" : "孩子今日尚未填寫心情";
           }
         }
       }
@@ -2395,26 +2677,39 @@
       loadAndRenderStudentScores(seat);
     }
 
-    async function loadAndRenderStudentScores(seat) {
+    let unsubscribeStudentScores = null;
+
+    function loadAndRenderStudentScores(seat) {
+      if (unsubscribeStudentScores) {
+        unsubscribeStudentScores();
+        unsubscribeStudentScores = null;
+      }
       if (!state.accessCode || !seat) return;
       try {
         const studentDocId = `studentScores_${state.accessCode}_seat${seat}`;
-        const url = `https://firestore.googleapis.com/v1/projects/cheker-barcode/databases/(default)/documents/artifacts/${APP_COLLECTION_ID}/public/data/userProfiles/${studentDocId}`;
-        const resp = await fetch(url);
-        if (resp.status === 200) {
-          const json = await resp.json();
-          const cloudData = parseRestDocument(json);
-          state.cloudStudentData = cloudData;
-          renderStudentScoresView(cloudData);
-          renderDailyBulletin(state.classData);
-        } else {
-          renderStudentScoresView(null);
-          renderDailyBulletin(state.classData);
-        }
+        const profileDocRef = doc(db, 'artifacts', APP_COLLECTION_ID, 'public', 'data', 'userProfiles', studentDocId);
+        unsubscribeStudentScores = onSnapshot(profileDocRef, (snap) => {
+          if (snap.exists()) {
+            const cloudData = snap.data();
+            state.cloudStudentData = cloudData;
+            renderStudentScoresView(cloudData);
+            if (isSeatUnlocked(seat)) {
+              renderParentScoresSection();
+            }
+            renderDailyBulletin(state.classData);
+          } else {
+            state.cloudStudentData = null;
+            renderStudentScoresView(null);
+            if (isSeatUnlocked(seat)) {
+              renderParentScoresSection();
+            }
+            renderDailyBulletin(state.classData);
+          }
+        }, (err) => {
+          console.warn("Realtime studentScores onSnapshot warning:", err);
+        });
       } catch (e) {
-        console.warn("loadAndRenderStudentScores error:", e);
-        renderStudentScoresView(null);
-        renderDailyBulletin(state.classData);
+        console.warn("loadAndRenderStudentScores setup error:", e);
       }
     }
 
@@ -2834,8 +3129,7 @@
           trendText = `<i class="fa-solid fa-fire text-emerald-500 mr-1"></i> 持續進步中 (+${diff} 分)`;
           trendClass = "bg-emerald-50 text-emerald-700 border border-emerald-200";
         } else if (diff <= -3) {
-          trendText = `<i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1"></i> 略微下滑 (${diff} 分) 需加強`;
-          trendClass = "bg-amber-50 text-amber-700 border border-amber-200";
+          trendText = null;
         } else {
           trendText = `<i class="fa-solid fa-bullseye text-indigo-500 mr-1"></i> 穩定持平 (波動 ${diff >= 0 ? '+' : ''}${diff} 分)`;
           trendClass = "bg-indigo-50 text-indigo-700 border border-indigo-200";
@@ -2848,14 +3142,18 @@
           trendText = `<i class="fa-solid fa-arrow-trend-up text-emerald-500 mr-1"></i> 較前次進步 (+${diff} 分)`;
           trendClass = "bg-emerald-50 text-emerald-700 border border-emerald-200";
         } else if (diff < 0) {
-          trendText = `<i class="fa-solid fa-arrow-trend-down text-amber-500 mr-1"></i> 較前次退步 (${diff} 分)`;
-          trendClass = "bg-amber-50 text-amber-700 border border-amber-200";
+          trendText = null;
         }
       }
 
       if (elements.parentTrendStatusBadge) {
-        elements.parentTrendStatusBadge.className = `px-3 py-1 rounded-full text-xs font-extrabold ${trendClass} self-start sm:self-auto inline-flex items-center gap-1`;
-        elements.parentTrendStatusBadge.innerHTML = trendText;
+        if (trendText) {
+          elements.parentTrendStatusBadge.className = `px-3 py-1 rounded-full text-xs font-extrabold ${trendClass} self-start sm:self-auto inline-flex items-center gap-1`;
+          elements.parentTrendStatusBadge.innerHTML = trendText;
+          elements.parentTrendStatusBadge.classList.remove('hidden');
+        } else {
+          elements.parentTrendStatusBadge.classList.add('hidden');
+        }
       }
 
       const width = 600;
@@ -3012,12 +3310,15 @@
       elements.parentSubjectAnalyticsGrid.querySelectorAll('.parent-subject-card').forEach(card => {
         card.addEventListener('click', () => {
           const sub = card.getAttribute('data-sub');
+          state.selectedSubjectsFilter = [sub];
+          updateParentMultiSubjectBtnLabel();
           if (elements.parentFilterScoreSubject) {
             elements.parentFilterScoreSubject.value = sub;
-            renderParentDetailedScoresList();
-            showToast(`已為您篩選【${sub}】歷史成績`, "info");
-            elements.parentFilterScoreSubject.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }
+          renderParentDetailedScoresList();
+          showToast(`已為您篩選【${sub}】測驗成績`, "info");
+          const targetEl = document.getElementById('parent-scores-history-section') || elements.parentDetailedScoresList;
+          targetEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       });
     }
@@ -3170,17 +3471,34 @@
                 ${modifiedNote}
               </div>
             </div>
-            <div class="flex items-center gap-2 self-end sm:self-center flex-shrink-0">
+            <div class="flex items-center gap-1.5 self-end sm:self-center flex-shrink-0 flex-wrap justify-end">
               <button
                 type="button"
                 data-exam-id="${s.examId || s.id}"
-                class="btn-parent-view-bracket touch-target px-3 py-1.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-700 text-xs font-bold border border-teal-200 flex items-center gap-1 cursor-pointer transition-colors"
+                class="btn-parent-view-bracket touch-target px-2.5 py-1.5 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-700 text-xs font-bold border border-teal-200 flex items-center gap-1 cursor-pointer transition-colors"
                 title="查看全班 6 大分數區段落點"
               >
                 <i class="fa-solid fa-chart-column text-teal-600"></i>
-                <span>全班區段</span>
+                <span class="hidden sm:inline">全班區段</span>
               </button>
-              <span class="text-xs font-bold text-slate-400 block">${scoreVal >= 60 ? '及格' : '不及格'}</span>
+              <button
+                type="button"
+                data-score-id="${s.id || s.examId}"
+                class="btn-parent-edit-score touch-target px-2.5 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold border border-indigo-200 flex items-center gap-1 cursor-pointer transition-colors"
+                title="編輯此小考成績"
+              >
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>編輯</span>
+              </button>
+              <button
+                type="button"
+                data-score-id="${s.id || s.examId}"
+                class="btn-parent-delete-score touch-target px-2.5 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold border border-rose-200 flex items-center gap-1 cursor-pointer transition-colors"
+                title="刪除此小考成績"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+              <span class="text-xs font-bold text-slate-400 block ml-1">${scoreVal >= 60 ? '及格' : '不及格'}</span>
             </div>
           </div>
         `;
@@ -3190,6 +3508,24 @@
         btn.addEventListener('click', () => {
           const examId = btn.getAttribute('data-exam-id');
           openParentScoreBracketModal(examId);
+        });
+      });
+
+      elements.parentDetailedScoresList.querySelectorAll('.btn-parent-edit-score').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const scoreId = btn.getAttribute('data-score-id');
+          const allScores = getParentCombinedScores();
+          const target = allScores.find(s => s.id === scoreId || s.examId === scoreId);
+          if (target) {
+            openParentScoreModal(target);
+          }
+        });
+      });
+
+      elements.parentDetailedScoresList.querySelectorAll('.btn-parent-delete-score').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const scoreId = btn.getAttribute('data-score-id');
+          await deleteParentScore(scoreId);
         });
       });
     }
@@ -3291,6 +3627,253 @@
 
     function closeParentScoreBracketModal() {
       elements.modalParentScoreBracketAnalysis?.classList.add('hidden');
+    }
+
+    // ==========================================
+    // PARENT SCORE REGISTRATION & EDIT MODAL
+    // ==========================================
+
+    function openParentScoreModal(scoreToEdit = null) {
+      if (!elements.parentScoreModal) return;
+      const seat = state.studentSeat;
+      if (!seat) {
+        showToast("請先選擇座號！", "warning");
+        return;
+      }
+
+      if (scoreToEdit) {
+        if (elements.parentScoreModalTitle) {
+          elements.parentScoreModalTitle.innerHTML = '<i class="fa-solid fa-pen-to-square text-emerald-600"></i> 編輯小考成績';
+        }
+        if (elements.parentEditScoreId) elements.parentEditScoreId.value = scoreToEdit.id || scoreToEdit.examId || '';
+        if (elements.parentInputScoreSubject) elements.parentInputScoreSubject.value = scoreToEdit.subject || '國文';
+        if (elements.parentInputScoreName) elements.parentInputScoreName.value = scoreToEdit.name || '';
+        if (elements.parentInputScoreVal) elements.parentInputScoreVal.value = (scoreToEdit.score !== undefined && scoreToEdit.score !== null) ? scoreToEdit.score : '';
+        if (elements.parentInputScoreDate) elements.parentInputScoreDate.value = scoreToEdit.date || getTodayDateString();
+        if (elements.parentInputScoreRemark) elements.parentInputScoreRemark.value = scoreToEdit.remark || '';
+
+        // Subject pill highlight
+        const curSub = scoreToEdit.subject || '國語文';
+        elements.parentSubjectPickerGroup?.querySelectorAll('.btn-parent-subject-pill').forEach(btn => {
+          if (btn.getAttribute('data-sub') === curSub) {
+            btn.className = "btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-emerald-600 bg-emerald-600 text-white font-bold text-xs shadow-xs transition-all text-center cursor-pointer";
+          } else {
+            btn.className = "btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:border-emerald-500 hover:bg-emerald-50 bg-white transition-all text-center cursor-pointer";
+          }
+        });
+
+        // Correction pill highlight
+        const curCor = scoreToEdit.correction || '已完成訂正';
+        elements.parentCorrectionPickerGroup?.querySelectorAll('.btn-correction-choice').forEach(btn => {
+          btn.className = "btn-correction-choice flex-1 py-1.5 px-2 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-100 transition-all text-center cursor-pointer";
+          const val = btn.getAttribute('data-val');
+          if (val === curCor) {
+            if (val === '全對免訂正') btn.className = "btn-correction-choice flex-1 py-1.5 px-2 rounded-xl border border-emerald-600 bg-emerald-600 text-white font-black text-xs shadow-xs transition-all text-center cursor-pointer";
+            else if (val === '已完成訂正') btn.className = "btn-correction-choice flex-1 py-1.5 px-2 rounded-xl border border-teal-600 bg-teal-600 text-white font-black text-xs shadow-xs transition-all text-center cursor-pointer";
+            else btn.className = "btn-correction-choice flex-1 py-1.5 px-2 rounded-xl border border-rose-600 bg-rose-600 text-white font-black text-xs shadow-xs transition-all text-center cursor-pointer";
+          }
+        });
+      } else {
+        if (elements.parentScoreModalTitle) {
+          elements.parentScoreModalTitle.innerHTML = '<i class="fa-solid fa-pen-to-square text-emerald-600"></i> 登記小考成績';
+        }
+        if (elements.parentEditScoreId) elements.parentEditScoreId.value = '';
+        if (elements.parentInputScoreSubject) elements.parentInputScoreSubject.value = '國語文';
+        if (elements.parentInputScoreName) elements.parentInputScoreName.value = '';
+        if (elements.parentInputScoreVal) elements.parentInputScoreVal.value = '';
+        if (elements.parentInputScoreDate) elements.parentInputScoreDate.value = getTodayDateString();
+        if (elements.parentInputScoreRemark) elements.parentInputScoreRemark.value = '';
+
+        elements.parentSubjectPickerGroup?.querySelectorAll('.btn-parent-subject-pill').forEach(btn => {
+          if (btn.getAttribute('data-sub') === '國語文') {
+            btn.className = "btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-emerald-600 bg-emerald-600 text-white font-bold text-xs shadow-xs transition-all text-center cursor-pointer";
+          } else {
+            btn.className = "btn-parent-subject-pill parent-sub-btn px-2.5 py-1.5 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs hover:border-emerald-500 hover:bg-emerald-50 bg-white transition-all text-center cursor-pointer";
+          }
+        });
+
+        elements.parentCorrectionPickerGroup?.querySelectorAll('.btn-correction-choice').forEach(btn => {
+          const val = btn.getAttribute('data-val');
+          if (val === '已完成訂正') {
+            btn.className = "btn-correction-choice flex-1 py-1.5 px-2 rounded-xl border border-teal-600 bg-teal-600 text-white font-black text-xs shadow-xs transition-all text-center cursor-pointer";
+          } else {
+            btn.className = "btn-correction-choice flex-1 py-1.5 px-2 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-100 transition-all text-center cursor-pointer";
+          }
+        });
+      }
+
+      elements.parentScoreModal.classList.remove('hidden');
+      setTimeout(() => elements.parentInputScoreVal?.focus(), 100);
+    }
+
+    function closeParentScoreModal() {
+      elements.parentScoreModal?.classList.add('hidden');
+    }
+
+    async function saveParentScoreFromModal() {
+      const seat = state.studentSeat;
+      if (!seat) {
+        showToast("請先選擇座號！", "warning");
+        return;
+      }
+      const scoreVal = elements.parentInputScoreVal?.value.trim();
+      if (scoreVal === '' || isNaN(scoreVal) || Number(scoreVal) < 0 || Number(scoreVal) > 100) {
+        showToast("請輸入 0 ~ 100 的有效小考成績！", "error");
+        return;
+      }
+      const scoreNum = parseFloat(scoreVal);
+      const sub = elements.parentInputScoreSubject?.value.trim() || '國語文';
+      const name = elements.parentInputScoreName?.value.trim() || `${sub} 小考`;
+      const dateVal = elements.parentInputScoreDate?.value || getTodayDateString();
+      const remarkVal = elements.parentInputScoreRemark?.value.trim() || '';
+      
+      const activeCorBtn = elements.parentCorrectionPickerGroup?.querySelector('.btn-correction-choice.bg-emerald-600, .btn-correction-choice.bg-teal-600, .btn-correction-choice.bg-rose-600');
+      const corVal = activeCorBtn ? activeCorBtn.getAttribute('data-val') : '已完成訂正';
+
+      const now = new Date();
+      const lastModifiedStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      const editId = elements.parentEditScoreId?.value;
+
+      state.cloudStudentData = state.cloudStudentData || { scores: [], moodJournal: {} };
+      if (!Array.isArray(state.cloudStudentData.scores)) {
+        state.cloudStudentData.scores = [];
+      }
+
+      if (editId) {
+        const target = state.cloudStudentData.scores.find(s => s.id === editId || s.examId === editId);
+        if (target) {
+          const orig = (target.originalScore !== null && target.originalScore !== undefined) ? target.originalScore : target.score;
+          target.subject = sub;
+          target.name = name;
+          target.score = scoreNum;
+          target.date = dateVal;
+          target.correction = corVal;
+          target.remark = remarkVal;
+          target.originalScore = orig;
+          target.lastModified = lastModifiedStr;
+        } else {
+          const curClass = state.classData;
+          const exam = curClass?.exams?.find(e => e.id === editId);
+          if (exam) {
+            exam.submissions = exam.submissions || {};
+            const seatStr = String(seat);
+            const oldSub = exam.submissions[seatStr];
+            const orig = (oldSub && oldSub.originalScore !== null && oldSub.originalScore !== undefined)
+              ? oldSub.originalScore
+              : (oldSub ? oldSub.score : scoreNum);
+            exam.submissions[seatStr] = {
+              ...oldSub,
+              score: scoreNum,
+              correction: corVal,
+              remark: remarkVal,
+              originalScore: orig,
+              lastModified: lastModifiedStr,
+              updatedAt: now.toISOString()
+            };
+            try {
+              if (state.accessCode) {
+                const parentDocRef = doc(db, 'artifacts', APP_COLLECTION_ID, 'public', 'data', 'parentClasses', state.accessCode);
+                await setDoc(parentDocRef, {
+                  exams: curClass.exams,
+                  updatedAt: now.toISOString()
+                }, { merge: true });
+              }
+            } catch (e) {}
+          }
+          state.cloudStudentData.scores.unshift({
+            id: editId,
+            examId: editId,
+            subject: sub,
+            name: name,
+            score: scoreNum,
+            date: dateVal,
+            correction: corVal,
+            remark: remarkVal,
+            originalScore: null,
+            lastModified: lastModifiedStr,
+            isMakeup: false
+          });
+        }
+      } else {
+        const newId = 'score_' + Date.now();
+        state.cloudStudentData.scores.unshift({
+          id: newId,
+          examId: newId,
+          subject: sub,
+          name: name,
+          score: scoreNum,
+          date: dateVal,
+          correction: corVal,
+          remark: remarkVal,
+          originalScore: null,
+          lastModified: lastModifiedStr,
+          isMakeup: false
+        });
+      }
+
+      // Ensure the registered score's subject is visible in current filter
+      if (state.selectedSubjectsFilter && state.selectedSubjectsFilter.length > 0 && state.selectedSubjectsFilter.length < PARENT_ALL_21_SUBJECTS.length) {
+        if (!state.selectedSubjectsFilter.includes(sub)) {
+          state.selectedSubjectsFilter.push(sub);
+          updateParentMultiSubjectBtnLabel();
+        }
+      }
+      if (elements.parentFilterScoreSubject && elements.parentFilterScoreSubject.value !== "all" && elements.parentFilterScoreSubject.value !== sub) {
+        elements.parentFilterScoreSubject.value = "all";
+      }
+
+      await syncParentScoresToCloud();
+      renderParentScoresSection();
+      renderDailyBulletin(state.classData);
+      closeParentScoreModal();
+      showToast("成績已儲存並即時同步至雲端！", "success");
+    }
+
+    async function deleteParentScore(scoreId) {
+      if (!confirm("確定要刪除這筆小考成績紀錄嗎？")) return;
+      const seat = state.studentSeat;
+      if (!seat) return;
+
+      if (state.cloudStudentData && Array.isArray(state.cloudStudentData.scores)) {
+        state.cloudStudentData.scores = state.cloudStudentData.scores.filter(s => s.id !== scoreId && s.examId !== scoreId);
+      }
+
+      const curClass = state.classData;
+      const exam = curClass?.exams?.find(e => e.id === scoreId);
+      if (exam && exam.submissions) {
+        delete exam.submissions[String(seat)];
+        try {
+          if (state.accessCode) {
+            const parentDocRef = doc(db, 'artifacts', APP_COLLECTION_ID, 'public', 'data', 'parentClasses', state.accessCode);
+            await setDoc(parentDocRef, {
+              exams: curClass.exams,
+              updatedAt: new Date().toISOString()
+            }, { merge: true });
+          }
+        } catch (e) {}
+      }
+
+      await syncParentScoresToCloud();
+      renderParentScoresSection();
+      renderDailyBulletin(state.classData);
+      showToast("小考成績已刪除並同步！", "info");
+    }
+
+    async function syncParentScoresToCloud() {
+      if (!state.accessCode || !state.studentSeat) return;
+      try {
+        const studentDocId = `studentScores_${state.accessCode}_seat${state.studentSeat}`;
+        const profileDocRef = doc(db, 'artifacts', APP_COLLECTION_ID, 'public', 'data', 'userProfiles', studentDocId);
+        await setDoc(profileDocRef, {
+          classCode: state.accessCode,
+          seat: state.studentSeat,
+          scores: state.cloudStudentData?.scores || [],
+          moodJournal: state.cloudStudentData?.moodJournal || {},
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+      } catch (err) {
+        console.warn("syncParentScoresToCloud error:", err);
+      }
     }
 
     // 初始化【家長端科目複選】彈窗內容
@@ -3504,14 +4087,25 @@
         });
       }
 
-      // Default selected date if not set (defaults to today on the right)
+      const effectiveInfo = getEffectiveBulletinDate(data);
+
+      // Default selected date if not set (若為週末無作業，預設呈現週五)
       if (!state.selectedContactDate || !dates.some(d => d.dateStr === state.selectedContactDate)) {
-        state.selectedContactDate = dates[dates.length - 1].dateStr;
+        if (effectiveInfo.isFridayFallback && dates.some(d => d.dateStr === effectiveInfo.effectiveDate)) {
+          state.selectedContactDate = effectiveInfo.effectiveDate;
+        } else {
+          state.selectedContactDate = dates[dates.length - 1].dateStr;
+        }
       }
+
+      // 開啟或檢視該日聯絡簿後，立即標記為已看過
+      markContactDateAsViewed(state.selectedContactDate);
 
       // Render 7-day slider buttons
       elements.contactDateSlider.innerHTML = dates.map(d => {
         const isSelected = d.dateStr === state.selectedContactDate;
+        const isViewed = isContactDateViewed(d.dateStr);
+        const showDot = d.hasEntries && !isViewed;
         const activeClass = isSelected
           ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20 border-indigo-600'
           : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200';
@@ -3528,7 +4122,7 @@
             <span class="text-xs sm:text-sm font-extrabold mt-0.5">
               ${d.shortDate}
             </span>
-            ${d.hasEntries ? `
+            ${showDot ? `
               <span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-emerald-300' : 'bg-emerald-500'} absolute top-2 right-2"></span>
             ` : ''}
           </button>
@@ -3538,7 +4132,9 @@
       // Add click listener to date buttons
       elements.contactDateSlider.querySelectorAll('.contact-date-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          state.selectedContactDate = btn.getAttribute('data-date');
+          const clickedDate = btn.getAttribute('data-date');
+          state.selectedContactDate = clickedDate;
+          markContactDateAsViewed(clickedDate);
           renderContactBookSection(data);
         });
       });
@@ -3838,6 +4434,41 @@
       elements.bulletinItemMood?.addEventListener('click', () => switchParentTab('contact'));
       elements.btnBulletinBindSeat?.addEventListener('click', openSettingsModal);
 
+      // Parent Add/Edit Score Modal
+      elements.btnParentOpenAddScore?.addEventListener('click', () => openParentScoreModal());
+      elements.btnParentCloseScoreModal?.addEventListener('click', closeParentScoreModal);
+      elements.btnParentCancelScoreModal?.addEventListener('click', closeParentScoreModal);
+      elements.btnParentSaveScoreModal?.addEventListener('click', saveParentScoreFromModal);
+
+      // Subject pills inside parent score modal
+      elements.parentSubjectPickerGroup?.querySelectorAll('.btn-parent-subject-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const sub = btn.getAttribute('data-sub');
+          if (elements.parentInputScoreSubject) elements.parentInputScoreSubject.value = sub;
+          elements.parentSubjectPickerGroup.querySelectorAll('.btn-parent-subject-pill').forEach(b => {
+            b.className = "btn-parent-subject-pill px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer";
+          });
+          btn.className = "btn-parent-subject-pill px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-xs transition-colors cursor-pointer";
+        });
+      });
+
+      // Correction pills inside parent score modal
+      elements.parentCorrectionPickerGroup?.querySelectorAll('.btn-correction-choice').forEach(btn => {
+        btn.addEventListener('click', () => {
+          elements.parentCorrectionPickerGroup.querySelectorAll('.btn-correction-choice').forEach(b => {
+            b.className = "btn-correction-choice flex-1 py-1.5 px-2 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-100 transition-all text-center cursor-pointer";
+          });
+          const val = btn.getAttribute('data-val');
+          if (val === '全對免訂正') {
+            btn.className = "btn-correction-choice flex-1 py-1.5 px-2 rounded-xl border border-emerald-600 bg-emerald-600 text-white font-black text-xs shadow-xs transition-all text-center cursor-pointer";
+          } else if (val === '已完成訂正') {
+            btn.className = "btn-correction-choice flex-1 py-1.5 px-2 rounded-xl border border-teal-600 bg-teal-600 text-white font-black text-xs shadow-xs transition-all text-center cursor-pointer";
+          } else {
+            btn.className = "btn-correction-choice flex-1 py-1.5 px-2 rounded-xl border border-rose-600 bg-rose-600 text-white font-black text-xs shadow-xs transition-all text-center cursor-pointer";
+          }
+        });
+      });
+
       // Quick pick seat buttons in unbound view
       document.querySelectorAll('.btn-goto-pick-seat').forEach(btn => {
         btn.addEventListener('click', openSettingsModal);
@@ -3944,6 +4575,10 @@
 
       // Switch Class / Logout
       const handleSwitchClass = () => {
+        if (unsubscribeStudentScores) {
+          unsubscribeStudentScores();
+          unsubscribeStudentScores = null;
+        }
         if (state.unsubscribeSnapshot) {
           state.unsubscribeSnapshot();
           state.unsubscribeSnapshot = null;
